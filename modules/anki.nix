@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 
 let
-  # Tokyo Night Colorscheme for AnkiRecolor
+  # 1. Simplify the config: config.json only needs the settings, not the metadata
   recolorConfig = {
     colors = {
       "CANVAS" = [ "Background" "#1a1b26" "#1a1b26" "--canvas" ];
@@ -24,13 +24,6 @@ let
       major = 3;
       minor = 4;
     };
-  };
-
-  recolorJson = builtins.toJSON {
-    name = "AnkiRecolor";
-    mod = 1704067200;  # Unix timestamp
-    disabled = false;
-    config = recolorConfig;
   };
 
   anki-connect = pkgs.stdenv.mkDerivation {
@@ -63,25 +56,30 @@ let
     '';
   };
 
-  anki-recolor = pkgs.stdenv.mkDerivation {
+  # 2. Use buildAnkiAddon and target the correct subdirectory
+  anki-recolor = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "anki-recolor";
-    version = "v3.4.1";
+    version = "3.4.1";
+    
     src = pkgs.fetchFromGitHub {
       owner = "AnKing-VIP";
       repo = "AnkiRecolor";
-      rev = "master";
+      # It is safer to use the tag than master to prevent hash mismatch in future
+      rev = "v${finalAttrs.version}"; 
       sha256 = "sha256-TbDUVCfqDXQmCwRgDW+hLZPfIElQAW2wFFgWOc3iKiU=";
     };
-    installPhase = ''
-      mkdir -p $out
-      cp -r * $out/
-      
-      # Write config.json with our Tokyo Night theme
+
+    # CRITICAL FIX: The actual add-on code is in a subdirectory
+    sourceRoot = "${finalAttrs.src.name}/src/addon";
+
+    # CRITICAL FIX: Inject the config directly into the build
+    # buildAnkiAddon handles manifest.json automatically
+    postInstall = ''
       cat > $out/config.json << 'EOF'
-${recolorJson}
-EOF
+      ${builtins.toJSON recolorConfig}
+      EOF
     '';
-  };
+  });
 
   anki-hide-menu-bar = pkgs.stdenv.mkDerivation {
     pname = "anki-hide-menu-bar";
