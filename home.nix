@@ -85,5 +85,12 @@ in
     mpv
     keepassxc
     gh
+
+    gtk-engine-murrine
+    gnome-themes-extra
+    
+    # REQUIRED for apps to load settings
+    gsettings-desktop-schemas
+    pamixer
   ];
 }

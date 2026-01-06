@@ -20,6 +20,10 @@ let
       "SCROLLBAR_BG" = [ "Scrollbar" "#16161e" "#16161e" "--scrollbar-bg" ];
       "SCROLLBAR_BG_HOVER" = [ "Scrollbar Hover" "#24283b" "#24283b" "--scrollbar-bg-hover" ];
     };
+    version = {
+      major = 3;
+      minor = 4; # Matching the addon version you are installing (v3.4.1)
+    };
   };
 
   recolorJson = builtins.toJSON {

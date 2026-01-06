@@ -65,9 +65,9 @@ keys = [
 
 
     # Volume Control
-    Key([], "XF86AudioRaiseVolume", lazy.spawn("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+")),
-    Key([], "XF86AudioLowerVolume", lazy.spawn("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-")),
-    Key([], "XF86AudioMute", lazy.spawn("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")),
+    Key([], "XF86AudioRaiseVolume", lazy.spawn("pamixer -i 5"), desc="Volume Up"),
+    Key([], "XF86AudioLowerVolume", lazy.spawn("pamixer -d 5"), desc="Volume Down"),
+    Key([], "XF86AudioMute", lazy.spawn("pamixer -t"), desc="Toggle Mute"),
 
     # Brightness Control
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +5%")),
@@ -251,8 +251,15 @@ screens = [
                 sep,
                 widget.Volume(
                     foreground = colors[7],
-                    padding = 8, 
+                    padding = 8,
                     fmt = 'Vol: {}',
+                    # This tells the standard volume widget how to read/set volume via pamixer
+                    get_volume_command = "pamixer --get-volume",
+                    check_mute_command = "pamixer --get-mute",
+                    check_mute_string = "true",
+                    volume_up_command = "pamixer -i 5",
+                    volume_down_command = "pamixer -d 5",
+                    mute_command = "pamixer -t",
                 ),
                 sep,
                 widget.Clock(
