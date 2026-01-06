@@ -1,8 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  # Tokyo Night Colorscheme for AnkiRecolor
-  # Based on the forum fix, we wrap the configuration in a "config" attribute
+  # 1. Recolor Config (Fixed with all required keys)
   recolorConfig = {
     config = {
       colors = {
@@ -21,50 +20,21 @@ let
         "BORDER_FOCUS" = [ "Border Focus" "#7aa2f7" "#7aa2f7" "--border-focus" ];
         "SCROLLBAR_BG" = [ "Scrollbar" "#16161e" "#16161e" "--scrollbar-bg" ];
         "SCROLLBAR_BG_HOVER" = [ "Scrollbar Hover" "#24283b" "#24283b" "--scrollbar-bg-hover" ];
+        "BUTTON_HOVER" = [ "Button Hover" "#2f334d" "#2f334d" "--button-hover" ];
+        "HIGHLIGHT_BG" = [ "Highlight Bg" "#2f334d" "#2f334d" "--highlight-bg" ];
+        "HIGHLIGHT_FG" = [ "Highlight Fg" "#c0caf5" "#c0caf5" "--highlight-fg" ];
       };
-      version = {
-        major = 3;
-        minor = 1; # Adjusted to match the forum's working version
-      };
+      version = { major = 3; minor = 1; };
     };
   };
 
-  # 1. Anki Connect
-  anki-connect = pkgs.stdenv.mkDerivation {
-    pname = "anki-connect";
-    version = "2024-02-27";
-    src = pkgs.fetchFromGitHub {
-      owner = "FooSoft";
-      repo = "anki-connect";
-      rev = "master";
-      sha256 = "sha256-VxQ1Qu6GSdStnL/SCkzZazC3WI29hJA3Fco4ix2pOLQ=";
-    };
-    installPhase = ''
-      mkdir -p $out
-      cp -r * $out/
-    '';
-  };
-
-  # 2. Review Heatmap
-  review-heatmap = pkgs.stdenv.mkDerivation {
-    pname = "review-heatmap";
-    version = "v1.0.0-beta.1";
-    src = pkgs.fetchurl {
-      url = "https://github.com/glutanimate/review-heatmap/releases/download/v1.0.0-beta.1/review-heatmap-v1.0.0-beta.1-anki21.ankiaddon";
-      sha256 = "sha256-ZMK8010iITSLON3EzmuHTm8hzwQ/0X23zDJQhPZ7vBs=";
-    };
-    nativeBuildInputs = [ pkgs.unzip ];
-    unpackPhase = "unzip $src";
-    installPhase = ''
-      mkdir -p $out
-      cp -r * $out/
-    '';
-  };
-
-  # 3. Anki Recolor (Using the .withConfig fix)
+  # 2. Native Nixpkgs Addons (Switching to the ones you found!)
   anki-recolor = pkgs.ankiAddons.recolor.withConfig recolorConfig;
+  anki-connect = pkgs.ankiAddons.anki-connect;
+  review-heatmap = pkgs.ankiAddons.review-heatmap;
 
-  # 4. Hide Menu Bar
+  # 3. Hide Menu Bar (Manual fix)
+  # We apply the config by physically writing the meta.json into the correct spot
   anki-hide-menu-bar = pkgs.stdenv.mkDerivation {
     pname = "anki-hide-menu-bar";
     version = "master";
@@ -78,6 +48,8 @@ let
     installPhase = ''
       mkdir -p $out
       cp -r * $out/
+      # This writes the config file Anki looks for inside the addon folder
+      echo '{"config": {"hidden": true, "shortcut": "Ctrl+Alt+T"}}' > $out/meta.json
     '';
   };
 
@@ -85,9 +57,9 @@ in
 {
   home.packages = [
     (pkgs.anki.withAddons [
+      anki-recolor
       anki-connect
       review-heatmap
-      anki-recolor
       anki-hide-menu-bar
     ])
   ];
@@ -95,8 +67,6 @@ in
   home.sessionVariables = {
     ANKI_WAYLAND = "1";
     ANKI_NOHIGHDPI = "0";
-    # FIX: Use 'fusion' instead of 'gtk2'. 
-    # Recolor works by injecting CSS; the GTK2 engine often blocks these overrides.
-    QT_STYLE_OVERRIDE = "fusion"; 
+    QT_STYLE_OVERRIDE = lib.mkForce "fusion"; 
   };
 }
