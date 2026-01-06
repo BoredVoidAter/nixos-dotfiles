@@ -1,7 +1,8 @@
 { pkgs, lib, ... }:
 
 let
-  # 1. Simplify the config: config.json only needs the settings, not the metadata
+  # Tokyo Night Colorscheme for AnkiRecolor
+  # We just pass the raw config object. We do not wrap it in "config" or metadata.
   recolorConfig = {
     colors = {
       "CANVAS" = [ "Background" "#1a1b26" "#1a1b26" "--canvas" ];
@@ -56,7 +57,6 @@ let
     '';
   };
 
-  # 2. Use buildAnkiAddon and target the correct subdirectory
   anki-recolor = pkgs.anki-utils.buildAnkiAddon (finalAttrs: {
     pname = "anki-recolor";
     version = "3.4.1";
@@ -64,16 +64,25 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "AnKing-VIP";
       repo = "AnkiRecolor";
-      # It is safer to use the tag than master to prevent hash mismatch in future
       rev = "v${finalAttrs.version}"; 
       sha256 = "sha256-TbDUVCfqDXQmCwRgDW+hLZPfIElQAW2wFFgWOc3iKiU=";
     };
 
-    # CRITICAL FIX: The actual add-on code is in a subdirectory
+    # The actual python code is in this subdirectory
     sourceRoot = "${finalAttrs.src.name}/src/addon";
 
-    # CRITICAL FIX: Inject the config directly into the build
-    # buildAnkiAddon handles manifest.json automatically
+    # FIX: Patch the files to stop them from trying to write to the read-only Nix store
+    postPatch = ''
+      # 1. Stop the migration logic that runs on startup
+      substituteInPlace __init__.py \
+        --replace-fail "maybe_migrate_config(conf)" "pass # maybe_migrate_config(conf)"
+
+      # 2. Stop the config manager from trying to save changes to disk
+      substituteInPlace ankiaddonconfig/manager.py \
+        --replace-fail "mw.addonManager.writeConfig(self.addon_dir, self._config)" "pass"
+    '';
+
+    # Inject our config into the build
     postInstall = ''
       cat > $out/config.json << 'EOF'
       ${builtins.toJSON recolorConfig}
