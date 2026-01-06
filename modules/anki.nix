@@ -84,7 +84,7 @@ let
 in
 {
   home.packages = [
-    (pkgs.anki-bin.withAddons [
+    (pkgs.anki.withAddons [
       anki-connect
       review-heatmap
       anki-recolor
