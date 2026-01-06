@@ -1,7 +1,6 @@
 { pkgs, ... }:
 
 {
-  # Force pointer cursor settings system-wide for consistency
   home.pointerCursor = {
     gtk.enable = true;
     x11.enable = true;
@@ -29,14 +28,12 @@
     };
   };
 
-  # Qt theming to respect GTK colors
   qt = {
     enable = true;
     platformTheme.name = "gtk";
-    style.name = "gtk2"; # Often works better for unifying looks than adwaita
+    style.name = "gtk2";
   };
 
-  # This is crucial for PCManFM and other GTK3 apps to stay dark
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
@@ -46,14 +43,17 @@
     };
   };
 
-  # Helps with legacy apps
   xresources.properties = {
     "Xcursor.theme" = "Bibata-Modern-Ice";
     "Xcursor.size" = 24;
   };
+
+  # Forces PCManFM and other stubborn GTK apps to use the theme
+  home.sessionVariables = {
+    GTK_THEME = "Tokyonight-Dark-B";
+  };
   
   home.packages = with pkgs; [
-    # Settings daemon helper to broadcast theme changes
     xsettingsd
   ];
 }
