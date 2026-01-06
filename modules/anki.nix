@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  # 1. Recolor Config (Fixed with all required keys)
+  # 1. Recolor Config
   recolorConfig = {
     config = {
       colors = {
@@ -28,30 +28,10 @@ let
     };
   };
 
-  # 2. Native Nixpkgs Addons (Switching to the ones you found!)
+  # 2. Native Nixpkgs Addons
   anki-recolor = pkgs.ankiAddons.recolor.withConfig recolorConfig;
   anki-connect = pkgs.ankiAddons.anki-connect;
   review-heatmap = pkgs.ankiAddons.review-heatmap;
-
-  # 3. Hide Menu Bar (Manual fix)
-  # We apply the config by physically writing the meta.json into the correct spot
-  anki-hide-menu-bar = pkgs.stdenv.mkDerivation {
-    pname = "anki-hide-menu-bar";
-    version = "master";
-    src = pkgs.fetchFromGitHub {
-      owner = "abdnh";
-      repo = "anki-hide-menu-bar";
-      rev = "master";
-      sha256 = "sha256-dyoPHPzS0O7dOxq7PDfHmjmZz7Qq9DIeHBcjls1BDRU=";
-    };
-    dontBuild = true;
-    installPhase = ''
-      mkdir -p $out
-      cp -r * $out/
-      # This writes the config file Anki looks for inside the addon folder
-      echo '{"config": {"hidden": true, "shortcut": "Ctrl+Alt+T"}}' > $out/meta.json
-    '';
-  };
 
 in
 {
@@ -60,7 +40,6 @@ in
       anki-recolor
       anki-connect
       review-heatmap
-      anki-hide-menu-bar
     ])
   ];
 

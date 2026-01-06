@@ -12,7 +12,7 @@
   gtk = {
     enable = true;
     theme = {
-      name = "Tokyonight-Dark-B";
+      name = "Tokyonight-Dark";
       package = pkgs.tokyonight-gtk-theme;
     };
     iconTheme = {
@@ -36,7 +36,7 @@
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      gtk-theme = "Tokyonight-Dark-B";
+      gtk-theme = "Tokyonight-Dark";
       cursor-theme = "Bibata-Modern-Ice";
       icon-theme = "Papirus-Dark";
     };
@@ -49,8 +49,8 @@
 
   # Forces PCManFM and other stubborn GTK apps to use the theme
   home.sessionVariables = {
-    GTK_THEME = "Tokyonight-Dark-B";
-    GTK2_RC_FILES = lib.mkForce "${pkgs.tokyonight-gtk-theme}/share/themes/Tokyonight-Dark-B/gtk-2.0/gtkrc";
+    GTK_THEME = "Tokyonight-Dark";
+    GTK2_RC_FILES = lib.mkForce "${pkgs.tokyonight-gtk-theme}/share/themes/Tokyonight-Dark/gtk-2.0/gtkrc";
   };
   
   home.packages = with pkgs; [
@@ -59,7 +59,7 @@
 
   # Create xsettingsd config for runtime theme enforcement
   xdg.configFile."xsettingsd/xsettingsd.conf".text = ''
-    Net/ThemeName "Tokyonight-Dark-B"
+    Net/ThemeName "Tokyonight-Dark"
     Net/IconThemeName "Papirus-Dark"
     Gtk/CursorThemeName "Bibata-Modern-Ice"
     Net/EnableEventSounds 1

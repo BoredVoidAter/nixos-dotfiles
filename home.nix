@@ -74,7 +74,7 @@ in
 
   home.packages = with pkgs; [
     rofi
-    xfce.thunar
+    # Thunar removed here; it is enabled in configuration.nix
     xfce.tumbler
     obsidian
     brightnessctl
