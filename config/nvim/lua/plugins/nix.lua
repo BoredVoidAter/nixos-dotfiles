@@ -1,8 +1,8 @@
 return {
   -- 1. Disable Mason (the auto-installer)
   -- Because it downloads binaries that don't work on NixOS
-  { "williamboman/mason.nvim", enabled = false },
-  { "williamboman/mason-lspconfig.nvim", enabled = false },
+  { "mason-org/mason.nvim", enabled = false },
+  { "mason-org/mason-lspconfig.nvim", enabled = false },
 
   -- 2. Ensure Treesitter uses the system compiler
   {

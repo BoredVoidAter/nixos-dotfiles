@@ -50,16 +50,7 @@
         '';
       };
 
-      # Added WhatsApp profile for the desktop launcher
-      whatsapp = {
-        id = 1;
-        name = "whatsapp";
-        settings = {
-          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-          "browser.startup.homepage" = "https://web.whatsapp.com";
-          "ui.systemUsesDarkTheme" = 1;
-        };
-      };
+      
     };
   };
 }

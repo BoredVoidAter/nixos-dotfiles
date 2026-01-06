@@ -5,11 +5,14 @@ from libqtile.utils import guess_terminal
 import os
 import subprocess
 
-
 mod = "mod4"
-terminal = guess_terminal()
+terminal = "alacritty"
 
-myTerm = "alacritty" 
+# --- Autostart Hook ---
+@hook.subscribe.startup_once
+def autostart():
+    home = os.path.expanduser('~')
+    subprocess.Popen(['sh', home + '/.config/qtile/autostart.sh'])
 
 keys = [
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
@@ -17,23 +20,15 @@ keys = [
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
     Key([mod], "tab", lazy.layout.next(), desc="Move window focus to other window"),
-    # Move windows between left/right columns or move up/down in current stack.
-    # Moving out of range in Columns layout will create new column.
     Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
     Key([mod, "shift"], "l", lazy.layout.shuffle_right(), desc="Move window to the right"),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
-    # Grow windows. If current window is on the edge of screen and direction
-    # will be to screen edge - window would shrink.
     Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
-    # Toggle between split and unsplit sides of stack.
-    # Split = all windows displayed
-    # Unsplit = 1 window displayed, like Max layout, but still with
-    # multiple stack panes
     Key(
         [mod, "shift"],
         "Return",
@@ -41,8 +36,6 @@ keys = [
         desc="Toggle between split and unsplit sides of stack",
     ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
-    # Toggle between different layouts as defined below
-    # Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
     Key(
         [mod],
@@ -63,7 +56,6 @@ keys = [
     Key([mod, "shift"], "b", lazy.spawn("firefox"), desc="Run Browser"),
     Key([mod, "shift"], "f", lazy.spawn("thunar"), desc="Run Filemanager"),
 
-
     # Volume Control
     Key([], "XF86AudioRaiseVolume", lazy.spawn("pamixer -i 5"), desc="Volume Up"),
     Key([], "XF86AudioLowerVolume", lazy.spawn("pamixer -d 5"), desc="Volume Down"),
@@ -72,12 +64,9 @@ keys = [
     # Brightness Control
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +5%")),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 5%-")),
-
 ]
 
 # Add key bindings to switch VTs in Wayland.
-# We can't check qtile.core.name in default config as it is loaded before qtile is started
-# We therefore defer the check until the key binding is run by using .when(func=...)
 for vt in range(1, 8):
     keys.append(
         Key(
@@ -88,30 +77,55 @@ for vt in range(1, 8):
         )
     )
 
+# --- GROUPS & ICONS CONFIGURATION ---
+groups = [
+    # 1. Terminal (Always Alacritty)
+    Group("1", label="", layout="columns"), 
 
-groups = [Group(i) for i in "123456789"]
+    # 2. Firefox (Matches firefox class)
+    Group("2", label="󰈹", layout="max", 
+          matches=[Match(wm_class=["firefox", "Firefox", "Navigator"])]),
 
-for i in groups:
+    # 3. Obsidian (Matches obsidian)
+    Group("3", label="󰠮", layout="columns", 
+          matches=[Match(wm_class=["obsidian", "Obsidian"])]),
+
+    # 4. Anki (Matches anki)
+    Group("4", label="󰘸", layout="columns", 
+          matches=[Match(wm_class=["anki", "Anki"])]),
+
+    # 5. KeepassXC (Matches keepassxc)
+    Group("5", label="󰌋", layout="columns", 
+          matches=[Match(wm_class=["keepassxc", "KeePassXC"])]),
+
+    # 6-9 Generic Workspaces
+    Group("6", label="", layout="columns"),
+    Group("7", label="", layout="columns"),
+    Group("8", label="", layout="columns"),
+    Group("9", label="", layout="columns"),
+]
+
+for i, group in enumerate(groups):
+    # Determine the key name (1, 2, 3...) based on the group name
+    # We use the group name "1", "2" etc.
+    key_name = group.name
+    
     keys.extend(
         [
             # mod + group number = switch to group
             Key(
                 [mod],
-                i.name,
-                lazy.group[i.name].toscreen(),
-                desc=f"Switch to group {i.name}",
+                key_name,
+                lazy.group[group.name].toscreen(),
+                desc=f"Switch to group {group.name}",
             ),
-            # mod + shift + group number = switch to & move focused window to group
-            # Key(
-            #     [mod, "shift"],
-            #     i.name,
-            #     lazy.window.togroup(i.name, switch_group=True),
-            #     desc=f"Switch to & move focused window to group {i.name}",
-            # ),
-            # Or, use below if you prefer not to switch to that group.
-            # # mod + shift + group number = move focused window to group
-            Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-                desc="move focused window to group {}".format(i.name)),
+            # mod + shift + group number = move focused window to group
+            Key(
+                [mod, "shift"],
+                key_name,
+                lazy.window.togroup(group.name),
+                desc="move focused window to group {}".format(group.name),
+            ),
         ]
     )
 
@@ -128,12 +142,9 @@ colors = [
     ["#444b6a", "#444b6a"]   # color[9]  (bright.black)
 ]
 
-# helper in case your colors are ["#hex", "#hex"]
-def C(x): return x[0] if isinstance(x, (list, tuple)) else x
-
 layout_theme = {
     "border_width" : 1,
-    "margin" : 1,
+    "margin" : 4, # Increased margin slightly for aesthetics
     "border_focus" : colors[6],
     "border_normal" : colors[0],
 }
@@ -141,17 +152,7 @@ layout_theme = {
 layouts = [
     layout.Columns(**layout_theme),
     layout.Max(),
-    # Try more layouts by unleashing below layouts.
-    # layout.Stack(num_stacks=2),
-    # layout.Bsp(),
-    # layout.Matrix(),
     layout.MonadTall(**layout_theme),
-    # layout.MonadWide(),
-    # layout.RatioTile(),
-    # layout.Tile(),
-    # layout.TreeTab(),
-    # layout.VerticalTile(),
-    # layout.Zoomy(),
 ]
 
 widget_defaults = dict(
@@ -161,7 +162,6 @@ widget_defaults = dict(
     background=colors[0],
 )
 
-
 extension_defaults = widget_defaults.copy()
 
 sep = widget.Sep(linewidth=1, padding=8, foreground=colors[9])
@@ -170,17 +170,12 @@ screens = [
     Screen(
         top=bar.Bar(
             widgets = [
-                widget.Prompt(
-                    font = "Ubuntu Mono",
-                    fontsize=14,
-                    foreground = colors[1]
-                ),
                 widget.GroupBox(
-                    fontsize = 18,
-                    margin_y = 5,
+                    fontsize = 22, # Increased size for Icons
+                    margin_y = 3,
                     margin_x = 5,
-                    padding_y = 0,
-                    padding_x = 2,
+                    padding_y = 5,
+                    padding_x = 5,
                     borderwidth = 3,
                     active = colors[8],
                     inactive = colors[9],
@@ -191,6 +186,7 @@ screens = [
                     this_screen_border = colors [4],
                     other_current_screen_border = colors[7],
                     other_screen_border = colors[4],
+                    disable_drag = True,
                 ),
                 widget.TextBox(
                     text = '|',
@@ -216,37 +212,21 @@ screens = [
                     max_chars = 40,
                     markup=False,
                 ),
-                widget.GenPollText(
-                    update_interval = 300,
-                    func = lambda: subprocess.check_output("printf $(uname -r)", shell=True, text=True),
-                    foreground = colors[3],
-                    padding = 8, 
-                    fmt = '{}',
-                ),
+                widget.Spacer(), # Pushes widgets to the right
+                widget.Systray(padding = 6),
                 sep,
                 widget.CPU(
                     foreground = colors[4],
                     padding = 8, 
-                    mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(myTerm + ' -e btop')},
+                    mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(terminal + ' -e btop')},
                     format="CPU: {load_percent}%",
                 ),
                 sep,
                 widget.Memory(
                     foreground = colors[8],
                     padding = 8, 
-                    mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(myTerm + ' -e btop')},
+                    mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(terminal + ' -e btop')},
                     format = 'Mem: {MemUsed:.0f}{mm}',
-                ),
-                sep,
-                widget.DF(
-                    update_interval = 60,
-                    foreground = colors[5],
-                    padding = 8, 
-                    mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn('notify-disk')},
-                    partition = '/',
-                    format = '{uf}{m} free',
-                    fmt = 'Disk: {}',
-                    visible_on_warn = False,
                 ),
                 sep,
                 widget.GenPollText(
@@ -268,7 +248,6 @@ screens = [
                     mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn('notify-date')},
                     format = "%a, %b %d - %H:%M",
                 ),
-                widget.Systray(padding = 6),
                 widget.Spacer(length = 8),
             ],
             margin=[0, 0, 0, 0], 
@@ -279,7 +258,6 @@ screens = [
     ),
 ]
 
-# Drag floating layouts.
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(), start=lazy.window.get_position()),
     Drag([mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()),
@@ -287,36 +265,30 @@ mouse = [
 ]
 
 dgroups_key_binder = None
-dgroups_app_rules = []  # type: list
+dgroups_app_rules = []
 follow_mouse_focus = True
 bring_front_click = False
 floats_kept_above = True
 cursor_warp = False
 floating_layout = layout.Floating(
     float_rules=[
-        # Run the utility of `xprop` to see the wm class and name of an X client.
         *layout.Floating.default_float_rules,
-        Match(wm_class="confirmreset"),  # gitk
-        Match(wm_class="makebranch"),  # gitk
-        Match(wm_class="maketag"),  # gitk
-        Match(wm_class="ssh-askpass"),  # ssh-askpass
-        Match(title="branchdialog"),  # gitk
-        Match(title="pinentry"),  # GPG key password entry
+        Match(wm_class="confirmreset"),
+        Match(wm_class="makebranch"),
+        Match(wm_class="maketag"),
+        Match(wm_class="ssh-askpass"),
+        Match(title="branchdialog"),
+        Match(title="pinentry"),
+        # Added specific float rules for potential popups
+        Match(wm_class="pavucontrol"),
+        Match(wm_class="nm-connection-editor"),
     ]
 )
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 reconfigure_screens = True
-
-# If things like steam games want to auto-minimize themselves when losing
-# focus, should we respect this or not?
 auto_minimize = True
-
-# When using the Wayland backend, this can be used to configure input devices.
 wl_input_rules = None
-
-# xcursor theme (string or None) and size (integer) for Wayland backend
 wl_xcursor_theme = None
 wl_xcursor_size = 24
-
 wmname = "LG3D"

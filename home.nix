@@ -51,19 +51,7 @@ in
     enableBashIntegration = true;
   };
  
-  xdg.desktopEntries = {
-    whatsapp = {
-      name = "WhatsApp";
-      # Updated to use the specific profile (-P whatsapp)
-      exec = "firefox -P whatsapp --class WhatsAppWeb --kiosk https://web.whatsapp.com";
-      icon = "whatsapp";
-      terminal = false;
-      categories = [ "Network" ];
-      settings = {
-        StartupWMClass = "WhatsAppWeb";
-      };
-    };
-  };
+  
 
   # Activation script to remove leftover Waydroid desktop entries
   home.activation.removeWaydroidEntries = lib.hm.dag.entryAfter ["writeBoundary"] ''
