@@ -74,7 +74,8 @@ in
 
   home.packages = with pkgs; [
     rofi
-    pcmanfm
+    xfce.thunar
+    xfce.tumbler
     obsidian
     brightnessctl
     wireplumber
