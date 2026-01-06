@@ -61,7 +61,7 @@ keys = [
         desc="Screenshot"
     ),
     Key([mod, "shift"], "b", lazy.spawn("firefox"), desc="Run Browser"),
-    Key([mod, "shift"], "f", lazy.spawn("pcmanfm"), desc="Run Filemanager"),
+    Key([mod, "shift"], "f", lazy.spawn("thunar"), desc="Run Filemanager"),
 
 
     # Volume Control
