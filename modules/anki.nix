@@ -22,14 +22,13 @@ let
     };
     version = {
       major = 3;
-      minor = 4; # Matching the addon version you are installing (v3.4.1)
+      minor = 4;
     };
   };
 
   recolorJson = builtins.toJSON {
     name = "AnkiRecolor";
-    # Important: Anki needs a modification time (mod) or it might ignore the config
-    mod = 123456789; 
+    mod = 1704067200;  # Unix timestamp
     disabled = false;
     config = recolorConfig;
   };
@@ -74,12 +73,13 @@ let
       sha256 = "sha256-TbDUVCfqDXQmCwRgDW+hLZPfIElQAW2wFFgWOc3iKiU=";
     };
     installPhase = ''
-      # We install into a folder named after the official ID so Anki recognizes it correctly
       mkdir -p $out
       cp -r * $out/
-      echo '${recolorJson}' > $out/meta.json
-      # Remove default config to ensure meta.json takes precedence
-      rm -f $out/config.json 
+      
+      # Write config.json with our Tokyo Night theme
+      cat > $out/config.json << 'EOF'
+${recolorJson}
+EOF
     '';
   };
 

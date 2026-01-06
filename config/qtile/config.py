@@ -249,17 +249,11 @@ screens = [
                     visible_on_warn = False,
                 ),
                 sep,
-                widget.Volume(
+                widget.PulseVolume(
                     foreground = colors[7],
                     padding = 8,
                     fmt = 'Vol: {}',
-                    # This tells the standard volume widget how to read/set volume via pamixer
-                    get_volume_command = "pamixer --get-volume",
-                    check_mute_command = "pamixer --get-mute",
-                    check_mute_string = "true",
-                    volume_up_command = "pamixer -i 5",
-                    volume_down_command = "pamixer -d 5",
-                    mute_command = "pamixer -t",
+                    update_interval = 0.1,
                 ),
                 sep,
                 widget.Clock(
@@ -320,4 +314,3 @@ wl_xcursor_theme = None
 wl_xcursor_size = 24
 
 wmname = "LG3D"
-
