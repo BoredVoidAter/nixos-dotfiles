@@ -19,6 +19,17 @@
   nixpkgs.config.allowUnfree = true;
 
   time.timeZone = "Europe/Berlin";
+  
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs.xfce; [
+      thunar-archive-plugin
+      thunar-volman
+    ];
+  };
+  
+  # Ensure thumbnail support is enabled
+  services.tumbler.enable = true;
 
   #services.displayManager.ly.enable = true;
   services.xserver = {

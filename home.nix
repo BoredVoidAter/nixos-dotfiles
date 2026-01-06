@@ -93,5 +93,7 @@ in
     # REQUIRED for apps to load settings
     gsettings-desktop-schemas
     pamixer
+    xfce.xfconf
+    repomix
   ];
 }
