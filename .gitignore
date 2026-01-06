@@ -1,0 +1,20 @@
+# Nix build results
+result
+result-*
+
+# Mac system files (if you ever sync to mac)
+.DS_Store
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*~
+
+# Generated Repomix files (you don't need to save the big xml file)
+repomix-output.xml
+
+# Private keys (Safety check)
+*.pem
+*.key
+id_rsa
