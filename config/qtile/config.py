@@ -83,7 +83,7 @@ groups = [
     Group("1", label="", layout="columns"), 
 
     # 2. Firefox (Matches firefox class)
-    Group("2", label="󰈹", layout="max", 
+    Group("2", label="󰈹", layout="monadtall", 
           matches=[Match(wm_class=["firefox", "Firefox", "Navigator"])]),
 
     # 3. Obsidian (Matches obsidian)
@@ -144,7 +144,7 @@ colors = [
 
 layout_theme = {
     "border_width" : 1,
-    "margin" : 4, # Increased margin slightly for aesthetics
+    "margin" : 0, # Increased margin slightly for aesthetics
     "border_focus" : colors[6],
     "border_normal" : colors[0],
 }
