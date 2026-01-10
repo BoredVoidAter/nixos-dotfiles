@@ -55,14 +55,6 @@ in
   
   
 
-  home.file.".local/share/applications/code.desktop".text = ''
-  [Desktop Entry]
-  Name=Visual Studio Code
-  Exec=${pkgs.alacritty}/bin/alacritty -e ${pkgs.neovim}/bin/nvim %f
-  Type=Application
-  Terminal=false
-  Icon=vscode
-'';
   
 
 
