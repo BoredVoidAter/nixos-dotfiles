@@ -84,6 +84,7 @@ in
     bluetuith
     polkit_gnome
     google-chrome
+    pavucontrol
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
