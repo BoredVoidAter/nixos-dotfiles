@@ -52,7 +52,29 @@ in
     enable = true;
     enableBashIntegration = true;
   };
- 
+  
+  # 1. Create a specific Desktop Entry for Neovim + Alacritty
+  xdg.desktopEntries = {
+    nvim-unity = {
+      name = "Neovim (Unity)";
+      genericName = "Text Editor";
+      # This command opens Alacritty and runs nvim on the file Unity passes in
+      exec = "${pkgs.alacritty}/bin/alacritty -e ${pkgs.neovim}/bin/nvim %f";
+      icon = "nvim";
+      terminal = false; # False because alacritty IS the terminal window
+      categories = [ "Utility" "TextEditor" "Development" ];
+      mimeType = [ "text/x-csharp" "text/plain" ];
+    };
+  };
+
+  # 2. Force the system to use this entry for C# files
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/x-csharp" = [ "nvim-unity.desktop" ];
+      "text/plain" = [ "nvim-unity.desktop" ];
+    };
+  };
   
 
 
