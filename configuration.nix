@@ -106,6 +106,7 @@
       };
     };
   };
+  security.polkit.enable = true;
 
   # -- Networking & Firewall --
   networking.firewall.allowedTCPPorts = [ 53317 ]; # LocalSend
