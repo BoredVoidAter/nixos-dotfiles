@@ -46,6 +46,11 @@
       # Shell
       shfmt
       shellcheck
+
+      # -- C# / Unity Support --
+      dotnet-sdk_8
+      omnisharp-roslyn
+      netcoredbg
     ];
   };
 }

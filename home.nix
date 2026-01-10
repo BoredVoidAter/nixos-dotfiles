@@ -15,6 +15,7 @@ in
     ./modules/neovim.nix
     ./modules/firefox.nix
     ./modules/anki.nix
+    ./modules/unity.nix
   ];
 
   home.username = "boredvoidater";
@@ -37,6 +38,7 @@ in
     shellAliases = {
       nrs = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
       n = "nvim";
+      unity = "nvidia-offload unityhub";         
     };
   };
 
@@ -53,12 +55,6 @@ in
  
   
 
-  # Activation script to remove leftover Waydroid desktop entries
-  home.activation.removeWaydroidEntries = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    echo "Cleaning up Waydroid desktop entries..."
-    rm -f $HOME/.local/share/applications/waydroid.*.desktop
-    rm -f $HOME/.local/share/applications/lineage.*.desktop
-  '';
 
   home.packages = with pkgs; [
     rofi

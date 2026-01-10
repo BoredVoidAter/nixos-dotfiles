@@ -10,6 +10,12 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # 1. Add File Watcher Fixes for Unity/IDE performance
+  boot.kernel.sysctl = {
+    "fs.inotify.max_user_watches" = 524288;
+    "fs.inotify.max_user_instances" = 512;
+  };
+
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
   
