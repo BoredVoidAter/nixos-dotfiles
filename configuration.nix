@@ -16,7 +16,10 @@
     "fs.inotify.max_user_instances" = 512;
   };
 
-  services.envfs.enable = true; # Useful for scripts looking for /usr/bin/
+  systemd.tmpfiles.rules = [
+    "L+ /usr/bin/nvim - - - - ${pkgs.neovim}/bin/nvim"
+    "L+ /usr/bin/alacritty - - - - ${pkgs.alacritty}/bin/alacritty"
+  ];
 
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
@@ -138,7 +141,8 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-    vim 
+    vim
+    nvim
     wget
     alacritty
     git
