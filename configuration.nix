@@ -16,11 +16,6 @@
     "fs.inotify.max_user_instances" = 512;
   };
 
-  systemd.tmpfiles.rules = [
-    "L+ /usr/bin/nvim - - - - ${pkgs.neovim}/bin/nvim"
-    "L+ /usr/bin/alacritty - - - - ${pkgs.alacritty}/bin/alacritty"
-  ];
-
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
   
@@ -142,7 +137,6 @@
 
   environment.systemPackages = with pkgs; [
     vim
-    neovim
     wget
     alacritty
     git
