@@ -59,29 +59,43 @@
   programs.gamemode.enable = true;
 
   programs.nix-ld.enable = true;
-
-  # 2. Provide the libraries Unity 6 needs
   programs.nix-ld.libraries = with pkgs; [
+    # --- The Essentials ---
     stdenv.cc.cc
-    libxml2
     zlib
+    fuse3
+    icu
     nss
     nspr
+    openssl
+    curl
     expat
+    
+    # --- Graphics / OpenGL (Fixes libGL.so.1) ---
+    libGL
+    libGLU
+    libuuid
+    libfeatures
+    mesa
+    vulkan-loader
+    
+    # --- UI / Desktop Environment ---
+    libxml2
     glib
+    gtk3
+    pango
+    cairo
+    gdk-pixbuf
     atk
     at-spi2-atk
     at-spi2-core
     dbus
-    gdk-pixbuf
-    gtk3
-    pango
-    cairo
     freetype
     fontconfig
     libdrm
-    mesa
     libxkbcommon
+    
+    # --- X11 Libraries ---
     xorg.libX11
     xorg.libXcomposite
     xorg.libXcursor
@@ -94,7 +108,14 @@
     xorg.libXtst
     xorg.libXScrnSaver
     xorg.libxcb
-  ];
+    
+    # --- Audio (Unity often crashes without these) ---
+    libpulseaudio
+    alsa-lib
+    
+    # --- System Tools ---
+    systemd # provides libudev
+  ]; 
 
   # -- Desktop Environment --
   services.xserver = {
