@@ -85,7 +85,7 @@ in
     polkit_gnome
     google-chrome
     pavucontrol
-    chiaki-ng
+    chiaki
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
