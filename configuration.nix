@@ -143,6 +143,7 @@
     libsForQt5.qt5.qtgraphicaleffects
     pciutils
     lshw
+    steam-run
     
     # Bluetooth tools
     bluez
