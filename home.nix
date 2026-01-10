@@ -83,5 +83,6 @@ in
     pamixer
     xfce.xfconf
     repomix
+    bluetuith
   ];
 }

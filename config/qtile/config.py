@@ -64,6 +64,8 @@ keys = [
     # Brightness Control
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +5%")),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 5%-")),
+
+    Key([mod], "b", lazy.spawn(terminal + " -e bluetuith"), desc="Bluetooth TUI"),
 ]
 
 # Add key bindings to switch VTs in Wayland.
