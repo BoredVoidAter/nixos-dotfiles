@@ -58,6 +58,44 @@
 
   programs.gamemode.enable = true;
 
+  programs.nix-ld.enable = true;
+
+  # 2. Provide the libraries Unity 6 needs
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    libxml2
+    zlib
+    nss
+    nspr
+    expat
+    glib
+    atk
+    at-spi2-atk
+    at-spi2-core
+    dbus
+    gdk-pixbuf
+    gtk3
+    pango
+    cairo
+    freetype
+    fontconfig
+    libdrm
+    mesa
+    libxkbcommon
+    xorg.libX11
+    xorg.libXcomposite
+    xorg.libXcursor
+    xorg.libXdamage
+    xorg.libXext
+    xorg.libXfixes
+    xorg.libXi
+    xorg.libXrandr
+    xorg.libXrender
+    xorg.libXtst
+    xorg.libXScrnSaver
+    xorg.libxcb
+  ];
+
   # -- Desktop Environment --
   services.xserver = {
     enable = true;
