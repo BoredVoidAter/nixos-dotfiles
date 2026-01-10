@@ -16,74 +16,51 @@
   # -- Time & Locale --
   time.timeZone = "Europe/Berlin";
   
-  # -- Graphics & Gaming Optimization (NEW) --
+  # -- Graphics & Gaming Optimization --
   
-  # 1. Enable OpenGL/Graphics
-  # 'hardware.graphics' is the modern option for NixOS Unstable (25.05)
   hardware.graphics = {
     enable = true;
-    enable32Bit = true; # Critical for Steam and Wine
+    enable32Bit = true;
   };
 
-  # 2. Load Nvidia Drivers
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
-    # Modesetting is required for most Wayland compositors and modern X setups
     modesetting.enable = true;
-
-    # Power management settings
-    # 'enable = false' is generally more stable. 'finegrained = false' keeps GPU on 
-    # when needed, preventing crashes on some laptops.
     powerManagement.enable = false;
     powerManagement.finegrained = false;
-
-    # Use proprietary drivers (generally better performance for gaming than open modules)
     open = false;
-
-    # Accessible via 'nvidia-settings'
     nvidiaSettings = true;
-
-    # Stable driver branch
     package = config.boot.kernelPackages.nvidiaPackages.stable;
 
-    # 3. PRIME Offloading (Hybrid Graphics)
-    # Configured for your Dell G3 15 (Intel + RTX 2060)
     prime = {
       offload = {
         enable = true;
         enableOffloadCmd = true;
       };
-
-      # Bus IDs derived from your lspci output
       intelBusId = "PCI:0:2:0"; 
       nvidiaBusId = "PCI:1:0:0"; 
     };
   };
 
-  # 4. Gaming Software
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true;     # Open ports for Stream Remote Play
-    dedicatedServer.openFirewall = true; # Open ports for Source Dedicated Server
-    gamescopeSession.enable = true;      # Micro-compositor for better scaling/perf
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    gamescopeSession.enable = true;
   };
 
-  programs.gamemode.enable = true;       # Optimizes CPU/IO when games are running
+  programs.gamemode.enable = true;
 
   # -- Desktop Environment --
   services.xserver = {
     enable = true;
     
-    # Keyboard settings
     autoRepeatDelay = 200;
     autoRepeatInterval = 35;
     xkb.layout = "de";
 
-    # Display Manager
     displayManager.lightdm.enable = true;
-    
-    # Window Manager
     windowManager.qtile.enable = true;
   };
 
@@ -97,27 +74,40 @@
     pulse.enable = true;
   };
   
+  # -- BLUETOOTH FIX --
   hardware.bluetooth = {
-    enable = true; # Enable support
-    powerOnBoot = true; # Power up the controller on boot
+    enable = true;
+    powerOnBoot = true;
     settings = {
       General = {
-        Enable = "Source,Sink,Media,Socket"; # Modern support
+        Enable = "Source,Sink,Media,Socket";
+        Experimental = true;  # Enables better device support
       };
     };
   };
+  
+  # Enable blueman for better Bluetooth management
+  services.blueman.enable = true;
+  
+  # Ensure your user is in the bluetooth group
+  users.users.boredvoidater = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "networkmanager" "video" "audio" "bluetooth" ];
+    packages = with pkgs; [
+      tree
+    ];
+  };
+  
   security.polkit.enable = true;
 
   # -- Networking & Firewall --
-  networking.firewall.allowedTCPPorts = [ 53317 ]; # LocalSend
+  networking.firewall.allowedTCPPorts = [ 53317 ];
   networking.firewall.allowedUDPPorts = [ 53317 ];
   
   # -- Services --
   
-  # Firmware
   hardware.enableRedistributableFirmware = true;
 
-  # File Manager Support
   programs.thunar = {
     enable = true;
     plugins = with pkgs.xfce; [
@@ -125,26 +115,16 @@
       thunar-volman
     ];
   };
-  services.tumbler.enable = true; # Thumbnails
-  services.gvfs.enable = true;    # Mounts/Trash
-  services.udisks2.enable = true; # Auto-mounting
+  services.tumbler.enable = true;
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
 
-  # Playit.gg
   services.playit = {
     enable = true;
     secretPath = "/etc/nixos/playit.toml"; 
   };
   
   programs.dconf.enable = true;
-
-  # -- Users --
-  users.users.boredvoidater = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
-    packages = with pkgs; [
-      tree
-    ];
-  };
 
   # -- Packages --
   nixpkgs.config.allowUnfree = true;
@@ -154,19 +134,19 @@
     wget
     alacritty
     git
-    # Theme consistency
     libsForQt5.qt5.qtgraphicaleffects
-    
-    # Useful for checking GPU status
     pciutils
     lshw
+    
+    # Bluetooth tools
+    bluez
+    bluez-tools
   ];
 
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
   ];
 
-  # XDG Portals
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];

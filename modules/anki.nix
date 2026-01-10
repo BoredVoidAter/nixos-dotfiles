@@ -1,7 +1,28 @@
 { config, pkgs, lib, ... }:
 
 let
-  # 1. Recolor Config
+  # 1. Define Contanki manually
+  contanki = pkgs.stdenv.mkDerivation {
+    pname = "contanki";
+    version = "1.0.0";
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/roxgib/anki-contanki/releases/download/v1.0/contanki.ankiaddon";
+      # REPLACE THIS with the hash you got from step 1
+      sha256 = "1jzif6c37hfkzc4qcccjw5xh9rm2n7m98j5zzr9ccb1nhr8ggjd9"; 
+    };
+
+    nativeBuildInputs = [ pkgs.unzip ];
+    
+    # .ankiaddon files are just zip files. We unzip them into $out.
+    dontUnpack = true;
+    installPhase = ''
+      mkdir -p $out
+      unzip $src -d $out
+    '';
+  };
+
+  # 2. Existing Config
   recolorConfig = {
     config = {
       colors = {
@@ -28,7 +49,6 @@ let
     };
   };
 
-  # 2. Native Nixpkgs Addons
   anki-recolor = pkgs.ankiAddons.recolor.withConfig recolorConfig;
   anki-connect = pkgs.ankiAddons.anki-connect;
   review-heatmap = pkgs.ankiAddons.review-heatmap;
@@ -37,6 +57,7 @@ in
 {
   home.packages = [
     (pkgs.anki.withAddons [
+      contanki      # Added here
       anki-recolor
       anki-connect
       review-heatmap
