@@ -16,6 +16,8 @@
     "fs.inotify.max_user_instances" = 512;
   };
 
+  services.envfs.enable = true; # Useful for scripts looking for /usr/bin/
+
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
   
