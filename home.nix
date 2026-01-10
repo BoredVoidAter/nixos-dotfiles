@@ -53,29 +53,16 @@ in
     enableBashIntegration = true;
   };
   
-  xdg.desktopEntries = {
-    # We name the key 'code' so the file becomes 'code.desktop'
-    # This is what the Unity VS Code plugin scans for.
-    code = {
-      name = "Visual Studio Code"; # Unity looks for this name
-      genericName = "Text Editor";
-      # The magic: it's actually Alacritty + Neovim
-      exec = "${pkgs.alacritty}/bin/alacritty -e ${pkgs.neovim}/bin/nvim %f";
-      icon = "vscode";
-      type = "Application";
-      terminal = false;
-      categories = [ "Utility" "TextEditor" "Development" ];
-      mimeType = [ "text/x-csharp" ];
-    };
-  };
+  
 
-  # Force the system to recognize this 'code' entry for C#
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      "text/x-csharp" = [ "code.desktop" ];
-    };
-  }; 
+  home.file.".local/share/applications/code.desktop".text = ''
+  [Desktop Entry]
+  Name=Visual Studio Code
+  Exec=${pkgs.alacritty}/bin/alacritty -e ${pkgs.neovim}/bin/nvim %f
+  Type=Application
+  Terminal=false
+  Icon=vscode
+'';
   
 
 
