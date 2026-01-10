@@ -53,28 +53,29 @@ in
     enableBashIntegration = true;
   };
   
-  # 1. Create a specific Desktop Entry for Neovim + Alacritty
   xdg.desktopEntries = {
-    nvim-unity = {
-      name = "Neovim (Unity)";
+    # We name the key 'code' so the file becomes 'code.desktop'
+    # This is what the Unity VS Code plugin scans for.
+    code = {
+      name = "Visual Studio Code"; # Unity looks for this name
       genericName = "Text Editor";
-      # This command opens Alacritty and runs nvim on the file Unity passes in
+      # The magic: it's actually Alacritty + Neovim
       exec = "${pkgs.alacritty}/bin/alacritty -e ${pkgs.neovim}/bin/nvim %f";
-      icon = "nvim";
-      terminal = false; # False because alacritty IS the terminal window
+      icon = "vscode";
+      type = "Application";
+      terminal = false;
       categories = [ "Utility" "TextEditor" "Development" ];
-      mimeType = [ "text/x-csharp" "text/plain" ];
+      mimeType = [ "text/x-csharp" ];
     };
   };
 
-  # 2. Force the system to use this entry for C# files
+  # Force the system to recognize this 'code' entry for C#
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      "text/x-csharp" = [ "nvim-unity.desktop" ];
-      "text/plain" = [ "nvim-unity.desktop" ];
+      "text/x-csharp" = [ "code.desktop" ];
     };
-  };
+  }; 
   
 
 
