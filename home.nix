@@ -83,7 +83,7 @@ in
     repomix
     bluetuith
     polkit_gnome
-    ungoogled-chromium
+    google-chrome
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
