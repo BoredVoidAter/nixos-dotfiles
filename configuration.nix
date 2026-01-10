@@ -58,65 +58,6 @@
 
   programs.gamemode.enable = true;
 
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [
-    # --- The Essentials ---
-    stdenv.cc.cc
-    zlib
-    fuse3
-    icu
-    nss
-    nspr
-    openssl
-    curl
-    expat
-    
-    # --- Graphics / OpenGL (Fixes libGL.so.1) ---
-    libGL
-    libGLU
-    libuuid
-    libfeatures
-    mesa
-    vulkan-loader
-    
-    # --- UI / Desktop Environment ---
-    libxml2
-    glib
-    gtk3
-    pango
-    cairo
-    gdk-pixbuf
-    atk
-    at-spi2-atk
-    at-spi2-core
-    dbus
-    freetype
-    fontconfig
-    libdrm
-    libxkbcommon
-    
-    # --- X11 Libraries ---
-    xorg.libX11
-    xorg.libXcomposite
-    xorg.libXcursor
-    xorg.libXdamage
-    xorg.libXext
-    xorg.libXfixes
-    xorg.libXi
-    xorg.libXrandr
-    xorg.libXrender
-    xorg.libXtst
-    xorg.libXScrnSaver
-    xorg.libxcb
-    
-    # --- Audio (Unity often crashes without these) ---
-    libpulseaudio
-    alsa-lib
-    
-    # --- System Tools ---
-    systemd # provides libudev
-  ]; 
-
   # -- Desktop Environment --
   services.xserver = {
     enable = true;
