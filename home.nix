@@ -83,6 +83,8 @@ in
     repomix
     bluetuith
     polkit_gnome
+
+    gfn-electron
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
