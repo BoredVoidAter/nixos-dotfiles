@@ -16,7 +16,6 @@ in
     ./modules/firefox.nix
     ./modules/anki.nix
     ./modules/unity.nix
-    ./modules/vscode.nix
   ];
 
   home.username = "boredvoidater";
@@ -101,6 +100,7 @@ in
     mono
     omnisharp-roslyn
     netcoredbg
+    jetbrains.rider
   ];
 
   home.sessionVariables = {
