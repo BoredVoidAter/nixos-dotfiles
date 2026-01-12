@@ -65,6 +65,42 @@ in
     };
   };
 
+  programs.vscode = {
+    enable = true;
+    package = pkgs.vscodium; # The de-Microsofted version
+    
+    # Install extensions declaratively
+    extensions = with pkgs.vscode-extensions; [
+      enkia.tokyo-night         # The Tokyonight theme
+      ms-dotnettools.csharp     # C# support (Patched for NixOS)
+      # Note: Install the 'Unity' extension manually via the IDE sidebar
+      # as it is not always available in the standard nixpkgs list.
+    ];
+
+    # Enforce your Minimal + Tokyonight look
+    userSettings = {
+      # --- Theming ---
+      "workbench.colorTheme" = "Tokyo Night Storm"; # Matches your Neovim
+      "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'monospace'";
+      "editor.fontLigatures" = true;
+      "editor.fontSize" = 14;
+
+      # --- Minimalism (Hide everything) ---
+      "workbench.activityBar.location" = "hidden";   # Hides the big left sidebar icons
+      "editor.minimap.enabled" = false;              # Hides the code preview on right
+      "editor.scrollbar.vertical" = "hidden";        # Hides scrollbar (optional)
+      "window.menuBarVisibility" = "toggle";         # Hides top menu (Alt to show)
+      "breadcrumbs.enabled" = false;                 # Hides path at top of file
+      "workbench.sideBar.location" = "left";
+      "explorer.openEditors.visible" = 0;            # Hides 'Open Editors' in file tree
+      
+      # --- NixOS C# Specifics ---
+      # Stop the extension from trying to download its own Mono/Dotnet
+      "omnisharp.useGlobalMono" = "always";
+      "omnisharp.waitForDebugger" = true;
+    };
+  };
+
   home.packages = with pkgs; [
     rofi
     # Thunar removed here; it is enabled in configuration.nix
@@ -93,7 +129,6 @@ in
     google-chrome
     pavucontrol
 
-    vscode
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
