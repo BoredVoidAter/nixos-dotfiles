@@ -96,7 +96,20 @@ in
     google-chrome
     pavucontrol
 
+    unityhub
+    dotnet-sdk_8
+    mono
+    omnisharp-roslyn
+    netcoredbg
   ];
+
+  home.sessionVariables = {
+    # CRITICAL: Tells VS Code and Unity where .NET 8 is
+    DOTNET_ROOT = "${pkgs.dotnet-sdk_8}";
+    
+    # Optional: Fixes some rendering issues in Unity on Wayland
+    UNITY_IGNORE_DKG = "1";
+  };
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
     Unit = {

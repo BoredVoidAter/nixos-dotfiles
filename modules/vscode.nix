@@ -6,24 +6,15 @@
     enable = true;
     package = pkgs.vscode; 
 
-    # New Home Manager syntax uses 'profiles.default'
     profiles.default = {
       enableUpdateCheck = false;
       enableExtensionUpdateCheck = false;
       
       extensions = with pkgs.vscode-extensions; [
-        # 1. Theme
-        enkia.tokyo-night
-
-        # 2. C# Support (Official)
-        ms-dotnettools.csharp
-        
-        # 3. Icons
-        pkief.material-icon-theme
-        
-        # Note: We removed the declarative Unity extension download because 
-        # Microsoft/Unity constantly changes the URL, breaking your Nix build.
-        # Please install the "Unity" extension manually in the sidebar once.
+        enkia.tokyo-night          # Theme
+        ms-dotnettools.csharp      # C# (Base support)
+        pkief.material-icon-theme  # Icons
+        # Remember: Install "Unity" extension manually in VS Code sidebar
       ];
 
       userSettings = {
@@ -43,7 +34,7 @@
         "window.menuBarVisibility" = "toggle";
         "explorer.openEditors.visible" = 0;
 
-        # --- Performance & Unity ---
+        # --- Performance ---
         "files.watcherExclude" = {
           "**/.git/objects/**" = true;
           "**/.git/subtree-cache/**" = true;
@@ -56,15 +47,26 @@
         "telemetry.telemetryLevel" = "off";
         "redhat.telemetry.enabled" = false;
         
-        # --- C# Configuration ---
-        "omnisharp.useModernNet" = true;
-        "omnisharp.organizeImportsOnFormat" = true;
-        "omnisharp.dotnetPath" = "${pkgs.dotnet-sdk_8}/bin/dotnet";
+        # --- C# & Unity Fixes (The Important Part) ---
+        
+        # 1. Force the use of the classic OmniSharp server (Stable on Nix)
+        "dotnet.server.useOmnisharp" = true;
+        
+        # 2. Point explicitly to the NixOS-installed OmniSharp binary
+        "omnisharp.path" = "${pkgs.omnisharp-roslyn}/bin/OmniSharp";
+        
+        # 3. Disable the extension's attempt to download/manage dotnet itself
+        "omnisharp.useGlobalMono" = "always";
+        "omnisharp.waitForDebugger" = true;
+        "omnisharp.enableRoslynAnalyzers" = true;
+        
+        # 4. Remove 'omnisharp.dotnetPath' and 'omnisharp.useModernNet' 
+        #    as these cause the "Save settings.json" loop.
       };
     };
   };
 
-  # System tools needed for C#
+  # Ensure the environment has the tools
   home.packages = with pkgs; [
     dotnet-sdk_8
     mono
