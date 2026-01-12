@@ -92,6 +92,8 @@ in
     polkit_gnome
     google-chrome
     pavucontrol
+
+    vscode
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
