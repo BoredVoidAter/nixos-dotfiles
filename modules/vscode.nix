@@ -5,59 +5,66 @@
   programs.vscode = {
     enable = true;
     package = pkgs.vscode; 
-    
-    extensions = with pkgs.vscode-extensions; [
-      # 1. Theme
-      enkia.tokyo-night
 
-      # 2. C# Support
-      ms-dotnettools.csharp
+    # New Home Manager syntax uses 'profiles.default'
+    profiles.default = {
+      enableUpdateCheck = false;
+      enableExtensionUpdateCheck = false;
       
-      # 3. Icons (Corrected Path)
-      pkief.material-icon-theme
-    ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-      # 4. Official Unity Extension
-      {
-        name = "vscode-unity";
-        publisher = "visualstudioexptteam";
-        version = "0.9.4";
-        sha256 = "sha256-HelO4POK7eD0sMd7tQtuXGBa6/PyTj9Jd1PmMl/05bw=";
-      }
-    ];
+      extensions = with pkgs.vscode-extensions; [
+        # 1. Theme
+        enkia.tokyo-night
 
-    userSettings = {
-      "workbench.colorTheme" = "Tokyo Night Storm";
-      "workbench.iconTheme" = "material-icon-theme";
-      "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'monospace'";
-      "editor.fontLigatures" = true;
-      "editor.fontSize" = 14;
+        # 2. C# Support (Official)
+        ms-dotnettools.csharp
+        
+        # 3. Icons
+        pkief.material-icon-theme
+        
+        # Note: We removed the declarative Unity extension download because 
+        # Microsoft/Unity constantly changes the URL, breaking your Nix build.
+        # Please install the "Unity" extension manually in the sidebar once.
+      ];
 
-      "workbench.activityBar.location" = "hidden";
-      "workbench.statusBar.visible" = true;
-      "editor.minimap.enabled" = false;
-      "editor.scrollbar.vertical" = "hidden";
-      "breadcrumbs.enabled" = false;
-      "window.menuBarVisibility" = "toggle";
-      "explorer.openEditors.visible" = 0;
+      userSettings = {
+        # --- Theming ---
+        "workbench.colorTheme" = "Tokyo Night Storm";
+        "workbench.iconTheme" = "material-icon-theme";
+        "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'monospace'";
+        "editor.fontLigatures" = true;
+        "editor.fontSize" = 14;
 
-      "files.watcherExclude" = {
-        "**/.git/objects/**" = true;
-        "**/.git/subtree-cache/**" = true;
-        "**/node_modules/*/**" = true;
-        "**/Library/**" = true;
-        "**/Temp/**" = true;
-        "**/obj/**" = true;
+        # --- Minimalism ---
+        "workbench.activityBar.location" = "hidden";
+        "workbench.statusBar.visible" = true;
+        "editor.minimap.enabled" = false;
+        "editor.scrollbar.vertical" = "hidden";
+        "breadcrumbs.enabled" = false;
+        "window.menuBarVisibility" = "toggle";
+        "explorer.openEditors.visible" = 0;
+
+        # --- Performance & Unity ---
+        "files.watcherExclude" = {
+          "**/.git/objects/**" = true;
+          "**/.git/subtree-cache/**" = true;
+          "**/node_modules/*/**" = true;
+          "**/Library/**" = true;
+          "**/Temp/**" = true;
+          "**/obj/**" = true;
+        };
+        
+        "telemetry.telemetryLevel" = "off";
+        "redhat.telemetry.enabled" = false;
+        
+        # --- C# Configuration ---
+        "omnisharp.useModernNet" = true;
+        "omnisharp.organizeImportsOnFormat" = true;
+        "omnisharp.dotnetPath" = "${pkgs.dotnet-sdk_8}/bin/dotnet";
       };
-      
-      "telemetry.telemetryLevel" = "off";
-      "redhat.telemetry.enabled" = false;
-      
-      "omnisharp.useModernNet" = true;
-      "omnisharp.organizeImportsOnFormat" = true;
-      "omnisharp.dotnetPath" = "${pkgs.dotnet-sdk_8}/bin/dotnet";
     };
   };
 
+  # System tools needed for C#
   home.packages = with pkgs; [
     dotnet-sdk_8
     mono
