@@ -156,6 +156,8 @@
 
   xdg.portal = {
     enable = true;
+    # Fix for Unity Hub login not opening browser
+    xdgOpenUsePortal = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     config.common.default = "gtk";
   };

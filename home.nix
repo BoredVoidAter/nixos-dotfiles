@@ -24,10 +24,9 @@ in
 
   programs.git = {
     enable = true;
-    userName = "Boredvoidater";             # e.g. "John Doe"
-    userEmail = "boredvoidater@proton.me";    # e.g. "john@example.com"
+    userName = "Boredvoidater";             
+    userEmail = "boredvoidater@proton.me";    
     
-    # This setup allows 'git push' to use the login details you just saved with 'gh'
     extraConfig = {
       credential.helper = "${pkgs.gh}/bin/gh auth git-credential";
     };
@@ -38,6 +37,7 @@ in
     shellAliases = {
       nrs = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
       n = "nvim";
+      # Since we installed Unity via Nix, we can usually just run unityhub
       unity = "nvidia-offload unityhub";         
     };
   };
@@ -65,11 +65,8 @@ in
     };
   };
 
-  
-
   home.packages = with pkgs; [
     rofi
-    # Thunar removed here; it is enabled in configuration.nix
     xfce.tumbler
     obsidian
     brightnessctl
@@ -85,7 +82,6 @@ in
     gtk-engine-murrine
     gnome-themes-extra
     
-    # REQUIRED for apps to load settings
     gsettings-desktop-schemas
     pamixer
     xfce.xfconf
@@ -95,21 +91,11 @@ in
     google-chrome
     pavucontrol
 
-    unityhub
-    dotnet-sdk_8
-    mono
+    # Unity/Rider/Dotnet packages have been moved to modules/unity.nix
+    # to avoid duplication and apply the Rider fix.
     omnisharp-roslyn
     netcoredbg
-    jetbrains.rider
   ];
-
-  home.sessionVariables = {
-    # CRITICAL: Tells VS Code and Unity where .NET 8 is
-    DOTNET_ROOT = "${pkgs.dotnet-sdk_8}";
-    
-    # Optional: Fixes some rendering issues in Unity on Wayland
-    UNITY_IGNORE_DKG = "1";
-  };
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
     Unit = {
