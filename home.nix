@@ -98,6 +98,7 @@ in
 
     xsel   # Required by Repomix's clipboard library
     xclip  # General clipboard tool for X11
+    gimp
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
