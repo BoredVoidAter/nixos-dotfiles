@@ -88,19 +88,10 @@ groups = [
     Group("2", label="󰈹", layout="monadtall", 
           matches=[Match(wm_class=["firefox", "Firefox", "Navigator"])]),
 
-    # 3. Obsidian (Matches obsidian)
-    Group("3", label="󰠮", layout="columns", 
-          matches=[Match(wm_class=["obsidian", "Obsidian"])]),
+    Group("3", label="", layout="columns"),
+    Group("4", label="", layout="columns"),
+    Group("5", label="", layout="columns"),
 
-    # 4. Anki (Matches anki)
-    Group("4", label="󰘸", layout="columns", 
-          matches=[Match(wm_class=["anki", "Anki"])]),
-
-    # 5. KeepassXC (Matches keepassxc)
-    Group("5", label="󰌋", layout="columns", 
-          matches=[Match(wm_class=["keepassxc", "KeePassXC"])]),
-
-    # 6-9 Generic Workspaces
     Group("6", label="", layout="columns"),
     Group("7", label="", layout="columns"),
     Group("8", label="", layout="columns"),
