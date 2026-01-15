@@ -100,6 +100,7 @@ in
     xclip  # General clipboard tool for X11
     gimp
     inkscape
+    aseprite
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
