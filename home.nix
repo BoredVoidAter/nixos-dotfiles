@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, pkgs-stable, lib, ... }:
 let
     dotfiles = "${config.home.homeDirectory}/nixos-dotfiles/config";
     create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
@@ -100,7 +100,7 @@ in
     xclip  # General clipboard tool for X11
     gimp
     inkscape
-    aseprite
+    pkgs-stable.aseprite
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
