@@ -101,6 +101,7 @@ in
     gimp
     inkscape
     pkgs-stable.aseprite
+    butler
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
