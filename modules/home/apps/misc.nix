@@ -35,8 +35,8 @@
     pkgs-stable.aseprite
 
     # Media / Rice
-    youtube-tui  # Beautiful TUI for YouTube
-    ytui-music   # TUI specifically for YouTube Music (Replacement for ytermusic)
+    youtube-tui  # Beautiful TUI for YouTube (Audio fixed!)
+    yewtube      # Robust CLI Youtube Player (mps-youtube fork)
     cava         # Audio Visualizer
   ];
 
