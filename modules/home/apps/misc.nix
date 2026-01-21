@@ -36,7 +36,7 @@
 
     # Media / Rice
     youtube-tui  # Beautiful TUI for YouTube
-    ytermusic    # TUI specifically for YouTube Music
+    ytui-music   # TUI specifically for YouTube Music (Replacement for ytermusic)
     cava         # Audio Visualizer
   ];
 
