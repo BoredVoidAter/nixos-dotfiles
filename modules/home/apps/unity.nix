@@ -29,14 +29,26 @@ let
       shopt -u extglob
     '' + (attrs.postInstall or "");
   });
+
+  # 4. Custom Unity Hub wrapper to ensure tools are visible
+  # We wrap UnityHub to append our tools to its PATH.
+  my-unityhub = pkgs.unityhub.overrideAttrs (old: {
+    buildInputs = (old.buildInputs or []) ++ [ pkgs.makeWrapper ];
+    postInstall = (old.postInstall or "") + ''
+      wrapProgram $out/bin/unityhub \
+        --prefix PATH : "${lib.makeBinPath [ pkgs.ffmpeg pkgs.android-tools rider ]}"
+    '';
+  });
 in
 {
   home.packages = with pkgs; [
-    unityhub
+    my-unityhub
     dotnet-sdk_8
     mono
     omnisharp-roslyn
     netcoredbg
+    ffmpeg        # Required for audio conversion
+    android-tools # Often needed by Unity
     
     rider
   ];
