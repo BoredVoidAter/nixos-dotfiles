@@ -32,13 +32,13 @@
         };
 
         # Productivity: Unhook - Remove YouTube Recommended Videos
-        "unhook" = {
+        "youtube-recommended-videos" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/unhook/latest.xpi";
           installation_mode = "force_installed";
         };
 
         # Productivity: LeechBlock NG - Block distracting sites
-        "leechblock-ng" = {
+        "leechblockng@proginosko.com" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/leechblock-ng/latest.xpi";
           installation_mode = "force_installed";
         };
