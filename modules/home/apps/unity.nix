@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 
 let
-  # 1. Rider dependencies
+  # 1. Setup Rider
   extra-path = with pkgs; [
     dotnet-sdk_8
     mono
@@ -32,24 +32,28 @@ let
   });
 
   # 2. CUSTOM UNITY BUILDER ENV
-  # This creates a "fake" FHS filesystem (like Ubuntu) containing exactly what Unity needs.
-  # This bypasses the Steam Runtime entirely, fixing the libxml2 issue.
-  unity-env = pkgs.buildFHSUserEnv {
+  # Replaced buildFHSUserEnv with buildFHSEnv to fix the "missing attribute" error.
+  unity-env = pkgs.buildFHSEnv {
     name = "unity-run";
     targetPkgs = pkgs: (with pkgs; [
-      # The Core Libraries Unity 6 needs
+      # Core System
       glibc
-      glib
-      gtk3
-      libxml2
       zlib
+      glib
+      libxml2
+      libuuid
+      
+      # Graphics & UI
+      gtk3
       gdk-pixbuf
       cairo
       pango
       freetype
       fontconfig
+      libglvnd
+      mesa
       
-      # X11 / Windowing
+      # X11 Windowing
       xorg.libX11
       xorg.libXcursor
       xorg.libXrandr
@@ -60,17 +64,19 @@ let
       xorg.libXfixes
       xorg.libXtst
       xorg.libXext
-      libglvnd
+      xorg.libXScrnSaver
+      
+      # Audio
       alsa-lib
       
-      # System / Networking / Licensing
+      # Unity Internal Dependencies
       nss
       nspr
       libcap
       cups
       dbus
       expat
-      libsecret # Important for Hub/Licensing
+      libsecret
       openssl
       udev
       
@@ -78,7 +84,7 @@ let
       ffmpeg
       android-tools
     ]);
-    # This runScript makes the FHS env execute whatever command you pass to it
+    # Using 'exec' ensures the exit code is passed back correctly
     runScript = "bash -c 'exec \"$@\"' --";
   };
 
@@ -96,7 +102,7 @@ in
     rider
     butler
     
-    # Use our custom dedicated environment
+    # The custom environment
     unity-env
   ];
 
