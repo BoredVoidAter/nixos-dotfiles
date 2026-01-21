@@ -33,6 +33,11 @@
     gemini-cli
     
     pkgs-stable.aseprite
+
+    # Media / Rice
+    youtube-tui  # Beautiful TUI for YouTube
+    ytermusic    # TUI specifically for YouTube Music
+    cava         # Audio Visualizer
   ];
 
   services.activitywatch.enable = true;
