@@ -36,7 +36,7 @@ let
     buildInputs = (old.buildInputs or []) ++ [ pkgs.makeWrapper ];
     postInstall = (old.postInstall or "") + ''
       wrapProgram $out/bin/unityhub \
-        --prefix PATH : "${lib.makeBinPath [ pkgs.ffmpeg pkgs.android-tools rider ]}"
+        --prefix PATH : "${lib.makeBinPath [ pkgs.ffmpeg pkgs.android-tools pkgs.p7zip rider ]}"
     '';
   });
 in
@@ -49,6 +49,7 @@ in
     netcoredbg
     ffmpeg        # Required for audio conversion
     android-tools # Often needed by Unity
+    p7zip         # Required for Unity module installation
     
     rider
   ];
