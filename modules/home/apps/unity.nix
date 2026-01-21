@@ -71,4 +71,4 @@ in
     UNITY_IGNORE_DKG = "1";
   };
 }
-[boredvoidater@nixos:~/nixos-dotfiles/modules/home/apps]$
+
