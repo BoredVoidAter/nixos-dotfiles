@@ -23,9 +23,6 @@
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
           installation_mode = "force_installed";
         };
-        # Tokyo Night Dark Theme by Bullfinch
-        # We use the slug as the ID which usually works for store extensions, 
-        # or it will be auto-resolved.
         "tokyo-night-dark-theme" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/tokyo-night-dark-theme/latest.xpi";
           installation_mode = "force_installed";
@@ -49,8 +46,18 @@
           browser { background-color: #1a1b26 !important; }
         '';
       };
+    };
+  };
 
-      
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "application/pdf" = [ "firefox.desktop" ];
+      "text/html" = [ "firefox.desktop" ];
+      "x-scheme-handler/http" = [ "firefox.desktop" ];
+      "x-scheme-handler/https" = [ "firefox.desktop" ];
+      "x-scheme-handler/about" = [ "firefox.desktop" ];
+      "x-scheme-handler/unknown" = [ "firefox.desktop" ];
     };
   };
 }
