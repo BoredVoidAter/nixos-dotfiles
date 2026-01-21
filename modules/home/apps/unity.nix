@@ -1,37 +1,27 @@
 { pkgs, lib, ... }:
 
 let
-  # 1. Define the dependencies Rider needs to see in its PATH
   extra-path = with pkgs; [
     dotnet-sdk_8
     mono
     msbuild
-    # Add any other tools you might need here
   ];
 
-  # 2. Define libraries (usually empty for modern Rider, but kept for compatibility)
-  extra-lib = with pkgs; [
-  ];
+  extra-lib = with pkgs; [ ];
 
-  # 3. Create the Custom Rider Package
   rider = pkgs.jetbrains.rider.overrideAttrs (attrs: {
     postInstall = ''
-      # Wrap rider with extra tools and libraries
       mv $out/bin/rider $out/bin/.rider-toolless
       makeWrapper $out/bin/.rider-toolless $out/bin/rider \
         --argv0 rider \
         --prefix PATH : "${lib.makeBinPath extra-path}" \
         --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath extra-lib}"
-
-      # Making Unity Rider plugin work!
       shopt -s extglob
       ln -s $out/rider/!(bin) $out/
       shopt -u extglob
     '' + (attrs.postInstall or "");
   });
 
-  # 4. Custom Unity Hub wrapper to ensure tools are visible
-  # We wrap UnityHub to append our tools to its PATH.
   my-unityhub = pkgs.unityhub.overrideAttrs (old: {
     buildInputs = (old.buildInputs or []) ++ [ pkgs.makeWrapper ];
     postInstall = (old.postInstall or "") + ''
@@ -39,6 +29,28 @@ let
         --prefix PATH : "${lib.makeBinPath [ pkgs.ffmpeg pkgs.android-tools pkgs.p7zip rider ]}"
     '';
   });
+
+  # --- CUSTOM UNITY RUNNER ---
+  # We override steam-run to include libxml2 and other common Unity dependencies
+  custom-steam-run = (pkgs.steam.override {
+    extraPkgs = pkgs: with pkgs; [
+      libxml2
+      libz
+      freetype
+      gtk3
+      glib
+      nss
+      nspr
+      # Add more here if you hit other "missing shared library" errors
+    ];
+  }).run;
+
+  # Create a unique binary name 'unity-run' to avoid conflicts with system steam-run
+  unity-run = pkgs.runCommand "unity-run" {} ''
+    mkdir -p $out/bin
+    ln -s ${custom-steam-run}/bin/steam-run $out/bin/unity-run
+  '';
+
 in
 {
   home.packages = with pkgs; [
@@ -47,14 +59,16 @@ in
     mono
     omnisharp-roslyn
     netcoredbg
-    ffmpeg        # Required for audio conversion
-    android-tools # Often needed by Unity
-    p7zip         # Required for Unity module installation
-    
+    ffmpeg
+    android-tools
+    p7zip
     rider
+    butler
+    
+    # Use our custom runner instead of generic steam-run
+    unity-run
   ];
 
-  # 4. Create the .desktop file Unity looks for
   xdg.dataFile."applications/jetbrains-rider.desktop".text = ''
     [Desktop Entry]
     Name=JetBrains Rider
@@ -65,7 +79,6 @@ in
     NoDisplay=true
   '';
 
-  # Force Unity/Dotnet to respect your Wayland/Dark theme preferences
   home.sessionVariables = {
     DOTNET_ROOT = "${pkgs.dotnet-sdk_8}";
     UNITY_IGNORE_DKG = "1";
