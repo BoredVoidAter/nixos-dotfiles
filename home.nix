@@ -102,6 +102,7 @@ in
     inkscape
     pkgs-stable.aseprite
     butler
+    gemini-cli
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
