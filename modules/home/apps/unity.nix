@@ -1,6 +1,7 @@
 { pkgs, lib, ... }:
 
 let
+  # 1. Rider dependencies
   extra-path = with pkgs; [
     dotnet-sdk_8
     mono
@@ -30,26 +31,56 @@ let
     '';
   });
 
-  # --- CUSTOM UNITY RUNNER ---
-  # We override steam-run to include libxml2 and other common Unity dependencies
-  custom-steam-run = (pkgs.steam.override {
-    extraPkgs = pkgs: with pkgs; [
-      libxml2
-      libz
-      freetype
-      gtk3
+  # 2. CUSTOM UNITY BUILDER ENV
+  # This creates a "fake" FHS filesystem (like Ubuntu) containing exactly what Unity needs.
+  # This bypasses the Steam Runtime entirely, fixing the libxml2 issue.
+  unity-env = pkgs.buildFHSUserEnv {
+    name = "unity-run";
+    targetPkgs = pkgs: (with pkgs; [
+      # The Core Libraries Unity 6 needs
+      glibc
       glib
+      gtk3
+      libxml2
+      zlib
+      gdk-pixbuf
+      cairo
+      pango
+      freetype
+      fontconfig
+      
+      # X11 / Windowing
+      xorg.libX11
+      xorg.libXcursor
+      xorg.libXrandr
+      xorg.libXrender
+      xorg.libXi
+      xorg.libXcomposite
+      xorg.libXdamage
+      xorg.libXfixes
+      xorg.libXtst
+      xorg.libXext
+      libglvnd
+      alsa-lib
+      
+      # System / Networking / Licensing
       nss
       nspr
-      # Add more here if you hit other "missing shared library" errors
-    ];
-  }).run;
-
-  # Create a unique binary name 'unity-run' to avoid conflicts with system steam-run
-  unity-run = pkgs.runCommand "unity-run" {} ''
-    mkdir -p $out/bin
-    ln -s ${custom-steam-run}/bin/steam-run $out/bin/unity-run
-  '';
+      libcap
+      cups
+      dbus
+      expat
+      libsecret # Important for Hub/Licensing
+      openssl
+      udev
+      
+      # Command Line Tools
+      ffmpeg
+      android-tools
+    ]);
+    # This runScript makes the FHS env execute whatever command you pass to it
+    runScript = "bash -c 'exec \"$@\"' --";
+  };
 
 in
 {
@@ -65,8 +96,8 @@ in
     rider
     butler
     
-    # Use our custom runner instead of generic steam-run
-    unity-run
+    # Use our custom dedicated environment
+    unity-env
   ];
 
   xdg.dataFile."applications/jetbrains-rider.desktop".text = ''
