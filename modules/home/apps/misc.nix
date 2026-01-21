@@ -33,5 +33,8 @@
     gemini-cli
     
     pkgs-stable.aseprite
+
+    # Productivity
+    activitywatch
   ];
 }

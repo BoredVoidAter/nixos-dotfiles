@@ -23,8 +23,23 @@
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
           installation_mode = "force_installed";
         };
+        # Tokyo Night Dark Theme by Bullfinch
+        # We use the slug as the ID which usually works for store extensions, 
+        # or it will be auto-resolved.
         "tokyo-night-dark-theme" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/tokyo-night-dark-theme/latest.xpi";
+          installation_mode = "force_installed";
+        };
+
+        # Productivity: Unhook - Remove YouTube Recommended Videos
+        "unhook" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/unhook/latest.xpi";
+          installation_mode = "force_installed";
+        };
+
+        # Productivity: LeechBlock NG - Block distracting sites
+        "leechblock-ng" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/leechblock-ng/latest.xpi";
           installation_mode = "force_installed";
         };
       };
