@@ -8,6 +8,7 @@
       n = "nvim";
       # Since we installed Unity via Nix, we can usually just run unityhub
       unity = "nvidia-offload unityhub";         
+      aw = "firefox http://localhost:5600";
     };
   };
 }
