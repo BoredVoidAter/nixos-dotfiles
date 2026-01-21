@@ -44,4 +44,8 @@
 
   # Hide the ugly tray icon by running in no-gui mode
   systemd.user.services.activitywatch.Service.ExecStart = lib.mkForce "${pkgs.activitywatch}/bin/aw-qt --no-gui";
+
+  home.sessionVariables = {
+    YTUI_MUSIC_DIR = "/home/boredvoidater/Music/ytui-music";
+  };
 }
