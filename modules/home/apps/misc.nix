@@ -1,4 +1,4 @@
-{ pkgs, pkgs-stable, ... }:
+{ pkgs, pkgs-stable, lib, ... }:
 
 {
   home.packages = with pkgs; [
@@ -36,4 +36,7 @@
   ];
 
   services.activitywatch.enable = true;
+
+  # Hide the ugly tray icon by running in no-gui mode
+  systemd.user.services.activitywatch.Service.ExecStart = lib.mkForce "${pkgs.activitywatch}/bin/aw-qt --no-gui";
 }
