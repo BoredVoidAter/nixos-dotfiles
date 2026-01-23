@@ -14,6 +14,7 @@
       };
       DisablePocket = true;
       
+      # --- Extension Installation ---
       ExtensionSettings = {
         "uBlock0@raymondhill.net" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
@@ -23,24 +24,47 @@
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
           installation_mode = "force_installed";
         };
-        # Tokyo Night Dark Theme by Bullfinch
-        # We use the slug as the ID which usually works for store extensions, 
-        # or it will be auto-resolved.
         "tokyo-night-dark-theme" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/tokyo-night-dark-theme/latest.xpi";
           installation_mode = "force_installed";
         };
 
-        # Productivity: Unhook - Remove YouTube Recommended Videos
-        "youtube-recommended-videos" = {
+        # FIXED: Correct ID for "Unhook - Remove YouTube Recommended Videos"
+        "my-youtube-recommendations@sblask" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/unhook/latest.xpi";
           installation_mode = "force_installed";
         };
 
-        # Productivity: LeechBlock NG - Block distracting sites
         "leechblockng@proginosko.com" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/leechblock-ng/latest.xpi";
           installation_mode = "force_installed";
+        };
+      };
+
+      # --- Extension Configuration (LeechBlock) ---
+      # This injects settings directly into LeechBlock's managed storage.
+      "3rdparty" = {
+        "Extensions" = {
+          "leechblockng@proginosko.com" = {
+            # Block Set 1: Social Media (30 mins/day)
+            "blockSet1" = {
+              "name" = "Social Media Limit";
+              # Sites to block (domains separated by + or newlines)
+              "siteString" = "youtube.com\ninstagram.com\ntwitter.com\nx.com\nfacebook.com\ntiktok.com\nreddit.com";
+              # 30 minutes allowed
+              "timeLimit" = 30;
+              # Reset limit every day
+              "timePeriod" = 1440; 
+              # Apply to all days (0=Sun, 1=Mon, ..., 6=Sat)
+              "days" = "0123456"; 
+              # Active all day (0000 to 2400)
+              "activeTimes" = "0000-2400"; 
+            };
+            
+            # Optional: Lockdown settings or general options
+            "showIcon" = true;
+            "showCount" = true;
+          };
         };
       };
     };
