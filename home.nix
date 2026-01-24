@@ -19,6 +19,7 @@
     ./modules/home/apps/anki.nix
     ./modules/home/apps/unity.nix
     ./modules/home/apps/misc.nix
+    ./modules/home/apps/cad.nix
   ];
 
   home.username = "boredvoidater";
