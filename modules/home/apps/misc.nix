@@ -15,7 +15,9 @@
     gh
 
     digital
-    # wakatime-cli  <-- REMOVED
+
+    peek
+    gifski
 
     gtk-engine-murrine
     gnome-themes-extra
