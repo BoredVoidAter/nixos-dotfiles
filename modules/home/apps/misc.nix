@@ -14,6 +14,8 @@
     keepassxc
     gh
 
+    digital
+
     gtk-engine-murrine
     gnome-themes-extra
     
