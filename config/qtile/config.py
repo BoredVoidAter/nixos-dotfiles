@@ -347,7 +347,6 @@ wl_xcursor_size = 24
 wmname = "LG3D"
 
 
-# Wakatime
 TRACKED_APPS = {
     "kicad": "PCB Design",
     "pcbnew": "PCB Design",
@@ -359,7 +358,20 @@ TRACKED_APPS = {
     "OpenSCAD": "Code",
     "Unity": "Game Dev",
     "Rider": "Code",
+    "code": "Code",
+    "nvim": "Code",
+    "neovim": "Code",
 }
+
+LOG_FILE = "/tmp/qtile_wakatime.log"
+
+def log_debug(message):
+    """Simple file logger for debugging"""
+    try:
+        with open(LOG_FILE, "a") as f:
+            f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
+    except:
+        pass
 
 def get_hackatime_state():
     """Reads the JSON state file managed by the hackatime-control script"""
@@ -377,31 +389,40 @@ def get_hackatime_state():
 
 def send_heartbeat(entity, category, project_name):
     """Sends a heartbeat to Hackatime via CLI"""
+    # log_debug(f"Sending heartbeat: Project={project_name}, Entity={entity}, Cat={category}")
     subprocess.Popen([
         "wakatime-cli",
         "--entity", entity,
         "--entity-type", "app",
-        "--category", "designing", # or 'coding' depending on context, keeping generic 'designing' or 'coding' is fine
+        "--category", "designing", 
         "--language", category,
-        "--project", project_name, # <-- HERE IS THE MAGIC
+        "--project", project_name,
         "--plugin", "qtile-nixos-watcher",
         "--write"
     ])
 
-@hook.subscribe.client_focus
-def watcher(window):
+def check_active_window(qtile):
+    """Checks the currently focused window and logs time if applicable"""
     try:
         # 1. Check if Tracking is Enabled
         state = get_hackatime_state()
         if not state or not state.get('active', False):
-            return # Tracking is OFF
+            # log_debug("Tracking paused.")
+            return
 
-        current_project = state.get('current', 'Unknown-Project')
-
-        # Get window info
-        wm_class = window.get_wm_class() 
-        wm_name = window.name 
+        current_project = state.get('current', 'General')
+        window = qtile.current_window
         
+        if not window:
+            return
+
+        wm_class = window.get_wm_class() # Returns a list like ['code', 'Code']
+        wm_name = window.name
+        
+        matched = False
+
+        # log_debug(f"Checking Window: Name='{wm_name}', Class='{wm_class}'")
+
         # 2. Check Window Classes
         if wm_class:
             for cls in wm_class:
@@ -409,14 +430,36 @@ def watcher(window):
                 for key, category in TRACKED_APPS.items():
                     if key.lower() in lower_cls:
                         send_heartbeat(wm_name or cls, category, current_project)
-                        return
+                        matched = True
+                        break
+                if matched: break
 
-        # 3. Check Window Titles
-        if wm_name:
-            if "onshape" in wm_name.lower():
+        # 3. Check Window Titles (Fallback for Java apps like Digital or Web Apps)
+        if not matched and wm_name:
+            lower_name = wm_name.lower()
+            if "onshape" in lower_name:
                 send_heartbeat("Onshape", "CAD", current_project)
-            elif "digital" in wm_name.lower() and "java" in (str(wm_class).lower()):
+            # Digital Logic Sim usually has "Digital" in the title
+            elif "digital" in lower_name:
                 send_heartbeat("Digital", "Digital Logic", current_project)
 
     except Exception as e:
-        pass
+        log_debug(f"Error in check_active_window: {e}")
+
+# --- HOOKS ---
+
+# 1. Poll every 2 minutes (120 seconds) to capture duration
+#    Wakatime needs periodic heartbeats to track "time spent".
+def poll_wakatime():
+    check_active_window(qtile)
+    qtile.call_later(120, poll_wakatime)
+
+@hook.subscribe.startup_complete
+def start_polling():
+    # Start the polling loop once Qtile is fully ready
+    poll_wakatime()
+
+# 2. Trigger immediately on focus change (for responsiveness)
+@hook.subscribe.client_focus
+def on_focus_change(window):
+    check_active_window(qtile)

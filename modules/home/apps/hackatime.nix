@@ -14,68 +14,81 @@ let
       echo '{"active": false, "current": "General", "projects": ["General", "Coding", "CAD", "Gaming"]}' > "${stateFile}"
     fi
 
-    # Read current state
-    ACTIVE=$(jq -r '.active' "${stateFile}")
-    CURRENT=$(jq -r '.current' "${stateFile}")
-    
-    # Determine Status Text
-    if [ "$ACTIVE" == "true" ]; then
-      STATUS_TEXT="🟢 Tracking: $CURRENT"
-      TOGGLE_TEXT="Stop Tracking"
-    else
-      STATUS_TEXT="🔴 Paused"
-      TOGGLE_TEXT="Start Tracking"
-    fi
+    while true; do
+      # Read current state
+      ACTIVE=$(jq -r '.active' "${stateFile}")
+      CURRENT=$(jq -r '.current' "${stateFile}")
+      
+      # Determine Status Text and Icons
+      if [ "$ACTIVE" == "true" ]; then
+        STATUS_TEXT="Tracking: $CURRENT"
+        TOGGLE_OPT="  Stop Tracking"
+        ICON="media-playback-start"
+      else
+        STATUS_TEXT="Paused"
+        TOGGLE_OPT="  Start Tracking"
+        ICON="media-playback-pause"
+      fi
 
-    # Main Menu
-    ACTION=$(zenity --list --title="Hackatime Control" --text="$STATUS_TEXT" \
-      --column="Option" \
-      "$TOGGLE_TEXT" \
-      "Switch Project" \
-      "Add New Project" \
-      --width=300 --height=250)
+      # Main Menu
+      ACTION=$(zenity --list --title="Hackatime Control" \
+        --text="<span size='x-large' weight='bold'>$STATUS_TEXT</span>" \
+        --column="Action" \
+        "$TOGGLE_OPT" \
+        "  Switch Project" \
+        "  Add New Project" \
+        "  Exit" \
+        --width=400 --height=350 \
+        --hide-header \
+        --window-icon="$ICON")
 
-    case "$ACTION" in
-      "Start Tracking")
-        jq '.active = true' "${stateFile}" > "${stateFile}.tmp" && mv "${stateFile}.tmp" "${stateFile}"
-        notify-send "Hackatime" "Tracking Started: $CURRENT"
-        ;;
-      "Stop Tracking")
-        jq '.active = false' "${stateFile}" > "${stateFile}.tmp" && mv "${stateFile}.tmp" "${stateFile}"
-        notify-send "Hackatime" "Tracking Paused"
-        ;;
-      "Switch Project")
-        # Get list of projects
-        PROJECTS=$(jq -r '.projects[]' "${stateFile}")
-        
-        NEW_PROJECT=$(echo "$PROJECTS" | zenity --list --title="Select Project" --column="Projects" --height=300)
-        
-        if [ -n "$NEW_PROJECT" ]; then
-          jq --arg p "$NEW_PROJECT" '.current = $p | .active = true' "${stateFile}" > "${stateFile}.tmp" && mv "${stateFile}.tmp" "${stateFile}"
-          notify-send "Hackatime" "Switched to: $NEW_PROJECT"
-        fi
-        ;;
-      "Add New Project")
-        NEW_NAME=$(zenity --entry --title="New Project" --text="Enter project name:")
-        
-        if [ -n "$NEW_NAME" ]; then
-          # Add to list and set as current
-          jq --arg p "$NEW_NAME" '.projects += [$p] | .current = $p | .active = true' "${stateFile}" > "${stateFile}.tmp" && mv "${stateFile}.tmp" "${stateFile}"
-          notify-send "Hackatime" "Created & Switched to: $NEW_NAME"
-        fi
-        ;;
-    esac
+      # Handle Cancel/Exit
+      if [ -z "$ACTION" ] || [ "$ACTION" == "  Exit" ]; then
+        break
+      fi
+
+      case "$ACTION" in
+        *"Start Tracking")
+          jq '.active = true' "${stateFile}" > "${stateFile}.tmp" && mv "${stateFile}.tmp" "${stateFile}"
+          notify-send -u low "Hackatime" "Started: $CURRENT"
+          ;;
+        *"Stop Tracking")
+          jq '.active = false' "${stateFile}" > "${stateFile}.tmp" && mv "${stateFile}.tmp" "${stateFile}"
+          notify-send -u low "Hackatime" "Paused"
+          ;;
+        *"Switch Project")
+          # Get list of projects
+          PROJECTS=$(jq -r '.projects[]' "${stateFile}")
+          
+          NEW_PROJECT=$(echo "$PROJECTS" | zenity --list --title="Select Project" --column="Projects" --height=400 --width=300)
+          
+          if [ -n "$NEW_PROJECT" ]; then
+            jq --arg p "$NEW_PROJECT" '.current = $p | .active = true' "${stateFile}" > "${stateFile}.tmp" && mv "${stateFile}.tmp" "${stateFile}"
+            notify-send -u low "Hackatime" "Switched to: $NEW_PROJECT"
+          fi
+          ;;
+        *"Add New Project")
+          NEW_NAME=$(zenity --entry --title="New Project" --text="Enter project name:")
+          
+          if [ -n "$NEW_NAME" ]; then
+            # Add to list and set as current
+            jq --arg p "$NEW_NAME" '.projects += [$p] | .current = $p | .active = true' "${stateFile}" > "${stateFile}.tmp" && mv "${stateFile}.tmp" "${stateFile}"
+            notify-send -u low "Hackatime" "Created: $NEW_NAME"
+          fi
+          ;;
+      esac
+    done
   '';
 in
 {
   home.packages = with pkgs; [
     wakatime-cli
-    zenity # For the GUI dialogs
-    jq     # For parsing JSON
+    zenity 
+    jq     
     hackatime-control
   ];
 
-  # --- Secrets (Moved from misc.nix) ---
+  # --- Secrets ---
   sops.secrets.wakatime_api_key = { };
 
   sops.templates.".wakatime.cfg" = {
@@ -88,13 +101,13 @@ in
     '';
   };
 
-  # --- Desktop Entry (So it shows up in Rofi) ---
+  # --- Desktop Entry ---
   xdg.desktopEntries.hackatime-control = {
     name = "Hackatime Control";
     genericName = "Time Tracker Manager";
     exec = "${hackatime-control}/bin/hackatime-control";
     terminal = false;
     categories = [ "Utility" ];
-    icon = "utilities-time-tracker"; # Standard icon, or use a custom path
+    icon = "utilities-time-tracker";
   };
 }
