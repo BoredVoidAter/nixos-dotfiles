@@ -84,15 +84,18 @@ in
   home.packages = with pkgs; [
     wakatime-cli
     zenity 
-    jq     
+    jq
+    libnotify # Required for notify-send
     hackatime-control
   ];
 
   # --- Secrets ---
   sops.secrets.wakatime_api_key = { };
 
+  # We use an absolute path so sops-nix writes directly to the home folder
+  # This avoids the symlink error you encountered
   sops.templates.".wakatime.cfg" = {
-    path = ".wakatime.cfg";
+    path = "${config.home.homeDirectory}/.wakatime.cfg";
     content = ''
       [settings]
       api_url = https://waka.hackclub.com/api/v1
@@ -100,9 +103,6 @@ in
       debug = false
     '';
   };
-
-  
-  home.file.".wakatime.cfg".source = config.sops.templates.".wakatime.cfg".path;
 
   # --- Desktop Entry ---
   xdg.desktopEntries.hackatime-control = {
