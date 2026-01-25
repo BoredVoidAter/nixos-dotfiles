@@ -362,7 +362,6 @@ TRACKED_APPS = {
     "code": "Code",
     "nvim": "Code",
     "neovim": "Code",
-    "firefox": "Browsing",
 }
 
 LOG_FILE = "/tmp/qtile_wakatime.log"
