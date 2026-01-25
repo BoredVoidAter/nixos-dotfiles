@@ -97,6 +97,7 @@ api_url = https://hackatime.hackclub.com/api/hackatime/v1
 api_key = ${config.sops.placeholder.wakatime_api_key}
 debug = false
 heartbeat_rate_limit_seconds = 30
+#test
     '';
   };
 
