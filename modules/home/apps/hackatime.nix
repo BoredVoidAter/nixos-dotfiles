@@ -89,6 +89,11 @@ in
     hackatime-control
   ];
 
+  sops.secrets.wakatime_api_key = {
+    # This tells sops-nix to look for this key in your secrets.yaml
+    # It will be decrypted to /run/user/1000/secrets/wakatime_api_key by default
+  };
+
   sops.templates.".wakatime.cfg" = {
     path = "${config.home.homeDirectory}/.wakatime.cfg";
     content = ''
