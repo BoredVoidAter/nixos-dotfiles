@@ -15,7 +15,7 @@
     gh
 
     digital
-    wakatime
+    wakatime-cli
 
     gtk-engine-murrine
     gnome-themes-extra
