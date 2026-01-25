@@ -18,3 +18,5 @@ repomix-output.xml
 *.pem
 *.key
 id_rsa
+keys.txt
+*.age

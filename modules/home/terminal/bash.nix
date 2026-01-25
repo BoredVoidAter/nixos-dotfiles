@@ -10,6 +10,7 @@
       unity = "nvidia-offload unityhub";         
       aw = "firefox http://localhost:5600";
       ym = "yt";
+      sops-edit = "nix shell nixpkgs#sops -c sops ~/nixos-dotfiles/secrets/secrets.yaml";
     };
   };
 }

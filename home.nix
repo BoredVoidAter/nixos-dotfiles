@@ -1,7 +1,8 @@
-{ config, pkgs, ... }:
+{ config, pkgs, sops-nix, ... }:
 
 {
   imports = [
+    sops-nix.homeManagerModules.sops
     # Desktop
     ./modules/home/desktop/theme.nix
     ./modules/home/desktop/qtile.nix

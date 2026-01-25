@@ -13,9 +13,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     playit-nixos-module.url = "github:pedorich-n/playit-nixos-module";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, playit-nixos-module, ... }: 
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, playit-nixos-module, sops-nix, ... }: 
   let
     system = "x86_64-linux";
     pkgs-stable = import nixpkgs-stable {
@@ -34,7 +38,7 @@
             useUserPackages = true;
             
             # Pass 'pkgs-stable' so home.nix can use it
-            extraSpecialArgs = { inherit pkgs-stable; };
+            extraSpecialArgs = { inherit pkgs-stable sops-nix; };
             
             users.boredvoidater = import ./home.nix;
             backupFileExtension = "backup";

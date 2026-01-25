@@ -1,4 +1,4 @@
-{ pkgs, pkgs-stable, lib, ... }:
+{ pkgs, pkgs-stable, lib, config, ... }:
 
 {
   home.packages = with pkgs; [
@@ -15,6 +15,7 @@
     gh
 
     digital
+    wakatime
 
     gtk-engine-murrine
     gnome-themes-extra
@@ -41,12 +42,23 @@
     cava         # Audio Visualizer
   ];
 
-  services.activitywatch.enable = true;
+  sops.defaultSopsFile = ../../../secrets/secrets.yaml;
+  sops.defaultSopsFormat = "yaml";
+  sops.age.keyFile = "/home/boredvoidater/.config/sops/age/keys.txt";
 
-  # Hide the ugly tray icon by running in no-gui mode
-  systemd.user.services.activitywatch.Service.ExecStart = lib.mkForce "${pkgs.activitywatch}/bin/aw-qt --no-gui";
+  sops.secrets.wakatime_api_key = { };
 
-  home.sessionVariables = {
+  sops.templates.".wakatime.cfg" = {
+    path = ".wakatime.cfg";
+    content = ''
+      [settings]
+      api_url = https://waka.hackclub.com/api/v1
+      api_key = ${config.sops.placeholder.wakatime_api_key}
+      debug = false
+    '';
+  };
+
+    home.sessionVariables = {
     YTUI_MUSIC_DIR = "/home/boredvoidater/Music/ytui-music";
   };
 }

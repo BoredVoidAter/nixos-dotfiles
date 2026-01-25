@@ -344,3 +344,56 @@ wl_input_rules = None
 wl_xcursor_theme = None
 wl_xcursor_size = 24
 wmname = "LG3D"
+
+
+# Wakatime
+TRACKED_APPS = {
+    "kicad": "PCB Design",
+    "pcbnew": "PCB Design",
+    "eeschema": "PCB Design",
+    "gerbview": "PCB Design",
+    "Digital": "Digital Logic", # For HNEemann/Digital
+    "Onshape": "CAD",           # For Browser Title
+    "Blender": "3D Modeling",
+    "OpenSCAD": "Code",
+}
+
+def send_heartbeat(entity, category):
+    """Sends a heartbeat to Hackatime via CLI"""
+    # We run this async so it doesn't freeze Qtile
+    subprocess.Popen([
+        "wakatime-cli",
+        "--entity", entity,
+        "--entity-type", "app",
+        "--category", "designing",
+        "--language", category,
+        "--plugin", "qtile-nixos-watcher",
+        "--write"
+    ])
+
+@hook.subscribe.client_focus
+def watcher(window):
+    try:
+        # Get window info
+        wm_class = window.get_wm_class() # Returns list e.g. ['kicad', 'KiCad']
+        wm_name = window.name # Window Title e.g. "MyProject - Onshape - Mozilla Firefox"
+        
+        # 1. Check Window Classes (Good for KiCad, Digital)
+        if wm_class:
+            for cls in wm_class:
+                lower_cls = cls.lower()
+                for key, category in TRACKED_APPS.items():
+                    if key.lower() in lower_cls:
+                        send_heartbeat(wm_name or cls, category)
+                        return
+
+        # 2. Check Window Titles (Crucial for Onshape in Browser)
+        if wm_name:
+            if "onshape" in wm_name.lower():
+                send_heartbeat("Onshape", "CAD")
+            elif "digital" in wm_name.lower() and "java" in (str(wm_class).lower()):
+                send_heartbeat("Digital", "Digital Logic")
+
+    except Exception as e:
+        # Prevent Qtile crash on error
+        pass
