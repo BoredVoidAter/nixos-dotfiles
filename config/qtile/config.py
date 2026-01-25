@@ -4,6 +4,7 @@ from libqtile.lazy import lazy
 import os
 import subprocess
 import time
+import json
 
 mod = "mod4"
 terminal = "alacritty"
@@ -352,21 +353,37 @@ TRACKED_APPS = {
     "pcbnew": "PCB Design",
     "eeschema": "PCB Design",
     "gerbview": "PCB Design",
-    "Digital": "Digital Logic", # For HNEemann/Digital
-    "Onshape": "CAD",           # For Browser Title
+    "Digital": "Digital Logic",
+    "Onshape": "CAD",
     "Blender": "3D Modeling",
     "OpenSCAD": "Code",
+    "Unity": "Game Dev",
+    "Rider": "Code",
 }
 
-def send_heartbeat(entity, category):
+def get_hackatime_state():
+    """Reads the JSON state file managed by the hackatime-control script"""
+    home = os.path.expanduser('~')
+    state_file = os.path.join(home, '.config', 'hackatime-tracker', 'state.json')
+    
+    if not os.path.exists(state_file):
+        return None
+        
+    try:
+        with open(state_file, 'r') as f:
+            return json.load(f)
+    except:
+        return None
+
+def send_heartbeat(entity, category, project_name):
     """Sends a heartbeat to Hackatime via CLI"""
-    # We run this async so it doesn't freeze Qtile
     subprocess.Popen([
         "wakatime-cli",
         "--entity", entity,
         "--entity-type", "app",
-        "--category", "designing",
+        "--category", "designing", # or 'coding' depending on context, keeping generic 'designing' or 'coding' is fine
         "--language", category,
+        "--project", project_name, # <-- HERE IS THE MAGIC
         "--plugin", "qtile-nixos-watcher",
         "--write"
     ])
@@ -374,26 +391,32 @@ def send_heartbeat(entity, category):
 @hook.subscribe.client_focus
 def watcher(window):
     try:
+        # 1. Check if Tracking is Enabled
+        state = get_hackatime_state()
+        if not state or not state.get('active', False):
+            return # Tracking is OFF
+
+        current_project = state.get('current', 'Unknown-Project')
+
         # Get window info
-        wm_class = window.get_wm_class() # Returns list e.g. ['kicad', 'KiCad']
-        wm_name = window.name # Window Title e.g. "MyProject - Onshape - Mozilla Firefox"
+        wm_class = window.get_wm_class() 
+        wm_name = window.name 
         
-        # 1. Check Window Classes (Good for KiCad, Digital)
+        # 2. Check Window Classes
         if wm_class:
             for cls in wm_class:
                 lower_cls = cls.lower()
                 for key, category in TRACKED_APPS.items():
                     if key.lower() in lower_cls:
-                        send_heartbeat(wm_name or cls, category)
+                        send_heartbeat(wm_name or cls, category, current_project)
                         return
 
-        # 2. Check Window Titles (Crucial for Onshape in Browser)
+        # 3. Check Window Titles
         if wm_name:
             if "onshape" in wm_name.lower():
-                send_heartbeat("Onshape", "CAD")
+                send_heartbeat("Onshape", "CAD", current_project)
             elif "digital" in wm_name.lower() and "java" in (str(wm_class).lower()):
-                send_heartbeat("Digital", "Digital Logic")
+                send_heartbeat("Digital", "Digital Logic", current_project)
 
     except Exception as e:
-        # Prevent Qtile crash on error
         pass
