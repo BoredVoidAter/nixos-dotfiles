@@ -89,23 +89,16 @@ in
     hackatime-control
   ];
 
-  # --- Secrets ---
-  sops.secrets.wakatime_api_key = { };
-
-  # We use an absolute path so sops-nix writes directly to the home folder
-  # This avoids the symlink error you encountered
   sops.templates.".wakatime.cfg" = {
-	  path = "${config.home.homeDirectory}/.wakatime.cfg";
-	  content = ''
-	    [settings]
-	    # CHANGE THIS LINE (Old was: https://waka.hackclub.com/api/v1)
-	    api_url = https://hackatime.hackclub.com/api/hackatime/v1
-	    
-	    api_key = ${config.sops.placeholder.wakatime_api_key}
-	    debug = false
-	    heartbeat_rate_limit_seconds = 30
-	  '';
-	}; 
+    path = "${config.home.homeDirectory}/.wakatime.cfg";
+    content = ''
+[settings]
+api_url = https://hackatime.hackclub.com/api/hackatime/v1
+api_key = ${config.sops.placeholder.wakatime_api_key}
+debug = false
+heartbeat_rate_limit_seconds = 30
+    '';
+  };
 
   # --- Desktop Entry ---
   xdg.desktopEntries.hackatime-control = {
