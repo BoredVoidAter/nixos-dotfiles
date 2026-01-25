@@ -352,15 +352,17 @@ TRACKED_APPS = {
     "pcbnew": "PCB Design",
     "eeschema": "PCB Design",
     "gerbview": "PCB Design",
-    "Digital": "Digital Logic",
+    "de-neemann-digital-gui-Main": "Digital Logic", # Added exact class from your xprop
     "Onshape": "CAD",
     "Blender": "3D Modeling",
     "OpenSCAD": "Code",
     "Unity": "Game Dev",
     "Rider": "Code",
+    "jetbrains-rider": "Code",
     "code": "Code",
     "nvim": "Code",
     "neovim": "Code",
+    "firefox": "Browsing",
 }
 
 LOG_FILE = "/tmp/qtile_wakatime.log"
