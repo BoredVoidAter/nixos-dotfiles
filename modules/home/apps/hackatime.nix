@@ -101,6 +101,9 @@ in
     '';
   };
 
+  
+  home.file.".wakatime.cfg".source = config.sops.templates.".wakatime.cfg".path;
+
   # --- Desktop Entry ---
   xdg.desktopEntries.hackatime-control = {
     name = "Hackatime Control";

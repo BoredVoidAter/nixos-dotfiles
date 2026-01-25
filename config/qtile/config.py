@@ -391,7 +391,7 @@ def get_hackatime_state():
 
 def send_heartbeat(entity, category, project_name):
     """Sends a heartbeat to Hackatime via CLI"""
-    # log_debug(f"Sending heartbeat: Project={project_name}, Entity={entity}, Cat={category}")
+    log_debug(f"Sending heartbeat: Project={project_name}, Entity={entity}, Cat={category}")
     subprocess.Popen([
         "wakatime-cli",
         "--entity", entity,
@@ -409,7 +409,7 @@ def check_active_window(qtile):
         # 1. Check if Tracking is Enabled
         state = get_hackatime_state()
         if not state or not state.get('active', False):
-            # log_debug("Tracking paused.")
+            log_debug("Tracking paused.")
             return
 
         current_project = state.get('current', 'General')
