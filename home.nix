@@ -21,6 +21,7 @@
     ./modules/home/apps/unity.nix
     ./modules/home/apps/misc.nix
     ./modules/home/apps/cad.nix
+    ./modules/home/apps/hackatime.nix
   ];
 
   home.username = "boredvoidater";
