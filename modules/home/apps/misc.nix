@@ -18,6 +18,7 @@
 
     peek
     gifski
+    flameshot
 
     gtk-engine-murrine
     gnome-themes-extra

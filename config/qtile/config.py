@@ -163,6 +163,7 @@ keys = [
     # Cycle through Desktops
     Key([mod], "period", lazy.function(switch_desktop(1)), desc="Next Desktop"),
     Key([mod], "comma", lazy.function(switch_desktop(-1)), desc="Prev Desktop"),
+    Key([mod], "s", lazy.spawn("flameshot gui"), desc="Screenshot (Flameshot)"),
 ]
 
 # Add Wayland VT switching
