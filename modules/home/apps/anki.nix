@@ -2,7 +2,7 @@
 
 let
   
-  # 2. Existing Config
+  # 2. Existing Config (Recolor)
   recolorConfig = {
     config = {
       colors = {
@@ -29,8 +29,18 @@ let
     };
   };
 
+  # 3. AnkiConnect Config (Fix for Obsidian CORS)
+  ankiConnectConfig = {
+    config = {
+      webCorsOriginList = [ "http://localhost" "app://obsidian.md" ];
+      webBindAddress = "127.0.0.1";
+      webBindPort = 8765;
+    };
+  };
+
   anki-recolor = pkgs.ankiAddons.recolor.withConfig recolorConfig;
-  anki-connect = pkgs.ankiAddons.anki-connect;
+  # Apply the config here:
+  anki-connect = pkgs.ankiAddons.anki-connect.withConfig ankiConnectConfig;
   review-heatmap = pkgs.ankiAddons.review-heatmap;
 
 in
@@ -47,11 +57,9 @@ in
   ];
 
   home.sessionVariables = {
-    ANKI_WAYLAND = "1"; # Try toggling this if issues persist
+    ANKI_WAYLAND = "1";
     ANKI_NOHIGHDPI = "0";
     QT_STYLE_OVERRIDE = lib.mkForce "fusion"; 
-    
-    # Potential fix for slow startup / GPU issues
     QTWEBENGINE_CHROMIUM_FLAGS = "--disable-gpu";
   };
 }
