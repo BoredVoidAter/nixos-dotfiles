@@ -42,6 +42,8 @@
 
     yewtube
     cava
+
+    tiled
   ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
