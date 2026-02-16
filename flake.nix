@@ -17,9 +17,11 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, playit-nixos-module, sops-nix, ... }: 
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, playit-nixos-module, sops-nix, nix-flatpak, ... }: 
   let
     system = "x86_64-linux";
     pkgs-stable = import nixpkgs-stable {
@@ -32,6 +34,10 @@
       modules = [
         ./configuration.nix
         home-manager.nixosModules.home-manager
+
+	nix-flatpak.nixosModules.nix-flatpak
+
+
         {
           home-manager = {
             useGlobalPkgs = true;
