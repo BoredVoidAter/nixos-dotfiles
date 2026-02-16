@@ -25,12 +25,10 @@
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/tokyo-night-dark-theme/latest.xpi";
           installation_mode = "force_installed";
         };
-        # Unhook - Remove YouTube Recommended Videos
         "my-youtube-recommendations@sblask" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/unhook/latest.xpi";
           installation_mode = "force_installed";
         };
-        # YouTube Shorts Blocker
         "{34daeb50-c2d2-4f14-886a-7160b24d66a4}" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/youtube-shorts-block/latest.xpi";
           installation_mode = "force_installed";
@@ -47,16 +45,44 @@
             # Block Set 1: Social Media Limit (30 mins/day)
             setName1 = "Social Media Limit";
             sites1 = "facebook.com instagram.com reddit.com tiktok.com twitter.com x.com youtube.com";
-            times1 = "0000-2400";
+            
+            # Use 2359 to be safe with parsing
+            times1 = "0000-2359";
+            
+            # 30 Minutes allowed per 24 hours (86400 seconds)
             limitMins1 = "30";
-            limitPeriod1 = "86400";
-            limitOffset1 = "";
+            limitPeriod1 = "86400"; 
+            
+            days1 = "127"; # Everyday
+            blockURL1 = "blocked.html?$S&$U";
+            
+            # --- SECURITY & ANTI-OVERRIDE ---
+            # 1 = Require password for Options page only
+            # (We disable the Override button entirely below, so no need to password protect the button)
+            passwordRequire1 = "1"; 
+            
+            # A static random hash acting as the password. 
+            # Since you don't know it, you can't unlock Options without editing this file.
+            passwordSetSpec1 = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
+            
+            # Disables the "Override" button on the block page completely.
+            allowOverride1 = false;
+            
+            # Prevents you from changing these settings while the block is active.
+            allowOverLock1 = false;
+
+            # --- BEHAVIOR ---
+            # Delay Blocking = True means "Allow access for limitMins"
+            delayFirst1 = true;
+            delayFirstMode1 = "0"; # 0 = Use limitMins1 as the budget
+            delayAllowMins1 = "30"; # Explicitly reiterate the 30 min budget
+            
+            countFocus1 = true; # Only count time when the tab is actually active
+            countAudio1 = false;
+            
+            # Standard boilerplate to keep other slots empty
             rollover1 = false;
             conjMode1 = false;
-            days1 = "127";
-            blockURL1 = "blocked.html?$S&$U";
-            passwordRequire1 = "0";
-            passwordSetSpec1 = "";
             customMsg1 = "";
             incogMode1 = "0";
             activeTabMode1 = "0";
@@ -67,20 +93,13 @@
             closeTab1 = false;
             activeBlock1 = true;
             minBlock1 = "";
-            countFocus1 = true;
-            countAudio1 = false;
             showKeyword1 = true;
             titleOnly1 = false;
-            delayFirst1 = true;
-            delayFirstMode1 = "0";
             delaySecs1 = "60";
-            delayAllowMins1 = "";
             delayAutoLoad1 = true;
             delayCancel1 = true;
             reloadSecs1 = "";
             addHistory1 = false;
-            allowOverride1 = false;
-            allowOverLock1 = true;
             prevOpts1 = false;
             prevGenOpts1 = false;
             prevAddons1 = false;
@@ -98,54 +117,14 @@
             regexpAllow1 = "";
             regexpKeyword1 = "";
             ignoreHash1 = true;
+            limitOffset1 = "";
+
+            setName2 = ""; sites2 = ""; times2 = ""; limitMins2 = ""; limitPeriod2 = ""; days2 = "62"; activeBlock2 = false; disable2 = false;
+            setName3 = ""; sites3 = ""; times3 = ""; limitMins3 = ""; limitPeriod3 = ""; days3 = "62"; activeBlock3 = false; disable3 = false;
+            setName4 = ""; sites4 = ""; times4 = ""; limitMins4 = ""; limitPeriod4 = ""; days4 = "62"; activeBlock4 = false; disable4 = false;
+            setName5 = ""; sites5 = ""; times5 = ""; limitMins5 = ""; limitPeriod5 = ""; days5 = "62"; activeBlock5 = false; disable5 = false;
+            setName6 = ""; sites6 = ""; times6 = ""; limitMins6 = ""; limitPeriod6 = ""; days6 = "62"; activeBlock6 = false; disable6 = false;
             
-            # Empty sets 2-6 (required by LeechBlock)
-            setName2 = "";
-            sites2 = "";
-            times2 = "";
-            limitMins2 = "";
-            limitPeriod2 = "";
-            days2 = "62";
-            activeBlock2 = false;
-            disable2 = false;
-            
-            setName3 = "";
-            sites3 = "";
-            times3 = "";
-            limitMins3 = "";
-            limitPeriod3 = "";
-            days3 = "62";
-            activeBlock3 = false;
-            disable3 = false;
-            
-            setName4 = "";
-            sites4 = "";
-            times4 = "";
-            limitMins4 = "";
-            limitPeriod4 = "";
-            days4 = "62";
-            activeBlock4 = false;
-            disable4 = false;
-            
-            setName5 = "";
-            sites5 = "";
-            times5 = "";
-            limitMins5 = "";
-            limitPeriod5 = "";
-            days5 = "62";
-            activeBlock5 = false;
-            disable5 = false;
-            
-            setName6 = "";
-            sites6 = "";
-            times6 = "";
-            limitMins6 = "";
-            limitPeriod6 = "";
-            days6 = "62";
-            activeBlock6 = false;
-            disable6 = false;
-            
-            # General options
             numSets = "6";
             sync = false;
             theme = "";
