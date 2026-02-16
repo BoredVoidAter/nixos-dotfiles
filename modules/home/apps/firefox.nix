@@ -55,15 +55,16 @@
             
             # --- SECURITY & ANTI-TAMPER ---
             # 1 = Require password for Options page
-            passwordRequire1 = 1; 
+            passwordRequire = 1; 
             
             # This is a SHA256 hash of a random complex string I generated.
             # Since you do not know the plain text, you cannot unlock the Options page.
             # To remove this lock, you must edit this nix file and rebuild.
-            passwordSetSpec1 = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+            passwordHash = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
             
             # Completely disable the "Override" button on the block page
             allowOverride1 = false;
+            allowOverride = false;
             
             # Prevent changing settings during block (Redundant if pw is unknown, but good safety)
             allowOverLock1 = false;
