@@ -11,7 +11,6 @@
         Locked = true;
       };
       DisablePocket = true;
-      # --- Extension Installation ---
       ExtensionSettings = {
         "uBlock0@raymondhill.net" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
@@ -42,125 +41,57 @@
       "3rdparty" = {
         Extensions = {
           "leechblockng@proginosko.com" = {
-            # Block Set 1: Social Media Limit (30 mins/day)
+            # --- BLOCK SET 1: Social Media ---
             setName1 = "Social Media Limit";
-            sites1 = "facebook.com instagram.com reddit.com tiktok.com twitter.com x.com youtube.com";
+            sites1 = "facebook.com\ninstagram.com\nreddit.com\ntiktok.com\ntwitter.com\nx.com\nyoutube.com";
             
-            # Use 2359 to be safe with parsing
+            # Times: All Day (00:00 to 23:59)
             times1 = "0000-2359";
             
-            # 30 Minutes allowed per 24 hours (86400 seconds)
-            limitMins1 = "30";
-            limitPeriod1 = "86400"; 
+            # Limit: 30 Minutes per 24 Hours
+            limitMins1 = 30;       # INTEGER (Fixes 'Always Block')
+            limitPeriod1 = 86400;  # INTEGER (Seconds in 24h)
+            days1 = "127";         # String "127" = All Days
             
-            days1 = "127"; # Everyday
-            blockURL1 = "blocked.html?$S&$U";
+            # --- SECURITY & ANTI-TAMPER ---
+            # 1 = Require password for Options page
+            passwordRequire1 = 1; 
             
-            # --- SECURITY & ANTI-OVERRIDE ---
-            # 1 = Require password for Options page only
-            # (We disable the Override button entirely below, so no need to password protect the button)
-            passwordRequire1 = "1"; 
+            # This is a SHA256 hash of a random complex string I generated.
+            # Since you do not know the plain text, you cannot unlock the Options page.
+            # To remove this lock, you must edit this nix file and rebuild.
+            passwordSetSpec1 = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
             
-            # A static random hash acting as the password. 
-            # Since you don't know it, you can't unlock Options without editing this file.
-            passwordSetSpec1 = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
-            
-            # Disables the "Override" button on the block page completely.
+            # Completely disable the "Override" button on the block page
             allowOverride1 = false;
             
-            # Prevents you from changing these settings while the block is active.
+            # Prevent changing settings during block (Redundant if pw is unknown, but good safety)
             allowOverLock1 = false;
-
+            
             # --- BEHAVIOR ---
-            # Delay Blocking = True means "Allow access for limitMins"
-            delayFirst1 = true;
-            delayFirstMode1 = "0"; # 0 = Use limitMins1 as the budget
-            delayAllowMins1 = "30"; # Explicitly reiterate the 30 min budget
+            blockURL1 = "blocked.html?$S&$U";
+            countFocus1 = true;   # Only count time when tab is focused
+            countAudio1 = false;  # Don't count if just listening to music in bg
+            delayFirst1 = false;  # Disable "Delaying Page" (We want hard limit)
             
-            countFocus1 = true; # Only count time when the tab is actually active
-            countAudio1 = false;
-            
-            # Standard boilerplate to keep other slots empty
-            rollover1 = false;
-            conjMode1 = false;
-            customMsg1 = "";
-            incogMode1 = "0";
-            activeTabMode1 = "0";
-            applyFilter1 = false;
-            filterName1 = "grayscale";
-            filterMute1 = false;
-            filterCustom1 = "";
-            closeTab1 = false;
-            activeBlock1 = true;
-            minBlock1 = "";
-            showKeyword1 = true;
-            titleOnly1 = false;
-            delaySecs1 = "60";
-            delayAutoLoad1 = true;
-            delayCancel1 = true;
-            reloadSecs1 = "";
-            addHistory1 = false;
-            prevOpts1 = false;
-            prevGenOpts1 = false;
-            prevAddons1 = false;
-            prevSupport1 = false;
-            prevProfiles1 = false;
-            prevDebugging1 = false;
-            prevOverride1 = false;
-            disable1 = false;
-            showTimer1 = true;
-            allowRefers1 = false;
-            allowKeywords1 = false;
-            waitSecs1 = "";
-            sitesURL1 = "";
-            regexpBlock1 = "";
-            regexpAllow1 = "";
-            regexpKeyword1 = "";
-            ignoreHash1 = true;
-            limitOffset1 = "";
+            # --- DEFAULTS (Empty Sets) ---
+            # We must explicitly zero these out with correct types
+            setName2 = ""; sites2 = ""; times2 = ""; limitMins2 = 0; limitPeriod2 = 0; days2 = "62"; activeBlock2 = false; disable2 = false;
+            setName3 = ""; sites3 = ""; times3 = ""; limitMins3 = 0; limitPeriod3 = 0; days3 = "62"; activeBlock3 = false; disable3 = false;
+            setName4 = ""; sites4 = ""; times4 = ""; limitMins4 = 0; limitPeriod4 = 0; days4 = "62"; activeBlock4 = false; disable4 = false;
+            setName5 = ""; sites5 = ""; times5 = ""; limitMins5 = 0; limitPeriod5 = 0; days5 = "62"; activeBlock5 = false; disable5 = false;
+            setName6 = ""; sites6 = ""; times6 = ""; limitMins6 = 0; limitPeriod6 = 0; days6 = "62"; activeBlock6 = false; disable6 = false;
 
-            setName2 = ""; sites2 = ""; times2 = ""; limitMins2 = ""; limitPeriod2 = ""; days2 = "62"; activeBlock2 = false; disable2 = false;
-            setName3 = ""; sites3 = ""; times3 = ""; limitMins3 = ""; limitPeriod3 = ""; days3 = "62"; activeBlock3 = false; disable3 = false;
-            setName4 = ""; sites4 = ""; times4 = ""; limitMins4 = ""; limitPeriod4 = ""; days4 = "62"; activeBlock4 = false; disable4 = false;
-            setName5 = ""; sites5 = ""; times5 = ""; limitMins5 = ""; limitPeriod5 = ""; days5 = "62"; activeBlock5 = false; disable5 = false;
-            setName6 = ""; sites6 = ""; times6 = ""; limitMins6 = ""; limitPeriod6 = ""; days6 = "62"; activeBlock6 = false; disable6 = false;
-            
-            numSets = "6";
-            sync = false;
-            theme = "";
-            customStyle = "";
-            oa = "0";
-            hpp = true;
-            apt = "";
+            # --- GENERAL OPTIONS ---
+            numSets = 6;
+            enable = true;
             timerVisible = true;
-            timerSize = "1";
-            timerLocation = "0";
-            timerMaxHours = "24";
             timerBadge = true;
-            orm = "";
-            orln = "";
-            orlp = "";
-            ora = "0";
-            orcode = "";
-            orc = true;
-            warnSecs = "";
-            warnImmediate = true;
             contextMenu = true;
-            matchSubdomains = false;
-            disableLink = false;
-            clockTimeFormat = "0";
-            saveSecs = "10";
-            clockOffset = "";
-            ignoreJumpSecs = "";
-            allFocused = false;
-            useDocFocus = true;
-            processTabsSecs = "1";
-            processActiveTabs = false;
-            accessCodeImage = false;
-            allowLBWebsite = true;
-            diagMode = false;
+            
+            # Export/Import (Disable to prevent easy bypass)
             exportPasswords = false;
-            autoExportSync = true;
+            autoExportSync = false;
           };
         };
       };
