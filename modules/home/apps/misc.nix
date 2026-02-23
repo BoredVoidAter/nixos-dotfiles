@@ -45,7 +45,7 @@
 
     tiled
 
-    cura
+    pkgs-stable.cura
   ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
