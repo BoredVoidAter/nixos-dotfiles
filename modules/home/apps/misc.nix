@@ -44,9 +44,7 @@
     cava
 
     tiled
-
-    pkgs-stable.cura
-  ];
+];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
   sops.defaultSopsFormat = "yaml";

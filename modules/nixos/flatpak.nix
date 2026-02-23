@@ -13,7 +13,8 @@
     # List of packages to install automatically
     packages = [
       "com.tencent.WeChat"
-      "io.github.mimbrero.WhatsAppDesktop" 
+      "io.github.mimbrero.WhatsAppDesktop"
+      "com.ultimaker.cura"                     # <--- ADD THIS LINE
     ];
 
     # Optional: Update flatpaks automatically on system activation
