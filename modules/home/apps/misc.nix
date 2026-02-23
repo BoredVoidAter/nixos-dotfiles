@@ -44,6 +44,8 @@
     cava
 
     tiled
+
+    cura
   ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
