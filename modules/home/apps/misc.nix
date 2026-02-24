@@ -44,6 +44,9 @@
     cava
 
     tiled
+
+    nootka
+    dl-librescore
 ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
