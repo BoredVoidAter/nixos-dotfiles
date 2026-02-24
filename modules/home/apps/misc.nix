@@ -46,7 +46,7 @@
     tiled
 
     nootka
-    dl-librescore
+    nodejs
 ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
