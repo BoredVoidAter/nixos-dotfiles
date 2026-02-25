@@ -45,17 +45,20 @@
             setName1 = "Social Media Limit";
             sites1 = "facebook.com\ninstagram.com\nreddit.com\ntiktok.com\ntwitter.com\nx.com\nyoutube.com";
             
-            # Times: All Day (00:00 to 23:59)
-            times1 = "0000-2359";
+            # IMPORTANT: Set this block to active
+            activeBlock1 = true;
+            
+            # Times: All Day
+            times1 = "0000-2400";
             
             # Limit: 30 Minutes per 24 Hours
-            limitMins1 = 30;       # INTEGER (Fixes 'Always Block')
-            limitPeriod1 = 86400;  # INTEGER (Seconds in 24h)
+            limitMins1 = 30;       # INTEGER
+            limitPeriod1 = 0;      # 0 lets the times1 parameter define the daily reset
             days1 = "127";         # String "127" = All Days
             
             # --- SECURITY & ANTI-TAMPER ---
-            # 1 = Require password for Options page
-            passwordRequire = 1; 
+            # 1 = Require password for Options page (MUST BE A STRING)
+            passwordRequire = "1"; 
             
             # This is a SHA256 hash of a random complex string I generated.
             # Since you do not know the plain text, you cannot unlock the Options page.
@@ -66,8 +69,11 @@
             allowOverride1 = false;
             allowOverride = false;
             
-            # Prevent changing settings during block (Redundant if pw is unknown, but good safety)
+            # Prevent changing settings during block
             allowOverLock1 = false;
+            
+            # Lock out the options page entirely while a block is active
+            prevOpts1 = true;
             
             # --- BEHAVIOR ---
             blockURL1 = "blocked.html?$S&$U";
@@ -121,7 +127,7 @@
       "application/pdf" = [ "firefox.desktop" ];
       "text/html" = [ "firefox.desktop" ];
       "x-scheme-handler/http" = [ "firefox.desktop" ];
-      "x-scheme-handler/https" = [ "firefox.desktop" ];
+      "x-scheme-handler/https" =[ "firefox.desktop" ];
       "x-scheme-handler/about" = [ "firefox.desktop" ];
       "x-scheme-handler/unknown" = [ "firefox.desktop" ];
     };
