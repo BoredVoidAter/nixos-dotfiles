@@ -11,7 +11,7 @@
 
     temperature = {
       day = 6500;   # Normal daylight temperature (Cool)
-      night = 3500; # Blue light filtered temperature (Warm/Orange)
+      night = 3000; # Blue light filtered temperature (Warm/Orange)
     };
 
     # Override the sun-based calculation to use strict time windows
