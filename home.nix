@@ -8,6 +8,7 @@
     ./modules/home/desktop/qtile.nix
     ./modules/home/desktop/rofi.nix
     ./modules/home/desktop/polkit.nix
+    ./modules/home/desktop/redshift.nix
     
     # Terminal
     ./modules/home/terminal/git.nix
