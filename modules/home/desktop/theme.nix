@@ -51,6 +51,7 @@
   home.sessionVariables = {
     GTK_THEME = "Tokyonight-Dark";
     GTK2_RC_FILES = lib.mkForce "${pkgs.tokyonight-gtk-theme}/share/themes/Tokyonight-Dark/gtk-2.0/gtkrc";
+    GTK_USE_PORTAL = "1";
   };
   
   home.packages = with pkgs; [

@@ -113,6 +113,6 @@ heartbeat_rate_limit_seconds = 30
     exec = "${hackatime-control}/bin/hackatime-control";
     terminal = false;
     categories = [ "Utility" ];
-    icon = "utilities-time-tracker";
+    icon = "preferences-system-time";
   };
 }

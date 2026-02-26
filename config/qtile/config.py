@@ -283,12 +283,11 @@ screens = [
                     format='Mem: {MemUsed:.0f}{mm}',
                 ),
                 sep,
-                widget.GenPollText(
-                    update_interval=0.1,
-                    func=lambda: subprocess.check_output("pamixer --get-volume-human", shell=True, text=True).strip(),
+                widget.PulseVolume(
                     foreground=colors[7],
                     padding=8,
                     fmt='Vol: {}',
+                    update_interval=0.1,
                     mouse_callbacks={
                         'Button1': lambda: qtile.cmd_spawn("pamixer -t"),
                         'Button4': lambda: qtile.cmd_spawn("pamixer -i 5"),

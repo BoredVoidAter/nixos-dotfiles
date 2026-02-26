@@ -57,9 +57,8 @@ in
   ];
 
   home.sessionVariables = {
-    ANKI_WAYLAND = "1";
+    ANKI_WAYLAND = "0";
     ANKI_NOHIGHDPI = "0";
     QT_STYLE_OVERRIDE = lib.mkForce "fusion"; 
-    QTWEBENGINE_CHROMIUM_FLAGS = "--disable-gpu";
   };
 }

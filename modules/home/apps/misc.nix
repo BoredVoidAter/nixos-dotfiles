@@ -18,7 +18,6 @@
 
     peek
     gifski
-    flameshot
 
     gtk-engine-murrine
     gnome-themes-extra
@@ -28,25 +27,9 @@
     xfconf
     repomix
     bluetuith
-    google-chrome
     pavucontrol
 
     xsel
-    xclip
-    gimp
-    inkscape
-    butler
-    gemini-cli
-    
-    pkgs-stable.aseprite
-
-    yewtube
-    cava
-
-    tiled
-
-    nootka
-    nodejs
 ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;

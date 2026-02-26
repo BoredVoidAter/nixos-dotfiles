@@ -9,8 +9,15 @@
     autoRepeatInterval = 35;
     xkb.layout = "de";
 
-    displayManager.lightdm.enable = true;
-    windowManager.qtile.enable = true;
+    displayManager.lightdm = {
+      enable = true;
+      greeters.gtk = {
+        enable = true;
+        theme = { name = "Tokyonight-Dark"; package = pkgs.tokyonight-gtk-theme; };
+        cursorTheme = { name = "Bibata-Modern-Ice"; package = pkgs.bibata-cursors; size = 24; };
+        iconTheme = { name = "Papirus-Dark"; package = pkgs.papirus-icon-theme; };
+      };
+      windowManager.qtile.enable = true;
   };
 
   services.libinput.enable = true;
@@ -31,6 +38,8 @@
   environment.systemPackages = with pkgs; [
     alacritty
     libsForQt5.qt5.qtgraphicaleffects
+    gnome-calendar
+    gnome-online-accounts
   ];
 
   fonts.packages = with pkgs; [
