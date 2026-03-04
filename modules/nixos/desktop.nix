@@ -4,7 +4,7 @@
   # -- Desktop Environment --
   services.xserver = {
     enable = true;
-    
+
     autoRepeatDelay = 200;
     autoRepeatInterval = 35;
     xkb.layout = "de";
@@ -17,7 +17,9 @@
         cursorTheme = { name = "Bibata-Modern-Ice"; package = pkgs.bibata-cursors; size = 24; };
         iconTheme = { name = "Papirus-Dark"; package = pkgs.papirus-icon-theme; };
       };
-      windowManager.qtile.enable = true;
+    };
+
+    windowManager.qtile.enable = true;
   };
 
   services.libinput.enable = true;
@@ -32,10 +34,10 @@
   services.tumbler.enable = true;
   services.gvfs.enable = true;
   services.udisks2.enable = true;
-  
+
   programs.dconf.enable = true;
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs;[
     alacritty
     libsForQt5.qt5.qtgraphicaleffects
     gnome-calendar
@@ -52,6 +54,6 @@
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     config.common.default = "gtk";
   };
-  
+
   security.polkit.enable = true;
 }
