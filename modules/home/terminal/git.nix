@@ -3,19 +3,13 @@
 {
   programs.git = {
     enable = true;
-    # userName = "Boredvoidater";             
-    # userEmail = "boredvoidater@proton.me";    
     
-    # extraConfig = {
-    #   credential.helper = "${pkgs.gh}/bin/gh auth git-credential";
-    # };
+    # You can use standard Home Manager options instead of 'settings':
+    userName = "BoredVoidAter";             
+    userEmail = "boredvoideater@proton.me"; # Fixed the missing 'e'
     
-    settings = {
-        user = {
-            name = "Boredvoidater";
-            email = "boredvoidater@proton.me";
-        };
-        credential.helper = "${pkgs.gh}/bin/gh auth git-credential";
+    extraConfig = {
+      credential.helper = "${pkgs.gh}/bin/gh auth git-credential";
     };
   };
 }
