@@ -19,7 +19,8 @@ in
     netcoredbg
     ffmpeg        
     android-tools 
-    p7zip         
+    p7zip
+    butler
   ];
 
   # Force Unity/Dotnet to respect your Wayland/Dark theme preferences
