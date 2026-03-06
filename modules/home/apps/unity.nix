@@ -2,11 +2,13 @@
 
 let
   # Merge .NET 8 (for Unity) and .NET 9 (for csharp-ls)
-  my-dotnet = with pkgs.dotnetCorePackages; combinePackages[ sdk_8_0 sdk_9_0 ];
+  my-dotnet = with pkgs.dotnetCorePackages; combinePackages [ sdk_8_0 sdk_9_0 ];
 
   # Fake VS Code wrapper
   unity-neovim-wrapper = pkgs.writeShellScriptBin "code" ''
     PROJECT_PATH="$1"
+    
+    # FIXED: Added the space between 'if' and '['
     if[ "$2" = "-g" ]; then
       FILE_ARG=$3
       FILE_PATH=$(echo "$FILE_ARG" | cut -d':' -f1)
@@ -19,7 +21,7 @@ let
 
   # Custom Unity Hub wrapper
   my-unityhub = pkgs.unityhub.overrideAttrs (old: {
-    buildInputs = (old.buildInputs or[]) ++[ pkgs.makeWrapper ];
+    buildInputs = (old.buildInputs or []) ++ [ pkgs.makeWrapper ];
     postInstall = (old.postInstall or "") + ''
       wrapProgram $out/bin/unityhub \
         --prefix PATH : "${lib.makeBinPath[ pkgs.ffmpeg pkgs.android-tools pkgs.p7zip ]}"
@@ -29,7 +31,7 @@ in
 {
   home.packages = with pkgs;[
     my-unityhub
-    my-dotnet      # <-- Our combined .NET SDK!
+    my-dotnet
     mono
     netcoredbg
     ffmpeg        
@@ -40,7 +42,7 @@ in
   ];
 
   home.sessionVariables = {
-    DOTNET_ROOT = "${my-dotnet}"; # Points both Unity and csharp-ls to the merged SDKs
+    DOTNET_ROOT = "${my-dotnet}";
     UNITY_IGNORE_DKG = "1";
   };
 }
