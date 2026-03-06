@@ -1,42 +1,20 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    dependencies = {
-      "Hoffs/omnisharp-extended-lsp.nvim",
-    },
     opts = {
       servers = {
         omnisharp = {
+          enabled = false,
+        },
+        csharp_ls = {
           mason = false,
-          cmd = { "OmniSharp" },
+          cmd = { "csharp-ls" },
           root_dir = function(fname)
-            local root_files = {
-              "*.sln",
-              "*.slnx",
-              "*.csproj",
-            }
-            for _, pattern in ipairs(root_files) do
-              local root = require("lspconfig.util").root_pattern(pattern)(fname)
-              if root then return root end
-            end
+            -- Use standard resolution, but fallback to our guaranteed CWD from the Unity wrapper
+            return require("lspconfig.util").root_pattern("*.slnx", "*.sln", "*.csproj")(fname) or vim.fn.getcwd()
           end,
-          handlers = {
-            ["textDocument/definition"] = function(...)
-              return require("omnisharp_extended").handler(...)
-            end,
-          },
-          enable_roslyn_analyzers = true,
-          enable_import_completion = true,
-          organize_imports_on_format = true,
-          enable_editorconfig_support = true,
         },
       },
     },
   }
 }
-
-
-
-
-
-

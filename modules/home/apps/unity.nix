@@ -2,25 +2,24 @@
 
 let
   # 1. Fake VS Code executable to trick Unity
-  # Unity sends arguments formatted like: "project/path" -g "file/path.cs:line:column"
-  # This wrapper extracts the file and line number, then opens it in Neovim via Alacritty!
   unity-neovim-wrapper = pkgs.writeShellScriptBin "code" ''
-    # If Unity passes the -g argument (meaning it wants to open a specific file)
+    # Unity passes: "ProjectPath" -g "FilePath:Line:Column"
+    PROJECT_PATH="$1"
+    
     if [ "$2" = "-g" ]; then
-      # Extract file path and line number from "filepath:line:column"
       FILE_ARG=$3
       FILE_PATH=$(echo "$FILE_ARG" | cut -d':' -f1)
       LINE=$(echo "$FILE_ARG" | cut -d':' -f2)
       
-      # Launch Neovim in a new Alacritty window directly at the correct line
-      exec ${pkgs.alacritty}/bin/alacritty -e nvim "+$LINE" "$FILE_PATH"
+      # Launch Alacritty locked to the Project Directory
+      exec ${pkgs.alacritty}/bin/alacritty --working-directory "$PROJECT_PATH" -e nvim "+$LINE" "$FILE_PATH"
     else
       # Fallback: Just open Alacritty in the project folder
-      exec ${pkgs.alacritty}/bin/alacritty -e nvim "$1"
+      exec ${pkgs.alacritty}/bin/alacritty --working-directory "$PROJECT_PATH" -e nvim .
     fi
   '';
 
-  # 2. Custom Unity Hub wrapper to ensure tools are visible
+  # 2. Custom Unity Hub wrapper
   my-unityhub = pkgs.unityhub.overrideAttrs (old: {
     buildInputs = (old.buildInputs or[]) ++ [ pkgs.makeWrapper ];
     postInstall = (old.postInstall or "") + ''
@@ -40,13 +39,12 @@ in
     android-tools 
     p7zip         
     
-    # Add our fake VS Code wrapper
-    unity-neovim-wrapper # will be at /etc/profiles/per-user/boredvoidater/bin/code hmhmhm im so smart
+    unity-neovim-wrapper
   ];
 
-  # Force Unity/Dotnet to respect your Wayland/Dark theme preferences
   home.sessionVariables = {
-    DOTNET_ROOT = "${pkgs.dotnet-sdk_8}";
+    # REMOVED: DOTNET_ROOT = "''${pkgs.dotnet-sdk_8}"; 
+    # (Setting this globally breaks csharp-ls which requires newer .NET runtimes)
     UNITY_IGNORE_DKG = "1";
   };
 }
