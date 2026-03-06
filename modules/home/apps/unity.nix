@@ -8,8 +8,8 @@ let
   unity-neovim-wrapper = pkgs.writeShellScriptBin "code" ''
     PROJECT_PATH="$1"
     
-    # FIXED: Added the space between 'if' and '['
-    if[ "$2" = "-g" ]; then
+    
+    if [ "$2" = "-g" ]; then
       FILE_ARG=$3
       FILE_PATH=$(echo "$FILE_ARG" | cut -d':' -f1)
       LINE=$(echo "$FILE_ARG" | cut -d':' -f2)
