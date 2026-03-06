@@ -9,6 +9,7 @@
     ./modules/home/desktop/rofi.nix
     ./modules/home/desktop/polkit.nix
     ./modules/home/desktop/redshift.nix
+    ./modules/home/desktop/nvim.nix
     
     # Terminal
     ./modules/home/terminal/git.nix

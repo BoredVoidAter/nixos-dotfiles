@@ -41,7 +41,7 @@ in
     p7zip         
     
     # Add our fake VS Code wrapper
-    unity-neovim-wrapper
+    unity-neovim-wrapper # will be at /etc/profiles/per-user/boredvoidater/bin/code hmhmhm im so smart
   ];
 
   # Force Unity/Dotnet to respect your Wayland/Dark theme preferences

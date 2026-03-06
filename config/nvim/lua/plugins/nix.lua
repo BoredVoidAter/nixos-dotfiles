@@ -1,10 +1,8 @@
 return {
-  -- 1. Disable Mason (the auto-installer)
-  -- Because it downloads binaries that don't work on NixOS
-  { "mason-org/mason.nvim", enabled = false },
-  { "mason-org/mason-lspconfig.nvim", enabled = false },
+  -- We must let Mason load so LazyVim's LSP system doesn't crash,
+  -- but we will bypass it for specific languages in their own files.
 
-  -- 2. Ensure Treesitter uses the system compiler
+  -- Ensure Treesitter uses the system compiler
   {
     "nvim-treesitter/nvim-treesitter",
     opts = {
