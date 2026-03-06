@@ -48,7 +48,7 @@
       shellcheck
 
       # -- C# / Unity Support --
-      dotnet-sdk_8
+      (with pkgs.dotnetCorePackages; combinePackages[ sdk_8_0 sdk_9_0 ])
       csharp-ls
       netcoredbg
     ];
