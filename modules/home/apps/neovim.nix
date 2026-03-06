@@ -49,7 +49,7 @@
 
       # -- C# / Unity Support --
       dotnet-sdk_8
-      omnisharp-roslyn
+      csharp-ls
       netcoredbg
     ];
   };

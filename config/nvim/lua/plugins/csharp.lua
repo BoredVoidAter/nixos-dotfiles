@@ -9,6 +9,17 @@ return {
         omnisharp = {
           mason = false,
           cmd = { "OmniSharp" },
+          root_dir = function(fname)
+            local root_files = {
+              "*.sln",
+              "*.slnx",
+              "*.csproj",
+            }
+            for _, pattern in ipairs(root_files) do
+              local root = require("lspconfig.util").root_pattern(pattern)(fname)
+              if root then return root end
+            end
+          end,
           handlers = {
             ["textDocument/definition"] = function(...)
               return require("omnisharp_extended").handler(...)
@@ -23,3 +34,9 @@ return {
     },
   }
 }
+
+
+
+
+
+
