@@ -23,7 +23,7 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, playit-nixos-module, sops-nix, nix-flatpak, ... }: 
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, playit-nixos-module, sops-nix, nix-flatpak, neohabit, ... }: 
   let
     system = "x86_64-linux";
     pkgs-stable = import nixpkgs-stable {
