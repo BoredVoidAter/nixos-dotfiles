@@ -41,4 +41,13 @@
   home.sessionVariables = {
     YTUI_MUSIC_DIR = "/home/boredvoidater/Music/ytui-music";
   };
+
+  # temporary
+  services.neohabit = {
+    enable = true;
+    domain = "localhost"; # Or your actual domain
+    environmentFile = config.sops.templates."neohabit.env".path;
+  };
+  # Open port 80 for Nginx if it's not open
+  networking.firewall.allowedTCPPorts = [ 80 ];
 }

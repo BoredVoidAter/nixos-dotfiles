@@ -44,4 +44,9 @@
 
   # -- Nix Configuration --
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # temporary
+  sops.templates."neohabit.env".content = ''
+    JWT_SECRET=${config.sops.placeholder.neohabit_env}
+  '';
 }

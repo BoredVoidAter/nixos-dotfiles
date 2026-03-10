@@ -4,6 +4,8 @@
   inputs = {
     # Unstable (Default)
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    neohabit.url = "path:/home/boredvoidater/Neohabit";
     
     # Stable (For broken packages like Aseprite)
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
@@ -33,6 +35,7 @@
       inherit system;
       modules = [
         ./configuration.nix
+        neohabit.nixosModules.default
         home-manager.nixosModules.home-manager
 
 	nix-flatpak.nixosModules.nix-flatpak
