@@ -1,7 +1,7 @@
-{ pkgs, pkgs-stable, lib, config, ... }:
+{ pkgs, pkgs-stable, lib, config, sops, ... }:
 
 {
-  home.packages = with pkgs; [
+  home.packages = with pkgs;[
     tumbler
     obsidian
     brightnessctl
@@ -30,7 +30,10 @@
     pavucontrol
 
     xsel
-];
+
+    # Added for Neohabit standalone wrapper
+    chromium
+  ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
   sops.defaultSopsFormat = "yaml";
@@ -42,12 +45,14 @@
     YTUI_MUSIC_DIR = "/home/boredvoidater/Music/ytui-music";
   };
 
-  # temporary
-  services.neohabit = {
-    enable = true;
-    domain = "localhost"; # Or your actual domain
-    environmentFile = config.sops.templates."neohabit.env".path;
+  # --- Neohabit Standalone App Wrapper ---
+  xdg.desktopEntries.neohabit = {
+    name = "Neohabit";
+    genericName = "Habit Tracker";
+    # The --app flag strips all browser UI (tabs, URL bar) to make it feel native
+    exec = "${pkgs.chromium}/bin/chromium --app=http://localhost --class=NeohabitApp";
+    terminal = false;
+    categories = [ "Utility" ];
+    icon = "view-calendar-tasks";
   };
-  # Open port 80 for Nginx if it's not open
-  networking.firewall.allowedTCPPorts = [ 80 ];
 }

@@ -16,7 +16,7 @@
 
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
-  
+
   # -- Time & Locale --
   time.timeZone = "Europe/Berlin";
 
@@ -26,7 +26,7 @@
   # -- Packages --
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs;[
     vim
     wget
     git
@@ -38,15 +38,31 @@
   # -- Users --
   users.users.boredvoidater = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "audio" "bluetooth" ];
+    extraGroups =[ "wheel" "networkmanager" "video" "audio" "bluetooth" ];
     home = "/home/boredvoidater";
   };
 
   # -- Nix Configuration --
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features =[ "nix-command" "flakes" ];
 
-  # temporary
+  # --- SYSTEM SECRETS (SOPS) ---
+  sops.defaultSopsFile = ../../secrets/secrets.yaml;
+  sops.age.keyFile = "/home/boredvoidater/.config/sops/age/keys.txt";
+  
+  # Tell sops to decrypt this specific secret at the system level
+  sops.secrets.neohabit_env = {};
+
   sops.templates."neohabit.env".content = ''
     JWT_SECRET=${config.sops.placeholder.neohabit_env}
   '';
+
+  # --- NEOHABIT DEPLOYMENT ---
+  services.neohabit = {
+    enable = true;
+    domain = "localhost"; # Or your actual domain
+    environmentFile = config.sops.templates."neohabit.env".path;
+  };
+  
+  # Open port 80 for Nginx
+  networking.firewall.allowedTCPPorts = [ 80 ];
 }

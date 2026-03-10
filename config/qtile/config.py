@@ -14,17 +14,14 @@ browser = "firefox"
 NUM_DESKTOPS = 4  # You have 4 total "Desktops" available (0, 1, 2, 3)
 
 # --- COLORS ---
-colors = [
+colors =[
     ["#1a1b26", "#1a1b26"],  # 0  bg
     ["#a9b1d6", "#a9b1d6"],  # 1  fg
     ["#32344a", "#32344a"],  # 2  black
     ["#f7768e", "#f7768e"],  # 3  red
     ["#9ece6a", "#9ece6a"],  # 4  green
     ["#e0af68", "#e0af68"],  # 5  yellow
-    ["#7aa2f7", "#7aa2f7"],  # 6  blue
-    ["#ad8ee6", "#ad8ee6"],  # 7  magenta
-    ["#0db9d7", "#0db9d7"],  # 8  cyan
-    ["#444b6a", "#444b6a"]   # 9  bright black
+    ["#7aa2f7", "#7aa2f7"],  # 6  blue["#ad8ee6", "#ad8ee6"],  # 7  magenta["#0db9d7", "#0db9d7"],  # 8  cyan["#444b6a", "#444b6a"]   # 9  bright black
 ]
 
 # --- AUTOSTART ---
@@ -67,7 +64,7 @@ def switch_desktop(direction):
         if new_index == 0:
             visible = [str(i) for i in range(1, 10)]
         else:
-            visible = [f"D{new_index}_{i}" for i in range(1, 10)]
+            visible =[f"D{new_index}_{i}" for i in range(1, 10)]
         
         gb = qtile.widgets_map["groupbox"]
         gb.visible_groups = visible
@@ -171,10 +168,10 @@ for vt in range(1, 8):
     keys.append(Key(["control", "mod1"], f"f{vt}", lazy.core.change_vt(vt).when(func=lambda: qtile.core.name == "wayland")))
 
 # --- GROUPS ---
-groups = []
+groups =[]
 
 # Workspace labels with icons
-workspace_labels = ["", "󰈹", "", "", "", "", "", "", ""]
+workspace_labels =["", "󰈹", "", "", "", "", "", "", ""]
 
 # 1. Desktop 0 (Standard 1-9)
 for i in range(1, 10):
@@ -201,7 +198,7 @@ layout_theme = {
     "border_normal": colors[0],
 }
 
-layouts = [
+layouts =[
     layout.Columns(**layout_theme),
     layout.Max(),
     layout.MonadTall(**layout_theme),
@@ -218,7 +215,7 @@ extension_defaults = widget_defaults.copy()
 
 sep = widget.Sep(linewidth=1, padding=10, foreground=colors[9])
 
-screens = [
+screens =[
     Screen(
         top=bar.Bar(
             widgets=[
@@ -319,7 +316,7 @@ mouse = [
 ]
 
 dgroups_key_binder = None
-dgroups_app_rules = []
+dgroups_app_rules =[]
 follow_mouse_focus = True
 bring_front_click = False
 floats_kept_above = True
@@ -337,6 +334,7 @@ floating_layout = layout.Floating(
         Match(wm_class="nm-connection-editor"),
         Match(title="UnityDropShadowWindow"),    # Unity dropdowns/menus
         Match(wm_class="Unity", title="Unity"),  # General Unity popups/color pickers
+        Match(wm_class="NeohabitApp"),           # Neohabit Standalone App Wrapper
     ]
 )
 auto_fullscreen = True
