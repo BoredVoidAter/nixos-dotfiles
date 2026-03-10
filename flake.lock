@@ -39,19 +39,20 @@
         "type": "github"
       }
     },
-    "neohabit": {
-      "inputs": {
-        "nixpkgs": "nixpkgs"
-      },
+    "neohabit-src": {
+      "flake": false,
       "locked": {
-        "lastModified": 1773123469,
-        "narHash": "sha256-ib+sj+JyLgXuP7AcCkvT1SuBjNZtYB31hDx0oPPZ03A=",
-        "path": "/home/boredvoidater/Neohabit",
-        "type": "path"
+        "lastModified": 1771957482,
+        "narHash": "sha256-8Wve6zYPaXkJ6l9QRdhW/mP+MQ+TkroYaG9iKibrmCk=",
+        "owner": "Vsein",
+        "repo": "Neohabit",
+        "rev": "3f7d8d59a85dbd402912c267dc75dbba89050b51",
+        "type": "github"
       },
       "original": {
-        "path": "/home/boredvoidater/Neohabit",
-        "type": "path"
+        "owner": "Vsein",
+        "repo": "Neohabit",
+        "type": "github"
       }
     },
     "nix-flatpak": {
@@ -71,15 +72,15 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1772963539,
-        "narHash": "sha256-9jVDGZnvCckTGdYT53d/EfznygLskyLQXYwJLKMPsZs=",
-        "owner": "NixOS",
+        "lastModified": 1767379071,
+        "narHash": "sha256-EgE0pxsrW9jp9YFMkHL9JMXxcqi/OoumPJYwf+Okucw=",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9dcb002ca1690658be4a04645215baea8b95f31d",
+        "rev": "fb7944c166a3b630f177938e478f0378e64ce108",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
+        "owner": "nixos",
         "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
@@ -118,22 +119,6 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1767379071,
-        "narHash": "sha256-EgE0pxsrW9jp9YFMkHL9JMXxcqi/OoumPJYwf+Okucw=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "fb7944c166a3b630f177938e478f0378e64ce108",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_3": {
-      "locked": {
         "lastModified": 1766902085,
         "narHash": "sha256-coBu0ONtFzlwwVBzmjacUQwj3G+lybcZ1oeNSQkgC0M=",
         "owner": "NixOS",
@@ -167,7 +152,7 @@
     "playit-nixos-module": {
       "inputs": {
         "flake-parts": "flake-parts",
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": "nixpkgs_2",
         "playit-agent-source": "playit-agent-source",
         "systems": "systems"
       },
@@ -188,9 +173,9 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
-        "neohabit": "neohabit",
+        "neohabit-src": "neohabit-src",
         "nix-flatpak": "nix-flatpak",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs",
         "nixpkgs-stable": "nixpkgs-stable",
         "playit-nixos-module": "playit-nixos-module",
         "sops-nix": "sops-nix"

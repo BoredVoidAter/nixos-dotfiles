@@ -1,4 +1,4 @@
-{ pkgs, pkgs-stable, lib, config, sops, ... }:
+{ pkgs, pkgs-stable, lib, config, sops, neohabit-src, ... }:
 
 {
   home.packages = with pkgs;[
@@ -53,6 +53,7 @@
     exec = "${pkgs.chromium}/bin/chromium --app=http://localhost --class=NeohabitApp";
     terminal = false;
     categories = [ "Utility" ];
-    icon = "view-calendar-tasks";
+    icon = "${neohabit-src}/frontend/src/logos/neohabit-logo-dark.svg";
+
   };
 }

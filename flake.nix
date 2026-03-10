@@ -55,7 +55,7 @@
             useUserPackages = true;
             
             # Pass 'pkgs-stable' so home.nix can use it
-            extraSpecialArgs = { inherit pkgs-stable sops-nix; };
+            extraSpecialArgs = { inherit pkgs-stable sops-nix neohabit-src; };
             
             users.boredvoidater = import ./home.nix;
             backupFileExtension = "backup";
