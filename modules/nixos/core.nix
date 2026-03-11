@@ -38,7 +38,7 @@
   # -- Users --
   users.users.boredvoidater = {
     isNormalUser = true;
-    extraGroups =[ "wheel" "networkmanager" "video" "audio" "bluetooth" ];
+    extraGroups =[ "wheel" "networkmanager" "video" "audio" "bluetooth" "dialout" ];
     home = "/home/boredvoidater";
   };
 
