@@ -14,16 +14,18 @@ browser = "firefox"
 NUM_DESKTOPS = 4  # You have 4 total "Desktops" available (0, 1, 2, 3)
 
 # --- COLORS ---
-colors =[
+colors = [
     ["#1a1b26", "#1a1b26"],  # 0  bg
     ["#a9b1d6", "#a9b1d6"],  # 1  fg
     ["#32344a", "#32344a"],  # 2  black
     ["#f7768e", "#f7768e"],  # 3  red
     ["#9ece6a", "#9ece6a"],  # 4  green
     ["#e0af68", "#e0af68"],  # 5  yellow
-    ["#7aa2f7", "#7aa2f7"],  # 6  blue["#ad8ee6", "#ad8ee6"],  # 7  magenta["#0db9d7", "#0db9d7"],  # 8  cyan["#444b6a", "#444b6a"]   # 9  bright black
+    ["#7aa2f7", "#7aa2f7"],  # 6  blue
+    ["#ad8ee6", "#ad8ee6"],  # 7  magenta
+    ["#0db9d7", "#0db9d7"],  # 8  cyan
+    ["#444b6a", "#444b6a"]   # 9  bright black
 ]
-
 # --- AUTOSTART ---
 @hook.subscribe.startup_once
 def autostart():
