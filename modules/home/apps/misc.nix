@@ -21,6 +21,8 @@
 
     gtk-engine-murrine
     gnome-themes-extra
+
+    pkgs-stable.aseprite
     
     gsettings-desktop-schemas
     pamixer
