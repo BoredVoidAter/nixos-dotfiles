@@ -24,6 +24,7 @@
     ./modules/home/apps/misc.nix
     ./modules/home/apps/cad.nix
     ./modules/home/apps/hackatime.nix
+    ./modules/home/apps/media.nix
   ];
 
   services.flameshot = {

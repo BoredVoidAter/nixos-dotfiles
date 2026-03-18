@@ -23,6 +23,8 @@
     gnome-themes-extra
 
     pkgs-stable.aseprite
+
+    tenacity
     
     gsettings-desktop-schemas
     pamixer
