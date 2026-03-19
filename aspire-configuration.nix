@@ -7,7 +7,10 @@
     ./modules/nixos/desktop.nix
     ./modules/nixos/audio.nix
   ];
-
+  boot.kernelParams = [
+    "radeon.dpm=0",
+    "radeon.uvd=0"
+  ];
   # Override Bootloader for old laptops (Legacy BIOS)
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
