@@ -42,7 +42,6 @@
       nixos-btw = nixpkgs.lib.nixosSystem {
         inherit system;
         
-        # Pass the raw neohabit source to our modules
         specialArgs = { inherit neohabit-src; };
         
         modules = [
@@ -50,17 +49,13 @@
           ./modules/nixos/neohabit.nix
           home-manager.nixosModules.home-manager
           sops-nix.nixosModules.sops
-
           nix-flatpak.nixosModules.nix-flatpak
 
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              
-              # Pass 'pkgs-stable' so home.nix can use it
               extraSpecialArgs = { inherit pkgs-stable sops-nix neohabit-src; };
-              
               users.boredvoidater = import ./home.nix;
               backupFileExtension = "backup";
             };
@@ -75,30 +70,28 @@
       nixos-aspire = nixpkgs.lib.nixosSystem {
         inherit system;
         
-        # Pass the raw neohabit source to our modules (in case shared modules need it)
         specialArgs = { inherit neohabit-src; };
         
         modules = [
           ./aspire-configuration.nix
+          
+          # ADDED BACK: We must include this so `core.nix` recognizes the option, 
+          # but `aspire-configuration.nix` will keep it disabled so it doesn't run.
+          ./modules/nixos/neohabit.nix 
+          
           home-manager.nixosModules.home-manager
           sops-nix.nixosModules.sops
-
           nix-flatpak.nixosModules.nix-flatpak
 
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              
-              # Pass 'pkgs-stable' so aspire-home.nix can use it
               extraSpecialArgs = { inherit pkgs-stable sops-nix neohabit-src; };
-              
               users.boredvoidater = import ./aspire-home.nix;
               backupFileExtension = "backup";
             };
           }
-          # Note: playit-nixos-module and neohabit.nix are excluded here 
-          # to keep the laptop stripped down and lightweight.
         ];
       };
     };
