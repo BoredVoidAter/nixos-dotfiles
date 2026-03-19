@@ -36,23 +36,69 @@
     };
   in {
     nixosConfigurations = {
-      nixos-btw = nixpkgs.lib.nixosSystem { ... }; # (Keep existing)
-
-      nixos-aspire = nixpkgs.lib.nixosSystem {
-        inherit system specialArgs;
+      # ---------------------------------------------------------
+      # MAIN DESKTOP HOST (nixos-btw)
+      # ---------------------------------------------------------
+      nixos-btw = nixpkgs.lib.nixosSystem {
+        inherit system;
+        
+        # Pass the raw neohabit source to our modules
+        specialArgs = { inherit neohabit-src; };
+        
         modules = [
-          ./aspire-configuration.nix       # We will create this
+          ./configuration.nix
+          ./modules/nixos/neohabit.nix
           home-manager.nixosModules.home-manager
           sops-nix.nixosModules.sops
+
+          nix-flatpak.nixosModules.nix-flatpak
+
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              
+              # Pass 'pkgs-stable' so home.nix can use it
               extraSpecialArgs = { inherit pkgs-stable sops-nix neohabit-src; };
-              users.boredvoidater = import ./aspire-home.nix; # We will create this
+              
+              users.boredvoidater = import ./home.nix;
               backupFileExtension = "backup";
             };
           }
+          playit-nixos-module.nixosModules.default
+        ];
+      };
+
+      # ---------------------------------------------------------
+      # OLD LAPTOP HOST (nixos-aspire)
+      # ---------------------------------------------------------
+      nixos-aspire = nixpkgs.lib.nixosSystem {
+        inherit system;
+        
+        # Pass the raw neohabit source to our modules (in case shared modules need it)
+        specialArgs = { inherit neohabit-src; };
+        
+        modules = [
+          ./aspire-configuration.nix
+          home-manager.nixosModules.home-manager
+          sops-nix.nixosModules.sops
+
+          nix-flatpak.nixosModules.nix-flatpak
+
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              
+              # Pass 'pkgs-stable' so aspire-home.nix can use it
+              extraSpecialArgs = { inherit pkgs-stable sops-nix neohabit-src; };
+              
+              users.boredvoidater = import ./aspire-home.nix;
+              backupFileExtension = "backup";
+            };
+          }
+          # Note: playit-nixos-module and neohabit.nix are excluded here 
+          # to keep the laptop stripped down and lightweight.
         ];
       };
     };
