@@ -35,34 +35,26 @@
       config.allowUnfree = true;
     };
   in {
-    nixosConfigurations.nixos-btw = nixpkgs.lib.nixosSystem {
-      inherit system;
-      
-      # Pass the raw neohabit source to our modules
-      specialArgs = { inherit neohabit-src; };
-      
-      modules =[
-        ./configuration.nix
-        ./modules/nixos/neohabit.nix
-        home-manager.nixosModules.home-manager
-        sops-nix.nixosModules.sops
+    nixosConfigurations = {
+      nixos-btw = nixpkgs.lib.nixosSystem { ... }; # (Keep existing)
 
-        nix-flatpak.nixosModules.nix-flatpak
-
-        {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            
-            # Pass 'pkgs-stable' so home.nix can use it
-            extraSpecialArgs = { inherit pkgs-stable sops-nix neohabit-src; };
-            
-            users.boredvoidater = import ./home.nix;
-            backupFileExtension = "backup";
-          };
-        }
-        playit-nixos-module.nixosModules.default
-      ];
+      nixos-aspire = nixpkgs.lib.nixosSystem {
+        inherit system specialArgs;
+        modules = [
+          ./aspire-configuration.nix       # We will create this
+          home-manager.nixosModules.home-manager
+          sops-nix.nixosModules.sops
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = { inherit pkgs-stable sops-nix neohabit-src; };
+              users.boredvoidater = import ./aspire-home.nix; # We will create this
+              backupFileExtension = "backup";
+            };
+          }
+        ];
+      };
     };
   };
 }

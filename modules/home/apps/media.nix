@@ -16,10 +16,7 @@
   programs.zathura = {
     enable = true;
     options = {
-      # Tokyonight-Dark theme settings
-      recolor = true;
-      recolor-darkcolor = "#a9b1d6";
-      recolor-lightcolor = "#1a1b26";
+      # Keep the UI dark to match Tokyonight, but leave the PDF original (colorful)
       default-bg = "#1a1b26";
       default-fg = "#a9b1d6";
       statusbar-bg = "#24283b";
