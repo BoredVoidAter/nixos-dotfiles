@@ -2,20 +2,18 @@
 
 {
   imports = [ 
-    ./hardware-aspire.nix # You will generate this on the laptop
+    ./hardware-aspire.nix 
     ./modules/nixos/core.nix
     ./modules/nixos/desktop.nix
     ./modules/nixos/audio.nix
-    # Notice we omitted gaming.nix and flatpak.nix entirely
   ];
 
-  # Override Bootloader for old laptops (If your Aspire uses Legacy BIOS)
-  # If it actually supports UEFI, you can remove these 3 lines.
+  # Override Bootloader for old laptops (Legacy BIOS)
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
   boot.loader.grub = {
     enable = true;
-    device = "/dev/sda"; # Change to your actual drive during install
+    device = "/dev/sda"; # Make sure this matches your drive
   };
 
   # Disable heavy services hardcoded in core.nix
@@ -23,8 +21,12 @@
   services.postgresql.enable = lib.mkForce false;
   services.nginx.enable = lib.mkForce false;
 
-  # Optionally disable SOPS if you don't want to copy your private keys to the old laptop
-  sops.defaultSopsFile = lib.mkForce null;
+  # FIX FOR SOPS: 
+  # Instead of breaking the file path, we forcefully empty the list of secrets 
+  # and templates that core.nix asked for. This prevents the laptop from 
+  # attempting (and failing) to decrypt the Neohabit secrets on boot.
+  sops.secrets = lib.mkForce {};
+  sops.templates = lib.mkForce {};
 
   system.stateVersion = "25.05";
 }
