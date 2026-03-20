@@ -7,6 +7,7 @@
     ./modules/nixos/desktop.nix
     ./modules/nixos/audio.nix
   ];
+  networking.hostName = "nixos-aspire";
   boot.kernelParams = [
     "radeon.dpm=0",
     "radeon.uvd=0"

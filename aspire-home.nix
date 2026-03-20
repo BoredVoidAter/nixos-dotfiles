@@ -30,6 +30,7 @@
     gh
     pamixer
     repomix
+    localsend
   ];
 
   home.username = "boredvoidater";

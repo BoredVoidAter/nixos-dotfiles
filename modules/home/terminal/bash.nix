@@ -4,7 +4,7 @@
   programs.bash = {
     enable = true;
     shellAliases = {
-      nrs = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
+      nrs = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles";
       n = "nvim";
       # Since we installed Unity via Nix, we can usually just run unityhub
       unity = "nvidia-offload unityhub";         

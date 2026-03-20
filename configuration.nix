@@ -11,5 +11,7 @@
       ./modules/nixos/flatpak.nix
     ];
 
+  networking.hostName = "nixos-btw"; # <--- Add this line
+
   system.stateVersion = "25.05";
 }
