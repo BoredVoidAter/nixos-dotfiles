@@ -9,7 +9,7 @@
   ];
   networking.hostName = "nixos-aspire";
   boot.kernelParams = [
-    "radeon.dpm=0",
+    "radeon.dpm=0"
     "radeon.uvd=0"
   ];
   # Override Bootloader for old laptops (Legacy BIOS)
