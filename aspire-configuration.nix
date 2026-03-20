@@ -11,7 +11,8 @@
   boot.kernelParams = [
   "nomodeset" 
   "radeon.modeset=0"
-  ]; 
+  ];
+  services.xserver.videoDrivers = [ "vesa" "fbdev" ];
   # Override Bootloader for old laptops (Legacy BIOS)
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
