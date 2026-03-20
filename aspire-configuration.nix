@@ -32,6 +32,13 @@
   services.postgresql.enable = lib.mkForce false;
   services.nginx.enable = lib.mkForce false;
 
+  services.openssh = {
+    enable = true;
+    settings.PasswordAuthentication = true;
+  };
+
+  networking.firewall.allowedTCPPorts = [ 22 ];
+
   # FIX FOR SOPS: 
   # Instead of breaking the file path, we forcefully empty the list of secrets 
   # and templates that core.nix asked for. This prevents the laptop from 
