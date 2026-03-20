@@ -9,9 +9,13 @@
   ];
   networking.hostName = "nixos-aspire";
   boot.kernelParams = [
-    "radeon.dpm=0"
-    "radeon.uvd=0"
-  ];
+    # Force ENABLE Dynamic Power Management so the GPU can cool down
+    "radeon.dpm=1" 
+    
+    # Optional: If you still get glitches, this disables PCIe Active State Power Management 
+    # which was notoriously buggy on 2010 Acer laptops
+    "pcie_aspm=off" 
+  ];  
   # Override Bootloader for old laptops (Legacy BIOS)
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
