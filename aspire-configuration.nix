@@ -37,7 +37,10 @@
     settings.PasswordAuthentication = true;
   };
 
-  networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall = {
+    allowedTCPPorts = [ 22 53317 ];
+    allowedUDPPorts = [ 53317 ];
+  };
 
   # FIX FOR SOPS: 
   # Instead of breaking the file path, we forcefully empty the list of secrets 
