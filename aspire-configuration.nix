@@ -9,10 +9,16 @@
   ];
   networking.hostName = "nixos-aspire";
   boot.kernelParams = [
-  "nomodeset" 
-  "radeon.modeset=0"
+    "radeon.dpm=1"
   ];
-  services.xserver.videoDrivers = [ "vesa" "fbdev" ];
+  services.xserver.videoDrivers = [ "radeon" ];
+  
+  # This is the magic trick: it tells the Radeon driver to handle the 
+  # resolution, but strictly forbids it from using the broken 3D engine.
+  services.xserver.deviceSection = ''
+    Option "NoAccel" "True"
+    Option "DRI" "False"
+  ''; 
   # Override Bootloader for old laptops (Legacy BIOS)
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
