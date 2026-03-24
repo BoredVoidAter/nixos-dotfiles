@@ -25,7 +25,6 @@
     pkgs-stable.aseprite
 
     tenacity
-    bitwig-studio
     
     gsettings-desktop-schemas
     pamixer
