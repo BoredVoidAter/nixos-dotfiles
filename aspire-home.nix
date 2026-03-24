@@ -38,7 +38,8 @@
     libdvdread
     libdvdnav
     asunder      # Graphical Audio CD Ripper
-    handbrake    # Video DVD/VCD Ripper
+    handbrake    # Video DVD Ripper
+    vcdimager    # Special tool for extracting SVCD/VCD .mpg files
     
     # CD Burning & YouTube Downloading
     yt-dlp
