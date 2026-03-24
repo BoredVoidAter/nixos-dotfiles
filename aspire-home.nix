@@ -31,6 +31,18 @@
     pamixer
     repomix
     localsend
+    
+    # Optical Media Playback
+    vlc
+    libdvdcss
+    libdvdread
+    libdvdnav
+    
+    # CD Burning & YouTube Downloading
+    yt-dlp
+    ffmpeg
+    brasero
+    cdrtools
   ];
 
   home.username = "boredvoidater";
