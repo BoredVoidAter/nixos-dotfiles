@@ -6,6 +6,8 @@
     ./modules/nixos/core.nix
     ./modules/nixos/desktop.nix
     ./modules/nixos/audio.nix
+
+    ./modules/home/apps/media.nix
   ];
   networking.hostName = "nixos-aspire";
   boot.kernelParams = [
