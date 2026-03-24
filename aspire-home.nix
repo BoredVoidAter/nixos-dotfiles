@@ -45,7 +45,7 @@
     yt-dlp
     ffmpeg
     brasero
-    cdrtools
+    cdrkit
   ];
 
   home.username = "boredvoidater";
