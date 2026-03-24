@@ -22,7 +22,7 @@ in
   ];
 
   home.packages = with pkgs; [
-    fake-cdrecord  # Shadows brasero's bundled cdrecord, forcing wodim
+    (lib.hiPrio fake-cdrecord)  # Shadows brasero's bundled cdrecord, forcing wodim
     brightnessctl
     wireplumber
     lxappearance
