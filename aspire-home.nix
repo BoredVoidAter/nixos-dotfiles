@@ -32,11 +32,13 @@
     repomix
     localsend
     
-    # Optical Media Playback
+    # Optical Media Playback & Extraction
     vlc
     libdvdcss
     libdvdread
     libdvdnav
+    asunder      # Graphical Audio CD Ripper
+    handbrake    # Video DVD/VCD Ripper
     
     # CD Burning & YouTube Downloading
     yt-dlp
