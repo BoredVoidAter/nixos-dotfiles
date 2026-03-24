@@ -1,11 +1,6 @@
 { config, pkgs, lib, ... }:
 
-let
-  fake-cdrecord = pkgs.writeShellScriptBin "cdrecord" ''
-    echo "cdrecord disabled, use wodim"
-    exit 1
-  '';
-in
+
 {
   imports = [
     ./modules/home/desktop/theme.nix
@@ -22,7 +17,6 @@ in
   ];
 
   home.packages = with pkgs; [
-    (lib.hiPrio fake-cdrecord)  # Shadows brasero's bundled cdrecord, forcing wodim
     brightnessctl
     wireplumber
     lxappearance

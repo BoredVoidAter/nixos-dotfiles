@@ -49,5 +49,21 @@
   sops.secrets = lib.mkForce {};
   sops.templates = lib.mkForce {};
 
+  security.wrappers.wodim = {
+    source = "${pkgs.cdrkit}/bin/wodim";
+    owner = "root";
+    group = "cdrom";
+    setuid = true;
+  };
+
+  security.wrappers.cdrecord = {
+    source = "${pkgs.cdrtools}/bin/cdrecord";
+    owner = "root";
+    group = "cdrom";
+    setuid = true;
+  };
+
+  users.users.boredvoidater.extraGroups = [ "cdrom" ];
+
   system.stateVersion = "25.05";
 }
