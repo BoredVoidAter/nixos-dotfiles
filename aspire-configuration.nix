@@ -9,7 +9,7 @@
   ];
   networking.hostName = "nixos-aspire";
   boot.kernelParams = [
-    "radeon.dpm=1"
+    "radeon.dpm=0"
   ];
   services.xserver.videoDrivers = [ "radeon" ];
   
@@ -19,6 +19,11 @@
     Option "NoAccel" "True"
     Option "DRI" "False"
   ''; 
+
+  environment.variables = {
+    LIBGL_ALWAYS_SOFTWARE = "1";
+  };
+
   # Override Bootloader for old laptops (Legacy BIOS)
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
