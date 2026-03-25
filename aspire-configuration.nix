@@ -11,18 +11,16 @@
   boot.kernelParams = [
     "radeon.dpm=0"
   ];
-  services.xserver.videoDrivers = [ "radeon" ];
-  
-  # This is the magic trick: it tells the Radeon driver to handle the 
-  # resolution, but strictly forbids it from using the broken 3D engine.
+  services.xserver.videoDrivers = [ "modesetting" ];
+
   services.xserver.deviceSection = ''
-    Option "NoAccel" "True"
-    Option "DRI" "False"
-  ''; 
+    Option "AccelMethod" "none"
+  '';
 
   environment.variables = {
     LIBGL_ALWAYS_SOFTWARE = "1";
   };
+ 
 
   # Override Bootloader for old laptops (Legacy BIOS)
   boot.loader.systemd-boot.enable = lib.mkForce false;
