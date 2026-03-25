@@ -16,6 +16,7 @@
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/4c258d2d-4926-4f6c-9298-8ade202cdce3";
       fsType = "ext4";
+      options = [ "noatime" "nodiratime" ];
     };
 
   swapDevices =

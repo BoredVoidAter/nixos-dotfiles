@@ -10,6 +10,7 @@
   networking.hostName = "nixos-aspire";
   boot.kernelParams = [
     "radeon.dpm=0"
+    "elevator=bfq"
   ];
   services.xserver.videoDrivers = [ "modesetting" ];
 
@@ -67,6 +68,19 @@
   };
 
   users.users.boredvoidater.extraGroups = [ "cdrom" ];
+
+    # Enable compressed RAM to prevent hitting the slow hard drive
+  zramSwap = {
+    enable = true;
+    algorithm = "lz4";
+  };
+  
+  # Tell the kernel to avoid writing to disk swap unless absolutely necessary (default is 60)
+  boot.kernel.sysctl = { "vm.swappiness" = 10; };
+
+    # Prevent background deduplication from choking the mechanical drive
+  nix.settings.auto-optimise-store = false;
+
 
   system.stateVersion = "25.05";
 }
