@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  dotfiles = (import ../dotfiles-path.nix { inherit config; }).dotfiles;
+  dotfiles = config.boredvoidater.dotfilesPath;
 in
 {
   xdg.configFile.nvim = {

@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  dotfiles = (import ../dotfiles-path.nix { inherit config; }).dotfiles;
+  dotfiles = config.boredvoidater.dotfilesPath;
 in
 {
   xdg.configFile.qtile = {

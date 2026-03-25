@@ -3,6 +3,7 @@
 
 {
   imports = [
+    ./modules/home/dotfiles-path.nix
     ./modules/home/desktop/theme.nix
     ./modules/home/desktop/qtile.nix
     ./modules/home/desktop/rofi.nix

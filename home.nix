@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./modules/home/dotfiles-path.nix
     sops-nix.homeManagerModules.sops
     # Desktop
     ./modules/home/desktop/theme.nix
