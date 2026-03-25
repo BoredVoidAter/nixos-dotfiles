@@ -36,7 +36,6 @@
     vcdimager
     yt-dlp
     ffmpeg
-    k3b
   ];
 
   home.username = "boredvoidater";

@@ -22,6 +22,7 @@
     LIBGL_ALWAYS_SOFTWARE = "1";
   };
  
+  programs.k3b.enable = true;
 
   # Override Bootloader for old laptops (Legacy BIOS)
   boot.loader.systemd-boot.enable = lib.mkForce false;
