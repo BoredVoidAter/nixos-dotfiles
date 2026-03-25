@@ -25,6 +25,8 @@
     pkgs-stable.aseprite
 
     tenacity
+
+    gimp
     
     gsettings-desktop-schemas
     pamixer
