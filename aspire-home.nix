@@ -36,8 +36,7 @@
     vcdimager
     yt-dlp
     ffmpeg
-    brasero
-    cdrkit
+    xfburn
   ];
 
   home.username = "boredvoidater";
