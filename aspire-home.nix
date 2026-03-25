@@ -8,6 +8,7 @@
     ./modules/home/desktop/rofi.nix
     ./modules/home/desktop/polkit.nix
     ./modules/home/desktop/nvim.nix
+    ./modules/home/desktop/redshift.nix
     ./modules/home/terminal/git.nix
     ./modules/home/terminal/bash.nix
     ./modules/home/terminal/fzf.nix
