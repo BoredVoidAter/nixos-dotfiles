@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  dotfiles = "${config.home.homeDirectory}/nixos-dotfiles/config";
+  dotfiles = config.boredvoidater.dotfilesPath;
 in
 {
   xdg.configFile.qtile = {
