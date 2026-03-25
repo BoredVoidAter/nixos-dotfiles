@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  dotfiles = import ../dotfiles-path.nix { inherit config; };
+  dotfiles = (import ../dotfiles-path.nix { inherit config; }).dotfiles;
 in
 {
   xdg.configFile.qtile = {
