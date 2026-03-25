@@ -36,22 +36,8 @@
     vcdimager
     yt-dlp
     ffmpeg
-    xfburn
-    
-    # --- ADDED GSTREAMER PACKAGES ---
-    gst_all_1.gstreamer
-    gst_all_1.gst-plugins-base
-    gst_all_1.gst-plugins-good
-    gst_all_1.gst-plugins-bad
-    gst_all_1.gst-plugins-ugly
-    gst_all_1.gst-libav
+    k3b
   ];
-
-  # --- ADDED SESSION VARIABLES ---
-  home.sessionVariables = {
-    # This dynamically points to wherever Home Manager installs your user packages
-    GST_PLUGIN_PATH = "${config.home.profileDirectory}/lib/gstreamer-1.0";
-  };
 
   home.username = "boredvoidater";
   home.stateVersion = "25.05";
