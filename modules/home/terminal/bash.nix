@@ -76,6 +76,9 @@ let
   yt-cd-list-script = pkgs.writeShellScriptBin "yt-cd-list" ''
     echo "Scanning for CD folders..."
     
+    # Get the name of the current parent directory (e.g., "ChineseMusic")
+    PARENT_DIR=$(basename "$PWD")
+    
     # Loop through any directory that starts with CD_
     for dir in CD_*/; do
       # Skip if no directories match
@@ -89,7 +92,7 @@ let
       
       # Clear or create the output file
       > "$OUTPUT_FILE"
-      echo "=== $CD_NAME TRACKLIST ===" >> "$OUTPUT_FILE"
+      echo "=== $PARENT_DIR / $CD_NAME TRACKLIST ===" >> "$OUTPUT_FILE"
       echo "" >> "$OUTPUT_FILE"
       
       # We will store the song names in a variable for the AI prompt
@@ -121,7 +124,7 @@ let
       
       echo "" >> "$OUTPUT_FILE"
       echo "=== AI ALBUM COVER PROMPT ===" >> "$OUTPUT_FILE"
-      echo "A minimalist, conceptual album cover design inspired by the themes of these songs: $SONG_LIST. The artwork must be strictly high-contrast black and white, using striking silhouettes, clean lines, and negative space to visually represent the mood of the music. The only color allowed in the entire image is a bold [INSERT ONE COLOR HERE], used sparingly as a dramatic accent to highlight the central focal point. The composition should leave empty negative space at the top or bottom for typography to be added later. Professional graphic design, flat vector art style, clean edges, completely textless." >> "$OUTPUT_FILE"
+      echo "A highly detailed, maximalist, meme-heavy album cover design inspired by the themes, jokes, and vibes of these songs: $SONG_LIST. The artwork must feature an intricate, chaotic composition filled with surreal internet memes, dense details, and wild energy. Strict color palette: you must use ONLY solid black, solid white, and exactly ONE other vibrant color of your choosing. Absolutely no gradients, shading, or additional colors. Leave a small empty space at the top or bottom for typography to be added later. Crisp vector art style, clean edges, completely textless." >> "$OUTPUT_FILE"
       
     done
     
