@@ -4,24 +4,28 @@
   services.redshift = {
     enable = true;
     
-    # We use a manual provider to satisfy the configuration requirements
     provider = "manual";
-    latitude = 51.1657; # Approx center of Germany
+    latitude = 51.1657; 
     longitude = 10.4515;
 
     temperature = {
-      day = 6500;   # Normal daylight temperature (Cool)
-      night = 3000; # Blue light filtered temperature (Warm/Orange)
+      day = 6500;   
+      # Dropping this from 3000 to 1800 creates a deep red tint
+      night = 1800; 
     };
 
-    # Override the sun-based calculation to use strict time windows
     settings = {
       redshift = {
-        # Gradually fades back to normal between 06:00 and 07:00
         dawn-time = "06:00-07:00";
-        # Gradually applies the blue light filter between 18:00 and 18:30
-        dusk-time = "18:00-18:30"; 
+        # Starts the fade at 6:00 PM and finishes exactly at 10:30 PM
+        dusk-time = "18:00-22:30"; 
       };
     };
   };
+
+  # Forces a 5-second delay on boot so Qtile/X11 is fully ready
+  systemd.user.services.redshift = {
+    Service.ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+  };
 }
+

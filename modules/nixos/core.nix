@@ -15,6 +15,7 @@
   };
 
   networking.networkmanager.enable = true;
+  networking.nameservers = [ "1.1.1.1" "1.0.0.1" ];
 
   # -- Time & Locale --
   time.timeZone = "Europe/Berlin";
