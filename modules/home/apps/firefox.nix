@@ -32,6 +32,12 @@
         "browser.startup.homepage" = "about:blank";
         "browser.search.region" = "DE";
         "ui.systemUsesDarkTheme" = 1;
+
+        "network.trr.mode" = 3;
+        # Set Cloudflare as the provider
+        "network.trr.uri" = "https://mozilla.cloudflare-dns.com/dns-query";
+        # Required for Mode 3 to resolve the initial connection
+        "network.trr.bootstrapAddress" = "1.1.1.1";
       };
       userChrome = "browser { background-color: #1a1b26 !important; }";
     };
