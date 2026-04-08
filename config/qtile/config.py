@@ -15,16 +15,16 @@ NUM_DESKTOPS = 4  # You have 4 total "Desktops" available (0, 1, 2, 3)
 
 # --- COLORS ---
 colors = [
-    ["#1a1b26", "#1a1b26"],  # 0  bg
-    ["#a9b1d6", "#a9b1d6"],  # 1  fg
-    ["#32344a", "#32344a"],  # 2  black
-    ["#f7768e", "#f7768e"],  # 3  red
-    ["#9ece6a", "#9ece6a"],  # 4  green
-    ["#e0af68", "#e0af68"],  # 5  yellow
-    ["#7aa2f7", "#7aa2f7"],  # 6  blue
-    ["#ad8ee6", "#ad8ee6"],  # 7  magenta
-    ["#0db9d7", "#0db9d7"],  # 8  cyan
-    ["#444b6a", "#444b6a"]   # 9  bright black
+    ["#0D0D0D", "#0D0D0D"], # 0 bg (Dark Background)
+    ["#D9BC9A", "#D9BC9A"], # 1 fg (Tan Text)
+    ["#0D0D0D", "#0D0D0D"], # 2 black
+    ["#590202", "#590202"], # 3 red (Dark Red Accent)
+    ["#BF8845", "#BF8845"], # 4 green (Mapped to Gold)
+    ["#BF8845", "#BF8845"], # 5 yellow (Gold)
+    ["#23A5D9", "#23A5D9"], # 6 blue (Light Blue)
+    ["#23A5D9", "#23A5D9"], # 7 magenta (Mapped to Light Blue)
+    ["#23A5D9", "#23A5D9"], # 8 cyan (Mapped to Light Blue)
+    ["#D9BC9A", "#D9BC9A"]  # 9 bright black (Mapped to Tan)
 ]
 # --- AUTOSTART ---
 @hook.subscribe.startup_once
@@ -147,7 +147,6 @@ keys = [
     
     # Apps
     Key([mod], "space", lazy.spawn("rofi -show drun -show-icons"), desc='Run Launcher'),
-    Key([mod], "s", lazy.spawn('sh -c "maim -s | xclip -selection clipboard -t image/png -i"'), desc="Screenshot"),
     Key([mod, "shift"], "b", lazy.spawn("firefox"), desc="Run Browser"),
     Key([mod, "shift"], "f", lazy.spawn("thunar"), desc="Run Filemanager"),
 
@@ -305,7 +304,7 @@ screens =[
             margin=[0, 0, 0, 0],
             size=30
         ),
-        wallpaper='/home/boredvoidater/Pictures/wallpaper.png',
+        wallpaper='/home/boredvoidater/Pictures/wallpaper.jpg',
         wallpaper_mode='fill',
     ),
 ]

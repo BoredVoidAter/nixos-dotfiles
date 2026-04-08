@@ -36,6 +36,7 @@
     pavucontrol
 
     xsel
+    xclip
 
     # Added for Neohabit standalone wrapper
     chromium

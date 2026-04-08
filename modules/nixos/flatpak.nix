@@ -14,7 +14,8 @@
     packages = [
       "com.tencent.WeChat"
       "io.github.mimbrero.WhatsAppDesktop"
-      "com.ultimaker.cura"                     # <--- ADD THIS LINE
+      "com.ultimaker.cura"
+      "org.jdownloader.JDownloader"# <--- ADD THIS LINE
     ];
 
     # Optional: Update flatpaks automatically on system activation
