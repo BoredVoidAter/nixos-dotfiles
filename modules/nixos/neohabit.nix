@@ -4,7 +4,7 @@ with lib;
 let
   cfg = config.services.neohabit;
 
-  # Build the Backend from our injected GitHub source
+
   backendPkg = pkgs.buildGoModule {
     pname = "neohabit-backend";
     version = "1.1.0-git";
@@ -12,7 +12,7 @@ let
 
     vendorHash = "sha256-7PGwxcWxcNaqoIVqHcmNb6Qt6WeYRCwAcAfz80V+TMg=";
 
-    subPackages =[ "core/cmd" ];
+    subPackages = [ "core/cmd" ];
 
     postInstall = ''
       mv $out/bin/cmd $out/bin/neohabit-backend
@@ -21,7 +21,7 @@ let
     '';
   };
 
-  # Build the Frontend from our injected GitHub source
+
   frontendPkg = pkgs.buildNpmPackage {
     pname = "neohabit-frontend";
     version = "1.1.0-git";
@@ -37,7 +37,7 @@ let
     '';
   };
 
-  # Dynamically generate the runtime config
+
   runtimeConfig = pkgs.writeText "runtime-config.js" ''
     window.APP_CONFIG = {
       API_URL: '${cfg.apiUrl}',
@@ -48,8 +48,9 @@ let
     };
   '';
 
-in {
-  # The NixOS Options
+in
+{
+
   options.services.neohabit = {
     enable = mkEnableOption "Neohabit";
     domain = mkOption { type = types.str; default = "localhost"; };
@@ -63,12 +64,12 @@ in {
     demo = mkOption { type = types.bool; default = false; };
   };
 
-  # The System Configuration (Systemd, Postgres, Nginx)
+
   config = mkIf cfg.enable {
     services.postgresql = {
       enable = true;
       ensureDatabases = [ "neohabit" ];
-      ensureUsers =[{
+      ensureUsers = [{
         name = "neohabit";
         ensureDBOwnership = true;
       }];
@@ -77,7 +78,7 @@ in {
     systemd.services.neohabit-backend = {
       description = "Neohabit Backend";
       wantedBy = [ "multi-user.target" ];
-      after =[ "network.target" "postgresql.service" ];
+      after = [ "network.target" "postgresql.service" ];
       requires = [ "postgresql.service" ];
       environment = {
         PG_DSN = "postgres:///neohabit?host=/run/postgresql";

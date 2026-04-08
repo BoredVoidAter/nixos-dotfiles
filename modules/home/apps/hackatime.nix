@@ -1,25 +1,25 @@
 { pkgs, config, lib, ... }:
 
 let
-  # Path to the state file
+
   stateDir = "${config.home.homeDirectory}/.config/hackatime-tracker";
   stateFile = "${stateDir}/state.json";
 
-  # The Control Script
+
   hackatime-control = pkgs.writeShellScriptBin "hackatime-control" ''
     mkdir -p ${stateDir}
     
-    # Initialize state file if it doesn't exist
+
     if [ ! -f "${stateFile}" ]; then
       echo '{"active": false, "current": "General", "projects": ["General", "Coding", "CAD", "Gaming"]}' > "${stateFile}"
     fi
 
     while true; do
-      # Read current state
+
       ACTIVE=$(jq -r '.active' "${stateFile}")
       CURRENT=$(jq -r '.current' "${stateFile}")
       
-      # Determine Status Text and Icons
+
       if [ "$ACTIVE" == "true" ]; then
         STATUS_TEXT="Tracking: $CURRENT"
         TOGGLE_OPT="  Stop Tracking"
@@ -30,7 +30,7 @@ let
         ICON="media-playback-pause"
       fi
 
-      # Main Menu
+
       ACTION=$(zenity --list --title="Hackatime Control" \
         --text="<span size='x-large' weight='bold'>$STATUS_TEXT</span>" \
         --column="Action" \
@@ -42,7 +42,7 @@ let
         --hide-header \
         --window-icon="$ICON")
 
-      # Handle Cancel/Exit
+
       if [ -z "$ACTION" ] || [ "$ACTION" == "  Exit" ]; then
         break
       fi
@@ -57,7 +57,7 @@ let
           notify-send -u low "Hackatime" "Paused"
           ;;
         *"Switch Project")
-          # Get list of projects
+
           PROJECTS=$(jq -r '.projects[]' "${stateFile}")
           
           NEW_PROJECT=$(echo "$PROJECTS" | zenity --list --title="Select Project" --column="Projects" --height=400 --width=300)
@@ -71,7 +71,7 @@ let
           NEW_NAME=$(zenity --entry --title="New Project" --text="Enter project name:")
           
           if [ -n "$NEW_NAME" ]; then
-            # Add to list and set as current
+
             jq --arg p "$NEW_NAME" '.projects += [$p] | .current = $p | .active = true' "${stateFile}" > "${stateFile}.tmp" && mv "${stateFile}.tmp" "${stateFile}"
             notify-send -u low "Hackatime" "Created: $NEW_NAME"
           fi
@@ -83,30 +83,27 @@ in
 {
   home.packages = with pkgs; [
     wakatime-cli
-    zenity 
+    zenity
     jq
     libnotify # Required for notify-send
     hackatime-control
   ];
 
-  sops.secrets.wakatime_api_key = {
-    # This tells sops-nix to look for this key in your secrets.yaml
-    # It will be decrypted to /run/user/1000/secrets/wakatime_api_key by default
-  };
+  sops.secrets.wakatime_api_key = { };
 
   sops.templates.".wakatime.cfg" = {
     path = "${config.home.homeDirectory}/.wakatime.cfg";
     content = ''
-[settings]
-api_url = https://hackatime.hackclub.com/api/hackatime/v1
-api_key = ${config.sops.placeholder.wakatime_api_key}
-debug = false
-heartbeat_rate_limit_seconds = 30
-#test
+      [settings]
+      api_url = https://hackatime.hackclub.com/api/hackatime/v1
+      api_key = ${config.sops.placeholder.wakatime_api_key}
+      debug = false
+      heartbeat_rate_limit_seconds = 30
+
     '';
   };
 
-  # --- Desktop Entry ---
+
   xdg.desktopEntries.hackatime-control = {
     name = "Hackatime Control";
     genericName = "Time Tracker Manager";

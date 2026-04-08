@@ -1,7 +1,7 @@
 { pkgs, config, ... }:
 
 {
-  # -- Graphics --
+
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -22,12 +22,12 @@
         enable = true;
         enableOffloadCmd = true;
       };
-      intelBusId = "PCI:0:2:0"; 
-      nvidiaBusId = "PCI:1:0:0"; 
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
     };
   };
 
-  # -- Gaming --
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
@@ -40,12 +40,12 @@
   environment.systemPackages = with pkgs; [
     steam-run
   ];
-  
+
   services.playit = {
     enable = true;
-    secretPath = "/etc/nixos/playit.toml"; 
+    secretPath = "/etc/nixos/playit.toml";
   };
-  
+
   networking.firewall.allowedTCPPorts = [ 53317 ];
   networking.firewall.allowedUDPPorts = [ 53317 ];
 }

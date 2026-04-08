@@ -11,7 +11,7 @@ configuration{
     display-run: " ";
     display-window: " ";
     
-    //adding vim keybindings
+
     kb-row-up: "Up,Control+k";
     kb-row-left: "Left,Control+h";
     kb-row-right: "Right,Control+l";
@@ -19,7 +19,7 @@ configuration{
 
     kb-accept-entry: "Control+z,Control+y,Return,KP_Enter";
 
-    //fixing up
+
     kb-remove-to-eol: "";
     kb-move-char-back: "Control+b";
     kb-remove-char-back: "BackSpace";

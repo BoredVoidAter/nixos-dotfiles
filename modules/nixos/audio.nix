@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  # -- Audio --
+
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -9,8 +9,8 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-  
-  # -- Bluetooth --
+
+
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
@@ -23,9 +23,9 @@
       };
     };
   };
-  
+
   services.blueman.enable = true;
-  
+
   environment.systemPackages = with pkgs; [
     pavucontrol # Often needed system-wide or per user, putting here for convenience if system audio
     bluez

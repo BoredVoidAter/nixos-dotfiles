@@ -7,11 +7,10 @@ vim.api.nvim_create_autocmd("FileType", {
       filetypes = { "cs" },
       root_dir = function(fname)
         local util = require("lspconfig.util")
-        return util.root_pattern("*.slnx", "*.sln", "Assembly-CSharp.csproj")(fname)
-          or util.find_git_ancestor(fname)
+        return util.root_pattern("*.slnx", "*.sln", "Assembly-CSharp.csproj")(fname) or util.find_git_ancestor(fname)
       end,
     })
-    -- Force attach to current buffer after setup
+
     require("lspconfig").csharp_ls.launch()
   end,
 })

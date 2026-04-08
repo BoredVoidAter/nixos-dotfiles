@@ -16,11 +16,11 @@ return {
         colors.blue = "#23A5D9"
         colors.yellow = "#BF8845"
         colors.border = "#590202"
-      end
-    }
+      end,
+    },
   },
   {
     "LazyVim/LazyVim",
     opts = { colorscheme = "tokyonight" },
-  }
+  },
 }

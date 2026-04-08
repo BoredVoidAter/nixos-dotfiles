@@ -1,8 +1,8 @@
 { pkgs, ... }:
 
 let
-  # Fetch the library from GitHub. 
-  # Note: You will need to replace the sha256 placeholder below.
+
+
   seeed-library = pkgs.fetchFromGitHub {
     owner = "Seeed-Studio";
     repo = "OPL_Kicad_Library";
@@ -15,7 +15,7 @@ in
     kicad
   ];
 
-  # Symlink the library from the Nix Store to your home directory
-  # Resulting Path: ~/.local/share/kicad/libraries/Seeed_OPL
+
+
   xdg.dataFile."kicad/libraries/Seeed_OPL".source = seeed-library;
 }

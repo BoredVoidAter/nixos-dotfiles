@@ -1,10 +1,10 @@
 { pkgs, lib, ... }:
 
 let
-  # Merge .NET 8 (for Unity) and .NET 9 (for csharp-ls)
+
   my-dotnet = with pkgs.dotnetCorePackages; combinePackages [ sdk_8_0 sdk_9_0 ];
 
-  # Fake VS Code wrapper
+
   unity-neovim-wrapper = pkgs.writeShellScriptBin "code" ''
     PROJECT_PATH="$1"
     
@@ -19,9 +19,9 @@ let
     fi
   '';
 
-  # Custom Unity Hub wrapper
+
   my-unityhub = pkgs.unityhub.overrideAttrs (old: {
-    buildInputs = (old.buildInputs or []) ++ [ pkgs.makeWrapper ];
+    buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.makeWrapper ];
     postInstall = (old.postInstall or "") + ''
       wrapProgram $out/bin/unityhub \
         --prefix PATH : "${lib.makeBinPath[ pkgs.ffmpeg pkgs.android-tools pkgs.p7zip ]}"
@@ -34,10 +34,10 @@ in
     my-dotnet
     mono
     netcoredbg
-    ffmpeg        
-    android-tools 
-    p7zip         
-    
+    ffmpeg
+    android-tools
+    p7zip
+
     unity-neovim-wrapper
   ];
 

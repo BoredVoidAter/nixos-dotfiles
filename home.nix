@@ -4,20 +4,20 @@
   imports = [
     ./modules/home/dotfiles-path.nix
     sops-nix.homeManagerModules.sops
-    # Desktop
+
     ./modules/home/desktop/theme.nix
     ./modules/home/desktop/qtile.nix
     ./modules/home/desktop/rofi.nix
     ./modules/home/desktop/polkit.nix
     ./modules/home/desktop/redshift.nix
     ./modules/home/desktop/nvim.nix
-    
-    # Terminal
+
+
     ./modules/home/terminal/git.nix
     ./modules/home/terminal/bash.nix
     ./modules/home/terminal/fzf.nix
-    
-    # Apps
+
+
     ./modules/home/apps/neovim.nix
     ./modules/home/apps/firefox.nix
     ./modules/home/apps/anki.nix
@@ -35,7 +35,7 @@
 
   home.username = "boredvoidater";
   home.stateVersion = "25.05";
-  
+
   xdg.configFile."Thunar/uca.xml".text = ''
     <?xml version="1.0" encoding="UTF-8"?>
     <actions>

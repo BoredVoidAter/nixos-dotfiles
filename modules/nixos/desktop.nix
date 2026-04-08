@@ -6,7 +6,7 @@
     autoRepeatDelay = 200;
     autoRepeatInterval = 35;
     xkb.layout = "de";
-    
+
     displayManager.lightdm = {
       enable = true;
       greeters.gtk = {
@@ -26,7 +26,7 @@
         };
       };
     };
-    
+
     windowManager.qtile.enable = true;
   };
 
@@ -34,9 +34,9 @@
 
   programs.thunar = {
     enable = true;
-    plugins = with pkgs; [ 
-      thunar-archive-plugin 
-      thunar-volman 
+    plugins = with pkgs; [
+      thunar-archive-plugin
+      thunar-volman
     ];
   };
 

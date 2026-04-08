@@ -2,18 +2,18 @@
   description = "NixOS from Scratch";
 
   inputs = {
-    # Unstable (Default)
+
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # Inject upstream Neohabit directly (no flake.nix required in their repo)
+
     neohabit-src = {
       url = "github:Vsein/Neohabit";
-      flake = false; 
+      flake = false;
     };
-    
-    # Stable (For broken packages like Aseprite)
+
+
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
-    
+
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -27,73 +27,74 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, playit-nixos-module, sops-nix, nix-flatpak, neohabit-src, ... }: 
-  let
-    system = "x86_64-linux";
-    pkgs-stable = import nixpkgs-stable {
-      inherit system;
-      config.allowUnfree = true;
-    };
-  in {
-    nixosConfigurations = {
-      # ---------------------------------------------------------
-      # MAIN DESKTOP HOST (nixos-btw)
-      # ---------------------------------------------------------
-      nixos-btw = nixpkgs.lib.nixosSystem {
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, playit-nixos-module, sops-nix, nix-flatpak, neohabit-src, ... }:
+    let
+      system = "x86_64-linux";
+      pkgs-stable = import nixpkgs-stable {
         inherit system;
-        
-        specialArgs = { inherit neohabit-src; };
-        
-        modules = [
-          ./configuration.nix
-          ./modules/nixos/neohabit.nix
-          home-manager.nixosModules.home-manager
-          sops-nix.nixosModules.sops
-          nix-flatpak.nixosModules.nix-flatpak
-
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = { inherit pkgs-stable sops-nix neohabit-src; };
-              users.boredvoidater = import ./home.nix;
-              backupFileExtension = "backup";
-            };
-          }
-          playit-nixos-module.nixosModules.default
-        ];
+        config.allowUnfree = true;
       };
+    in
+    {
+      nixosConfigurations = {
 
-      # ---------------------------------------------------------
-      # OLD LAPTOP HOST (nixos-aspire)
-      # ---------------------------------------------------------
-      nixos-aspire = nixpkgs.lib.nixosSystem {
-        inherit system;
-        
-        specialArgs = { inherit neohabit-src; };
-        
-        modules = [
-          ./aspire-configuration.nix
-          
-          # ADDED BACK: We must include this so `core.nix` recognizes the option, 
-          # but `aspire-configuration.nix` will keep it disabled so it doesn't run.
-          ./modules/nixos/neohabit.nix 
-          
-          home-manager.nixosModules.home-manager
-          sops-nix.nixosModules.sops
-          nix-flatpak.nixosModules.nix-flatpak
 
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = { inherit pkgs-stable sops-nix neohabit-src; };
-              users.boredvoidater = import ./aspire-home.nix;
-              backupFileExtension = "backup";
-            };
-          }
-        ];
+
+        nixos-btw = nixpkgs.lib.nixosSystem {
+          inherit system;
+
+          specialArgs = { inherit neohabit-src; };
+
+          modules = [
+            ./configuration.nix
+            ./modules/nixos/neohabit.nix
+            home-manager.nixosModules.home-manager
+            sops-nix.nixosModules.sops
+            nix-flatpak.nixosModules.nix-flatpak
+
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = { inherit pkgs-stable sops-nix neohabit-src; };
+                users.boredvoidater = import ./home.nix;
+                backupFileExtension = "backup";
+              };
+            }
+            playit-nixos-module.nixosModules.default
+          ];
+        };
+
+
+
+
+        nixos-aspire = nixpkgs.lib.nixosSystem {
+          inherit system;
+
+          specialArgs = { inherit neohabit-src; };
+
+          modules = [
+            ./aspire-configuration.nix
+
+
+
+            ./modules/nixos/neohabit.nix
+
+            home-manager.nixosModules.home-manager
+            sops-nix.nixosModules.sops
+            nix-flatpak.nixosModules.nix-flatpak
+
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = { inherit pkgs-stable sops-nix neohabit-src; };
+                users.boredvoidater = import ./aspire-home.nix;
+                backupFileExtension = "backup";
+              };
+            }
+          ];
+        };
       };
     };
-  };
 }

@@ -21,7 +21,7 @@
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
           installation_mode = "force_installed";
         };
-        # REMOVED tokyo-night-dark-theme HERE
+
         "my-youtube-recommendations@sblask" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/unhook/latest.xpi";
           installation_mode = "force_installed";

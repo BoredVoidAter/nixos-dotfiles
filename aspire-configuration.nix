@@ -1,8 +1,8 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ 
-    ./hardware-aspire.nix 
+  imports = [
+    ./hardware-aspire.nix
     ./modules/nixos/core.nix
     ./modules/nixos/desktop.nix
     ./modules/nixos/audio.nix
@@ -21,10 +21,10 @@
   environment.variables = {
     LIBGL_ALWAYS_SOFTWARE = "1";
   };
- 
+
   programs.k3b.enable = true;
 
-  # Override Bootloader for old laptops (Legacy BIOS)
+
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
   boot.loader.grub = {
@@ -32,7 +32,7 @@
     device = "/dev/sda"; # Make sure this matches your drive
   };
 
-  # Disable heavy services hardcoded in core.nix
+
   services.neohabit.enable = lib.mkForce false;
   services.postgresql.enable = lib.mkForce false;
   services.nginx.enable = lib.mkForce false;
@@ -47,26 +47,26 @@
     allowedUDPPorts = [ 53317 ];
   };
 
-  # FIX FOR SOPS: 
-  # Instead of breaking the file path, we forcefully empty the list of secrets 
-  # and templates that core.nix asked for. This prevents the laptop from 
-  # attempting (and failing) to decrypt the Neohabit secrets on boot.
-  sops.secrets = lib.mkForce {};
-  sops.templates = lib.mkForce {};
- 
+
+
+
+
+  sops.secrets = lib.mkForce { };
+  sops.templates = lib.mkForce { };
+
 
   users.users.boredvoidater.extraGroups = [ "cdrom" ];
 
-    # Enable compressed RAM to prevent hitting the slow hard drive
+
   zramSwap = {
     enable = true;
     algorithm = "lz4";
   };
-  
-  # Tell the kernel to avoid writing to disk swap unless absolutely necessary (default is 60)
+
+
   boot.kernel.sysctl = { "vm.swappiness" = 10; };
 
-    # Prevent background deduplication from choking the mechanical drive
+
   nix.settings.auto-optimise-store = false;
 
 
