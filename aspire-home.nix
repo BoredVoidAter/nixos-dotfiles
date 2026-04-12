@@ -15,6 +15,7 @@
     ./modules/home/apps/neovim.nix
     ./modules/home/apps/firefox.nix
     ./modules/home/apps/media.nix
+    ./modules/home/apps/alacritty.nix
   ];
 
   home.packages = with pkgs; [

@@ -64,5 +64,5 @@
   };
 
 
-  networking.firewall.allowedTCPPorts = [ 80 ];
+  networking.firewall.allowedTCPPorts = [ 80 5000 8000 ];
 }
