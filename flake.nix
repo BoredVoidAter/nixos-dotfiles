@@ -36,7 +36,6 @@
         nixos-btw = nixpkgs.lib.nixosSystem {
           inherit system;
 
-          specialArgs = { inherit neohabit-src; };
 
           modules = [
             ./configuration.nix
