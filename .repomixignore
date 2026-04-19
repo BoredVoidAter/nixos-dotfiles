@@ -4,3 +4,4 @@
 # tmp/
 config/nvim/LICENSE
 *.lock
+config/firefoxpwa/**/*

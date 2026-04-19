@@ -10,10 +10,6 @@ mod = "mod4"
 terminal = "alacritty"
 browser = "firefox"
 
-
-NUM_DESKTOPS = 4  # You have 4 total "Desktops" available (0, 1, 2, 3)
-
-
 colors = [
     ["#0D0D0D", "#0D0D0D"], # 0 bg (Dark Background)
     ["#D9BC9A", "#D9BC9A"], # 1 fg (Tan Text)
@@ -32,111 +28,28 @@ def autostart():
     home = os.path.expanduser('~')
     subprocess.Popen(['sh', home + '/.config/qtile/autostart.sh'])
 
-
-class DesktopManager:
-    def __init__(self):
-        self.current_desktop = 0 # Start at Desktop 0
-        self.initialized = {0}   # Desktop 0 is assumed ready (handled by autostart.sh)
-
-    def get_group_name(self, index):
-        """Returns the internal group name. 
-           Desktop 0: "1", "2"... 
-           Desktop 1: "D1_1", "D1_2"...
-        """
-        if self.current_desktop == 0:
-            return str(index)
-        return f"D{self.current_desktop}_{index}"
-
-desktop_manager = DesktopManager()
-
-def switch_desktop(direction):
-    """
-    direction: 1 (Next) or -1 (Prev)
-    """
-    def _inner(qtile):
-
-        new_index = (desktop_manager.current_desktop + direction) % NUM_DESKTOPS
-        desktop_manager.current_desktop = new_index
-
-
-        widget_text = f"[ DSK {new_index} ]"
-        qtile.widgets_map["desktop_indicator"].update(widget_text)
-
-
-        if new_index == 0:
-            visible = [str(i) for i in range(1, 10)]
-        else:
-            visible =[f"D{new_index}_{i}" for i in range(1, 10)]
-        
-        gb = qtile.widgets_map["groupbox"]
-        gb.visible_groups = visible
-        gb.bar.draw()
-
-
-        if new_index not in desktop_manager.initialized:
-            desktop_manager.initialized.add(new_index)
-            
-
-            g1 = f"D{new_index}_1"
-            g2 = f"D{new_index}_2"
-
-
-            qtile.groups_map[g2].toscreen()
-            qtile.spawn(browser)
-            
-
-            def spawn_terminal_on_g1():
-                qtile.groups_map[g1].toscreen()
-                qtile.spawn(terminal)
-            
-            qtile.call_later(0.5, spawn_terminal_on_g1)
-        else:
-
-            if new_index == 0:
-                qtile.groups_map["1"].toscreen()
-            else:
-                qtile.groups_map[f"D{new_index}_1"].toscreen()
-
-    return _inner
-
-def go_to_group(key_index):
-    """Switch to workspace X of CURRENT desktop"""
-    def _inner(qtile):
-        target = desktop_manager.get_group_name(key_index)
-        qtile.groups_map[target].toscreen()
-    return _inner
-
-def move_window(key_index):
-    """Move window to workspace X of CURRENT desktop"""
-    def _inner(qtile):
-        target = desktop_manager.get_group_name(key_index)
-        if qtile.current_window:
-            qtile.current_window.togroup(target)
-    return _inner
-
-
 keys = [
-
+    # Window navigation
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
     Key([mod], "Tab", lazy.layout.next(), desc="Move window focus to other window"),
 
-
+    # Window moving
     Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
     Key([mod, "shift"], "l", lazy.layout.shuffle_right(), desc="Move window to the right"),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
 
-
+    # Window resizing
     Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
 
-
+    # Layouts and essential spawns
     Key([mod, "shift"], "Return", lazy.layout.toggle_split(), desc="Toggle split"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
@@ -145,52 +58,43 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     
-
+    # Apps
     Key([mod], "space", lazy.spawn("rofi -show drun -show-icons"), desc='Run Launcher'),
     Key([mod, "shift"], "b", lazy.spawn("firefox"), desc="Run Browser"),
     Key([mod, "shift"], "f", lazy.spawn("thunar"), desc="Run Filemanager"),
 
-
+    # Multimedia Keys
     Key([], "XF86AudioRaiseVolume", lazy.spawn("pamixer -i 5")),
     Key([], "XF86AudioLowerVolume", lazy.spawn("pamixer -d 5")),
     Key([], "XF86AudioMute", lazy.spawn("pamixer -t")),
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +5%")),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 5%-")),
 
-
-
-    Key([mod], "period", lazy.function(switch_desktop(1)), desc="Next Desktop"),
-    Key([mod], "comma", lazy.function(switch_desktop(-1)), desc="Prev Desktop"),
+    # Workspace iteration
+    Key([mod], "period", lazy.screen.next_group(), desc="Next Workspace"),
+    Key([mod], "comma", lazy.screen.prev_group(), desc="Prev Workspace"),
+    
+    # Utilities
     Key([mod], "s", lazy.spawn("flameshot gui"), desc="Screenshot (Flameshot)"),
 ]
 
-
+# VT switching setup for Wayland (if applicable)
 for vt in range(1, 8):
     keys.append(Key(["control", "mod1"], f"f{vt}", lazy.core.change_vt(vt).when(func=lambda: qtile.core.name == "wayland")))
 
-
-groups =[]
-
-
-workspace_labels =["", "󰈹", "", "", "", "", "", "", ""]
-
+groups = []
+workspace_labels = ["", "󰈹", "", "", "", "", "", "", ""]
 
 for i in range(1, 10):
     groups.append(Group(name=str(i), label=workspace_labels[i-1], layout="columns"))
 
-
-for d in range(1, NUM_DESKTOPS):
-    for i in range(1, 10):
-        groups.append(Group(name=f"D{d}_{i}", label=workspace_labels[i-1], layout="columns"))
-
-
-for i in range(1, 10):
-    key_name = str(i)
+for i in groups:
     keys.extend([
-        Key([mod], key_name, lazy.function(go_to_group(i))),
-        Key([mod, "shift"], key_name, lazy.function(move_window(i))),
+        # mod + letter of group = switch to group
+        Key([mod], i.name, lazy.group[i.name].toscreen(), desc="Switch to group {}".format(i.name)),
+        # mod + shift + letter of group = switch to & move focused window to group
+        Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True), desc="Switch to & move focused window to group {}".format(i.name)),
     ])
-
 
 layout_theme = {
     "border_width": 1,
@@ -199,12 +103,11 @@ layout_theme = {
     "border_normal": colors[0],
 }
 
-layouts =[
+layouts = [
     layout.Columns(**layout_theme),
     layout.Max(),
     layout.MonadTall(**layout_theme),
 ]
-
 
 widget_defaults = dict(
     font="JetBrainsMono Nerd Font Propo Bold",
@@ -216,23 +119,20 @@ extension_defaults = widget_defaults.copy()
 
 sep = widget.Sep(linewidth=1, padding=10, foreground=colors[9])
 
-screens =[
+screens = [
     Screen(
         top=bar.Bar(
             widgets=[
-
+                # NixOS Icon launcher button
                 widget.TextBox(
-                    name="desktop_indicator",
-                    text="[ DSK 0 ]",
+                    text=" ",
                     foreground=colors[6],
-                    padding=10,
-                    fontsize=16,
+                    padding=15,
+                    fontsize=20,
+                    mouse_callbacks={'Button1': lambda: qtile.cmd_spawn("rofi -show drun -show-icons")}
                 ),
                 
-
                 widget.GroupBox(
-                    name="groupbox",
-                    visible_groups=[str(i) for i in range(1, 10)], # Start showing Desktop 0
                     fontsize=20,
                     margin_y=3,
                     margin_x=5,
@@ -267,6 +167,15 @@ screens =[
                 widget.Systray(padding=6),
                 sep,
                 
+                # Network activity
+                widget.Net(
+                    foreground=colors[5],
+                    padding=8,
+                    format='↓ {down:6.2f}{down_suffix:<2} ↑ {up:6.2f}{up_suffix:<2}',
+                    mouse_callbacks={'Button1': lambda: qtile.cmd_spawn(terminal + ' -e nmtui')}
+                ),
+                sep,
+
                 widget.CPU(
                     foreground=colors[4],
                     padding=8,
@@ -309,7 +218,6 @@ screens =[
     ),
 ]
 
-
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(), start=lazy.window.get_position()),
     Drag([mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()),
@@ -317,7 +225,7 @@ mouse = [
 ]
 
 dgroups_key_binder = None
-dgroups_app_rules =[]
+dgroups_app_rules = []
 follow_mouse_focus = True
 bring_front_click = False
 floats_kept_above = True
@@ -346,13 +254,12 @@ wl_xcursor_theme = None
 wl_xcursor_size = 24
 wmname = "LG3D"
 
-
 TRACKED_APPS = {
     "kicad": "PCB Design",
     "pcbnew": "PCB Design",
     "eeschema": "PCB Design",
     "gerbview": "PCB Design",
-    "de-neemann-digital-gui-Main": "Digital Logic", # Added exact class from your xprop
+    "de-neemann-digital-gui-Main": "Digital Logic",
     "Onshape": "CAD",
     "Blender": "3D Modeling",
     "OpenSCAD": "Code",
@@ -405,7 +312,6 @@ def send_heartbeat(entity, category, project_name):
 def check_active_window(qtile):
     """Checks the currently focused window and logs time if applicable"""
     try:
-
         state = get_hackatime_state()
         if not state or not state.get('active', False):
             log_debug("Tracking paused.")
@@ -417,13 +323,10 @@ def check_active_window(qtile):
         if not window:
             return
 
-        wm_class = window.get_wm_class() # Returns a list like ['code', 'Code']
+        wm_class = window.get_wm_class() 
         wm_name = window.name
         
         matched = False
-
-
-
 
         if wm_class:
             for cls in wm_class:
@@ -435,21 +338,15 @@ def check_active_window(qtile):
                         break
                 if matched: break
 
-
         if not matched and wm_name:
             lower_name = wm_name.lower()
             if "onshape" in lower_name:
                 send_heartbeat("Onshape", "CAD", current_project)
-
             elif "digital" in lower_name:
                 send_heartbeat("Digital", "Digital Logic", current_project)
 
     except Exception as e:
         log_debug(f"Error in check_active_window: {e}")
-
-
-
-
 
 def poll_wakatime():
     check_active_window(qtile)
@@ -457,9 +354,7 @@ def poll_wakatime():
 
 @hook.subscribe.startup_complete
 def start_polling():
-
     poll_wakatime()
-
 
 @hook.subscribe.client_focus
 def on_focus_change(window):

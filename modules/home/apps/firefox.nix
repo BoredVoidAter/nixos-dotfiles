@@ -2,9 +2,11 @@
 
 {
 
+  home.packages = [ pkgs.firefoxpwa ];
+
   programs.firefox = {
     enable = true;
-    nativeMessagingHosts = [ pkgs.keepassxc ];
+    nativeMessagingHosts = [ pkgs.keepassxc pkgs.firefoxpwa ];
     policies = {
       DisableTelemetry = true;
       DisableFirefoxStudies = true;

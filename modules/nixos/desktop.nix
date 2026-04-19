@@ -45,15 +45,10 @@
   services.udisks2.enable = true;
   programs.dconf.enable = true;
 
-  programs.firefox = {
-    enable = true;
-    nativeMessagingHosts.packages = [ pkgs.firefoxpwa ];
-  };
 
   environment.systemPackages = with pkgs; [
     alacritty
     libsForQt5.qt5.qtgraphicaleffects
-    firefoxpwa
   ];
 
   fonts.packages = with pkgs; [
