@@ -31,11 +31,7 @@
     enable = true;
     device = "/dev/sda"; # Make sure this matches your drive
   };
-
-
-  services.neohabit.enable = lib.mkForce false;
-  services.postgresql.enable = lib.mkForce false;
-  services.nginx.enable = lib.mkForce false;
+ 
 
   services.openssh = {
     enable = true;

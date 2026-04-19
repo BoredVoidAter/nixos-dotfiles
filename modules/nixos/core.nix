@@ -50,19 +50,4 @@
   sops.age.keyFile = "/home/boredvoidater/.config/sops/age/keys.txt";
 
 
-  sops.secrets.neohabit_env = { };
-
-  sops.templates."neohabit.env".content = ''
-    JWT_SECRET=${config.sops.placeholder.neohabit_env}
-  '';
-
-
-  services.neohabit = {
-    enable = true;
-    domain = "localhost"; # Or your actual domain
-    environmentFile = config.sops.templates."neohabit.env".path;
-  };
-
-
-  networking.firewall.allowedTCPPorts = [ 80 5000 8000 ];
 }

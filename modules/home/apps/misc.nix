@@ -39,7 +39,6 @@
     xclip
 
 
-    chromium
   ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
@@ -53,14 +52,4 @@
   };
 
 
-  xdg.desktopEntries.neohabit = {
-    name = "Neohabit";
-    genericName = "Habit Tracker";
-
-    exec = "${pkgs.chromium}/bin/chromium --app=http://localhost --class=NeohabitApp";
-    terminal = false;
-    categories = [ "Utility" ];
-    icon = "${neohabit-src}/frontend/src/logos/neohabit-logo-dark.svg";
-
-  };
 }

@@ -335,7 +335,6 @@ floating_layout = layout.Floating(
         Match(wm_class="nm-connection-editor"),
         Match(title="UnityDropShadowWindow"),    # Unity dropdowns/menus
         Match(wm_class="Unity", title="Unity"),  # General Unity popups/color pickers
-        Match(wm_class="NeohabitApp"),           # Neohabit Standalone App Wrapper
     ]
 )
 auto_fullscreen = True

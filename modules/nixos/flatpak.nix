@@ -12,10 +12,8 @@
 
 
     packages = [
-      "com.tencent.WeChat"
-      "io.github.mimbrero.WhatsAppDesktop"
       "com.ultimaker.cura"
-      "org.jdownloader.JDownloader" # <--- ADD THIS LINE
+      "org.jdownloader.JDownloader"
     ];
 
 

@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+  home.packages = [ pkgs.firefoxpwa ];
+
   programs.firefox = {
     enable = true;
     nativeMessagingHosts = [ pkgs.keepassxc ];
@@ -32,6 +34,10 @@
         };
         "leechblockng@proginosko.com" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/leechblock-ng/latest.xpi";
+          installation_mode = "force_installed";
+        };
+        "firefoxpwa@filips.si" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/pwas-for-firefox/latest.xpi";
           installation_mode = "force_installed";
         };
       };
