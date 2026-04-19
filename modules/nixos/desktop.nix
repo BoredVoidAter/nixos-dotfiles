@@ -47,9 +47,7 @@
 
   environment.systemPackages = with pkgs; [
     alacritty
-    libsForQt5.qt5.qtgraphicaleffects
-    gnome-calendar
-    gnome-online-accounts
+    libsForQt5.qt5.qtgraphicaleffects 
   ];
 
   fonts.packages = with pkgs; [
