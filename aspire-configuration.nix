@@ -39,8 +39,7 @@
   };
 
   networking.firewall = {
-    allowedTCPPorts = [ 22 53317 ];
-    allowedUDPPorts = [ 53317 ];
+    allowedTCPPorts = [ 22 ];
   };
 
 

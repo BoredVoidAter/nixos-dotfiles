@@ -41,11 +41,4 @@
     steam-run
   ];
 
-  services.playit = {
-    enable = true;
-    secretPath = "/etc/nixos/playit.toml";
-  };
-
-  networking.firewall.allowedTCPPorts = [ 53317 ];
-  networking.firewall.allowedUDPPorts = [ 53317 ];
 }
