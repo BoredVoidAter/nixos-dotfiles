@@ -13,10 +13,6 @@
 
   networking.hostName = "nixos-btw"; # <--- Add this line
 
-  services.mealie = {
-    enable = true;
-    openFirewall = true;
-  };
 
   system.stateVersion = "25.05";
 }

@@ -36,6 +36,11 @@
     tree
   ];
 
+  services.mealie = {
+    enable = true;
+    port = 9925;
+  };
+  networking.firewall.allowedTCPPorts = [ 9925 ];
 
   users.users.boredvoidater = {
     isNormalUser = true;
