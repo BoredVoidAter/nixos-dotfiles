@@ -45,10 +45,22 @@
   services.udisks2.enable = true;
   programs.dconf.enable = true;
 
+  services.printing = {
+    enable = true;
+    drivers = [ pkgs.hplipWithPlugin ];
+  };
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
 
   environment.systemPackages = with pkgs; [
     alacritty
     libsForQt5.qt5.qtgraphicaleffects
+    system-config-printer
   ];
 
   fonts.packages = with pkgs; [

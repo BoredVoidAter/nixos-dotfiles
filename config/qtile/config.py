@@ -73,7 +73,8 @@ keys = [
     Key([mod], "comma", lazy.screen.prev_group(), desc="Prev Workspace"),
     
     # Utilities
-    Key([mod], "s", lazy.spawn("flameshot gui"), desc="Screenshot (Flameshot)"),
+    Key([mod], "s", lazy.spawn("flameshot gui"), desc="Screenshot Region (Flameshot)"),
+    Key([], "Print", lazy.spawn("flameshot full -c"), desc="Screenshot Fullscreen (Flameshot)"),
 ]
 
 # VT switching setup for Wayland (if applicable)
