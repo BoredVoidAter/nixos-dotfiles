@@ -11,7 +11,6 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    playit-nixos-module.url = "github:pedorich-n/playit-nixos-module";
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,7 +19,7 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, playit-nixos-module, sops-nix, nix-flatpak, ... }:
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, sops-nix, nix-flatpak, ... }:
     let
       system = "x86_64-linux";
       pkgs-stable = import nixpkgs-stable {
@@ -52,7 +51,6 @@
                 backupFileExtension = "backup";
               };
             }
-            playit-nixos-module.nixosModules.default
           ];
         };
 
