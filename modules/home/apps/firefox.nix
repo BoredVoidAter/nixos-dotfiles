@@ -55,6 +55,7 @@
         "network.trr.mode" = 3;
         "network.trr.uri" = "https://mozilla.cloudflare-dns.com/dns-query";
         "network.trr.bootstrapAddress" = "1.1.1.1";
+        "general.autoScroll" = true;
       };
       userChrome = ''
         browser { background-color: #0D0D0D !important; }

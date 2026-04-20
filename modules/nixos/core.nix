@@ -22,6 +22,7 @@
 
 
   hardware.enableRedistributableFirmware = true;
+  hardware.rtl-sdr.enable = true;
 
 
   nixpkgs.config.allowUnfree = true;

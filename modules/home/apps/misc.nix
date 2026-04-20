@@ -37,7 +37,10 @@
 
     xsel
     xclip
+    copyq
 
+    gqrx
+    sdrpp
 
   ];
 
