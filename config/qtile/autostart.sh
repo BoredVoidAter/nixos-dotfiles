@@ -1,6 +1,3 @@
-
-
-
 alacritty &
 
 firefox &

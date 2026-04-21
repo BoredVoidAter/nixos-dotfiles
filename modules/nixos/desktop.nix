@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
   services.xserver = {
@@ -7,30 +7,46 @@
     autoRepeatInterval = 35;
     xkb.layout = "de";
 
-    displayManager.lightdm = {
-      enable = true;
-      greeters.gtk = {
-        enable = true;
-        theme = {
-          name = "Matcha-dark-aliz";
-          package = pkgs.matcha-gtk-theme;
-        };
-        cursorTheme = {
-          name = "Bibata-Modern-Ice";
-          package = pkgs.bibata-cursors;
-          size = 24;
-        };
-        iconTheme = {
-          name = "Papirus-Dark";
-          package = pkgs.papirus-icon-theme;
-        };
-      };
-    };
-
     windowManager.qtile.enable = true;
   };
 
+  # tuigreet via greetd — replaces LightDM
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = ''
+          ${pkgs.greetd.tuigreet}/bin/tuigreet \
+            --time \
+            --remember \
+            --remember-user-session \
+            --user-menu \
+            --sessions ${config.services.xserver.displayManager.sessionData.desktops}/share/xsessions:${config.services.xserver.displayManager.sessionData.desktops}/share/wayland-sessions
+        '';
+        user = "greeter";
+      };
+    };
+  };
+
+  # Carry over keyboard repeat rate to Wayland via libinput / udev
   services.libinput.enable = true;
+
+  # Keyboard repeat rate for Wayland (set via systemd/environment for compositors that respect it)
+  environment.variables = {
+    # XKB layout for Wayland sessions
+    XKB_DEFAULT_LAYOUT = "de";
+  };
+
+  # Key repeat for Wayland via udev hwdb
+  services.udev.extraHwdb = ''
+    evdev:input:*
+     KEYBOARD_KEY_delay=200
+  '';
+
+  virtualisation.waydroid.enable = true;
+  systemd.services.waydroid-container.wantedBy = [ "multi-user.target" ];
+  security.apparmor.enable = true;
+
 
   programs.thunar = {
     enable = true;
@@ -56,7 +72,6 @@
     openFirewall = true;
   };
 
-
   environment.systemPackages = with pkgs; [
     alacritty
     libsForQt5.qt5.qtgraphicaleffects
@@ -69,8 +84,8 @@
 
   xdg.portal = {
     enable = true;
-    xdgOpenUsePortal = true; # Fix for Unity Hub login
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    xdgOpenUsePortal = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
     config.common.default = "gtk";
   };
 

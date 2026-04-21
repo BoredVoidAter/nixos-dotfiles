@@ -14,12 +14,22 @@
     "fs.inotify.max_user_instances" = 512;
   };
 
-  networking.networkmanager.enable = true;
-  networking.nameservers = [ "1.1.1.1" "1.0.0.1" ];
+  console = {
+    useXkbConfig = true;
+  };
 
+  networking.networkmanager = {
+    enable = true;
+    unmanaged = [ "waydroid0" ]; 
+  };
+  networking.nameservers = [ "1.1.1.1" "1.0.0.1" ];
+  networking.nftables.enable = true;
+  networking.firewall = {
+    trustedInterfaces = [ "waydroid0" ];
+    allowedTCPPorts = [ 9925 ];
+  };
 
   time.timeZone = "Europe/Berlin";
-
 
   hardware.enableRedistributableFirmware = true;
   hardware.rtl-sdr.enable = true;
@@ -40,7 +50,6 @@
     enable = true;
     port = 9925;
   };
-  networking.firewall.allowedTCPPorts = [ 9925 ];
 
   users.users.boredvoidater = {
     isNormalUser = true;

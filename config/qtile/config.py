@@ -1,8 +1,9 @@
 from libqtile import bar, extension, hook, layout, qtile, widget
-from libqtile.config import Click, Drag, Group, Key, KeyChord, Match, Screen
+from libqtile.config import Click, Drag, Group, Key, KeyChord, Match, Screen, Rule
 from libqtile.lazy import lazy
 import os
 import subprocess
+from libqtile.backend.wayland import InputConfig
 
 mod = "mod4"
 terminal = "alacritty"
@@ -94,6 +95,8 @@ for i in groups:
         # mod + shift + letter of group = switch to & move focused window to group
         Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True), desc="Switch to & move focused window to group {}".format(i.name)),
     ])
+
+
 
 layout_theme = {
     "border_width": 1,
@@ -224,7 +227,13 @@ mouse = [
 ]
 
 dgroups_key_binder = None
-dgroups_app_rules = []
+dgroups_app_rules = [
+    # Send Firefox to workspace 2 automatically
+    Rule(
+        Match(wm_class="firefox"),  # or Match(title="Firefox") if wm_class doesn't work
+        group="2"
+    ),
+]
 follow_mouse_focus = True
 bring_front_click = False
 floats_kept_above = True
@@ -248,7 +257,15 @@ auto_fullscreen = True
 focus_on_window_activation = "smart"
 reconfigure_screens = True
 auto_minimize = True
-wl_input_rules = None
+wl_input_rules = {
+    "*": InputConfig(
+        kb_repeat_delay=200,
+        kb_repeat_rate=28,       # ~1000/35ms from your X11 setting
+        kb_layout="de",
+        tap=True,                # tap-to-click
+        natural_scroll=False,    # set True if you prefer it
+    ),
+}
 wl_xcursor_theme = None
 wl_xcursor_size = 24
 wmname = "LG3D"
