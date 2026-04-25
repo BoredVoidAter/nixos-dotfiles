@@ -26,7 +26,8 @@
   networking.nftables.enable = true;
   networking.firewall = {
     trustedInterfaces = [ "waydroid0" ];
-    allowedTCPPorts = [ 9925 ];
+    allowedTCPPorts = [ 9925 53317 ];
+    allowedUDPPorts = [ 53317 ];
   };
 
   time.timeZone = "Europe/Berlin";
@@ -51,6 +52,7 @@
     port = 9925;
   };
 
+
   users.users.boredvoidater = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "video" "audio" "bluetooth" "dialout" "cdrom" ];
@@ -63,6 +65,11 @@
 
   sops.defaultSopsFile = ../../secrets/secrets.yaml;
   sops.age.keyFile = "/home/boredvoidater/.config/sops/age/keys.txt";
+
+  environment.sessionVariables = {
+    XDG_CURRENT_DESKTOP = "qtile";   # or "sway" — flameshot checks this
+    XDG_SESSION_TYPE = "wayland";
+  };
 
 
 }

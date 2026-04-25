@@ -38,10 +38,16 @@
     xsel
     xclip
     copyq
+    wl-clipboard
+
+    grim          # Wayland screenshot backend
+    slurp         # region selection for grim
+    libsForQt5.qt5.qtwayland   # Qt Wayland support
 
     gqrx
     sdrpp
 
+    xdg-utils
   ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;

@@ -60,6 +60,7 @@
   services.gvfs.enable = true;
   services.udisks2.enable = true;
   programs.dconf.enable = true;
+  programs.firefox.enable = true;
 
   services.printing = {
     enable = true;
@@ -84,9 +85,12 @@
 
   xdg.portal = {
     enable = true;
-    xdgOpenUsePortal = true;
+    xdgOpenUsePortal = false;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
-    config.common.default = "gtk";
+    config = {
+      common.default = [ "gtk" ];
+      qtile.default = [ "gtk" ]; # <-- Explicitly tell the portal what to use in Qtile
+    };
   };
 
   security.polkit.enable = true;
