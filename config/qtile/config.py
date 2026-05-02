@@ -74,8 +74,11 @@ keys = [
     Key([mod], "comma", lazy.screen.prev_group(), desc="Prev Workspace"),
     
     # Utilities
-    Key([mod], "s", lazy.spawn("flameshot gui"), desc="Screenshot Region (Flameshot)"),
-    Key([], "Print", lazy.spawn("flameshot full -c"), desc="Screenshot Fullscreen (Flameshot)"),
+    # Region screenshot directly to Wayland clipboard
+    Key([mod], "s", lazy.spawn("sh -c 'grim -g \"$(slurp)\" - | wl-copy'"), desc="Screenshot Region (Grim/Slurp)"),
+    
+    # Fullscreen screenshot directly to Wayland clipboard
+    Key([], "Print", lazy.spawn("sh -c 'grim - | wl-copy'"), desc="Screenshot Fullscreen (Grim)"), 
 ]
 
 # VT switching setup for Wayland (if applicable)
@@ -219,6 +222,12 @@ screens = [
         wallpaper_mode='fill',
     ),
 ]
+
+@hook.subscribe.client_managed
+def polkit_focus(client):
+    if 'polkit' in client.name.lower():
+        client.toplvl()
+        client.focus()
 
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(), start=lazy.window.get_position()),

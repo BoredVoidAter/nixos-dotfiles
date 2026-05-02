@@ -77,6 +77,10 @@
     alacritty
     libsForQt5.qt5.qtgraphicaleffects
     system-config-printer
+    # ADD this wrapper to make the GNOME polkit agent easy to launch:
+    (writeShellScriptBin "polkit-gnome-agent" ''
+      exec ${polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 "$@"
+    '')
   ];
 
   fonts.packages = with pkgs; [

@@ -8,7 +8,6 @@
     ./modules/home/desktop/theme.nix
     ./modules/home/desktop/qtile.nix
     ./modules/home/desktop/rofi.nix
-    ./modules/home/desktop/polkit.nix
     ./modules/home/desktop/redshift.nix
     ./modules/home/desktop/nvim.nix
 

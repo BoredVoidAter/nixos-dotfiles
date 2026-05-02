@@ -48,6 +48,8 @@
     sdrpp
 
     xdg-utils
+
+    waydroid-helper
   ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
