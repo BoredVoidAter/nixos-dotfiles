@@ -6,6 +6,9 @@
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
+    withRuby = false;
+    withPython3 = false;
+    sideloadInitLua = true;  # <-- This prevents HM from trying to generate init.lua
 
     extraPackages = with pkgs; [
 
@@ -40,8 +43,8 @@
 
 
       nodejs
-      nodePackages.typescript-language-server
-      nodePackages.prettier
+      typescript-language-server
+      prettier
 
 
       shfmt

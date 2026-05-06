@@ -147,9 +147,9 @@ in
       unity = "nvidia-offload unityhub";
       aw = "firefox http://localhost:5600";
       ym = "yt";
-      yl = "yt-cd-list"; # <-- New alias to run the tracklist generator
+      yl = "yt-cd-list";
       sops-edit = "nix shell nixpkgs#sops -c sops ~/nixos-dotfiles/secrets/secrets.yaml";
+      maintenance = "cd ~/nixos-dotfiles && nix flake update && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw && sudo nix-collect-garbage -d && sudo nix-store --optimise";
     };
   };
 }
-
