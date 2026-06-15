@@ -50,6 +50,8 @@
     xdg-utils
 
     waydroid-helper
+    scrcpy
+
   ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;

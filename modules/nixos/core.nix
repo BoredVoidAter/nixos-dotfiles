@@ -45,11 +45,17 @@
     pciutils
     lshw
     tree
+    calibre
   ];
 
   services.mealie = {
     enable = true;
     port = 9925;
+  };
+
+  services.pcscd = {
+    enable = true;
+    plugins = [ pkgs.ccid ];
   };
 
 

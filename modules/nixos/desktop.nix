@@ -48,6 +48,7 @@
   security.apparmor.enable = true;
 
 
+
   programs.thunar = {
     enable = true;
     plugins = with pkgs; [
@@ -74,6 +75,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    file-roller
     alacritty
     libsForQt5.qt5.qtgraphicaleffects
     system-config-printer

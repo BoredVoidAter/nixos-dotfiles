@@ -27,6 +27,7 @@
     ./modules/home/apps/alacritty.nix
   ];
 
+
   services.flameshot = {
     enable = true;
     settings.General.showStartupLaunchMessage = false;
