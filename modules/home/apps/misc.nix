@@ -52,6 +52,8 @@
     waydroid-helper
     scrcpy
 
+    blender
+
   ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;

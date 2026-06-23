@@ -26,7 +26,7 @@
   networking.nftables.enable = true;
   networking.firewall = {
     trustedInterfaces = [ "waydroid0" ];
-    allowedTCPPorts = [ 9925 53317 ];
+    allowedTCPPorts = [ 9925 53317 9090];
     allowedUDPPorts = [ 53317 ];
   };
 
