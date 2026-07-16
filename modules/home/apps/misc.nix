@@ -42,17 +42,21 @@
 
     grim          # Wayland screenshot backend
     slurp         # region selection for grim
-    libsForQt5.qt5.qtwayland   # Qt Wayland support
+    qt5.qtwayland   # Qt Wayland support
 
     gqrx
     sdrpp
 
     xdg-utils
 
-    waydroid-helper
-    scrcpy
 
     blender
+
+    wl-clicker
+
+    ghidra
+
+    davinci-resolve
 
   ];
 
@@ -60,11 +64,7 @@
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/boredvoidater/.config/sops/age/keys.txt";
 
-
-
   home.sessionVariables = {
     YTUI_MUSIC_DIR = "/home/boredvoidater/Music/ytui-music";
   };
-
-
 }

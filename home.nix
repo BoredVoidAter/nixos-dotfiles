@@ -6,16 +6,13 @@
     sops-nix.homeManagerModules.sops
 
     ./modules/home/desktop/theme.nix
-    ./modules/home/desktop/qtile.nix
+    ./modules/home/desktop/hyprland.nix
     ./modules/home/desktop/rofi.nix
-    ./modules/home/desktop/redshift.nix
     ./modules/home/desktop/nvim.nix
-
 
     ./modules/home/terminal/git.nix
     ./modules/home/terminal/bash.nix
     ./modules/home/terminal/fzf.nix
-
 
     ./modules/home/apps/neovim.nix
     ./modules/home/apps/firefox.nix
@@ -28,11 +25,6 @@
   ];
 
 
-  services.flameshot = {
-    enable = true;
-    settings.General.showStartupLaunchMessage = false;
-  };
-
   home.username = "boredvoidater";
   home.stateVersion = "25.05";
 
@@ -42,17 +34,9 @@
       <action>
         <icon>localsend</icon>
         <name>Send via LocalSend</name>
-        <submenu></submenu>
-        <unique-id>localsend-action</unique-id>
         <command>localsend_app %F</command>
-        <description>Send file(s) to another device on the network</description>
         <patterns>*</patterns>
         <directories/>
-        <audio-files/>
-        <image-files/>
-        <other-files/>
-        <text-files/>
-        <video-files/>
       </action>
     </actions>
   '';

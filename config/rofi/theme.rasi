@@ -1,0 +1,85 @@
+/* Custom Dark Theme colorscheme (modern rounded Wayland) */
+* {
+    bg: #0D0D0D;       
+    hv: #23A5D9;       
+    primary: #590202;  
+    ug: #BF8845;       
+    kl: #D9BC9A;       
+    
+    font: "Monospace 11";
+    background-color: @bg;
+    text-color: @kl;
+    border: 0px;
+    transparent: rgba(13, 13, 13, 0);
+}
+
+window {
+    width: 600px;
+    orientation: vertical;
+    location: center;
+    anchor: center;
+    border-color: @primary;
+    border: 3px;
+    border-radius: 16px; /* <-- Nice Rounded Corners */
+    spacing: 0;
+    children: [ mainbox ];
+}
+
+mainbox {
+    spacing: 0;
+    children: [ inputbar, message, listview ];
+}
+
+inputbar {
+    color: @kl;
+    padding: 15px;
+    border: 0px 0px 2px 0px;
+    border-color: @primary;
+    border-radius: 12px 12px 0px 0px;
+}
+
+entry, prompt, case-indicator {
+    text-font: inherit;
+    text-color: inherit;
+}
+
+prompt {
+    margin: 0px 10px 0px 0px;
+}
+
+listview {
+    layout: vertical;
+    spacing: 5px;
+    padding: 10px;
+    lines: 7;
+    columns: 1; /* Modern single column search looks cleaner */
+    border-radius: 0px 0px 12px 12px;
+    dynamic: false;
+}
+
+element {
+    padding: 8px 12px;
+    spacing: 12px;
+    background-color: transparent;
+    text-color: @kl;
+    border-radius: 8px;
+}
+
+element selected.normal {
+    background-color: @hv;
+    text-color: @bg; 
+}
+
+element-icon {
+    background-color: inherit;
+    text-color: inherit;
+    size: 1.5em;
+}
+
+/* This is the magic part that forces it to stretch full-width */
+element-text {
+    background-color: inherit;
+    text-color: inherit;
+    vertical-align: 0.5;
+    expand: true;
+}

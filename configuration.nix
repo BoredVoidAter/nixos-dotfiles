@@ -5,7 +5,7 @@
     [
       ./hardware-configuration.nix
       ./modules/nixos/core.nix
-      ./modules/nixos/gaming.nix
+      ./modules/nixos/gpu.nix
       ./modules/nixos/desktop.nix
       ./modules/nixos/audio.nix
       ./modules/nixos/flatpak.nix

@@ -6,55 +6,35 @@
     autoRepeatDelay = 200;
     autoRepeatInterval = 35;
     xkb.layout = "de";
-
-    windowManager.qtile.enable = true;
   };
 
-  # tuigreet via greetd — replaces LightDM
   services.greetd = {
     enable = true;
     settings = {
       default_session = {
-        command = ''
-          ${pkgs.tuigreet}/bin/tuigreet \
-            --time \
-            --remember \
-            --remember-user-session \
-            --user-menu \
-            --sessions ${config.services.displayManager.sessionData.desktops}/share/xsessions:${config.services.displayManager.sessionData.desktops}/share/wayland-sessions
-        '';
+        # This automatically launches Hyprland after you type your password!
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd Hyprland";
         user = "greeter";
       };
     };
-  };
+  }; 
+  
+  programs.hyprland.enable = true;
 
-  # Carry over keyboard repeat rate to Wayland via libinput / udev
   services.libinput.enable = true;
 
-  # Keyboard repeat rate for Wayland (set via systemd/environment for compositors that respect it)
   environment.variables = {
-    # XKB layout for Wayland sessions
     XKB_DEFAULT_LAYOUT = "de";
   };
 
-  # Key repeat for Wayland via udev hwdb
   services.udev.extraHwdb = ''
     evdev:input:*
      KEYBOARD_KEY_delay=200
   '';
 
-  virtualisation.waydroid.enable = true;
-  systemd.services.waydroid-container.wantedBy = [ "multi-user.target" ];
-  security.apparmor.enable = true;
-
-
-
   programs.thunar = {
     enable = true;
-    plugins = with pkgs; [
-      thunar-archive-plugin
-      thunar-volman
-    ];
+    plugins = with pkgs; [ thunar-archive-plugin thunar-volman ];
   };
 
   services.tumbler.enable = true;
@@ -75,11 +55,8 @@
   };
 
   environment.systemPackages = with pkgs; [
-    file-roller
-    alacritty
-    libsForQt5.qt5.qtgraphicaleffects
-    system-config-printer
-    # ADD this wrapper to make the GNOME polkit agent easy to launch:
+
+    file-roller alacritty qt5.qtgraphicaleffects system-config-printer
     (writeShellScriptBin "polkit-gnome-agent" ''
       exec ${polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 "$@"
     '')
@@ -91,12 +68,8 @@
 
   xdg.portal = {
     enable = true;
-    xdgOpenUsePortal = false;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
-    config = {
-      common.default = [ "gtk" ];
-      qtile.default = [ "gtk" ]; # <-- Explicitly tell the portal what to use in Qtile
-    };
+    xdgOpenUsePortal = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-hyprland pkgs.xdg-desktop-portal-gtk ];
   };
 
   security.polkit.enable = true;
