@@ -2,6 +2,7 @@
 
 {
   home.pointerCursor = {
+    enable = true;
     gtk.enable = true;
     x11.enable = true;
     name = "Bibata-Modern-Ice";
@@ -28,7 +29,7 @@
 
   qt = {
     enable = true;
-    platformTheme.name = "gtk";
+    platformTheme.name = "gtk3";
   };
 
   dconf.settings = {

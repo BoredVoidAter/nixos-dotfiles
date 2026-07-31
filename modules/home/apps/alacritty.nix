@@ -6,10 +6,10 @@
     settings = {
       window = {
         padding = {
-          x = 10;
-          y = 10;
+          x = 12;
+          y = 12;
         };
-        opacity = 1.0;
+        opacity = 0.95;
       };
 
       font = {
@@ -30,35 +30,35 @@
 
       colors = {
         primary = {
-          background = "#0D0D0D"; # Your deep black
-          foreground = "#D9BC9A"; # Your Tan text
+          background = "#11111B";
+          foreground = "#CDD6F4";
         };
         
         cursor = {
-          text = "#0D0D0D";
-          cursor = "#D9BC9A";
+          text = "#11111B";
+          cursor = "#F5E0DC";
         };
 
         normal = {
-          black   = "#1D1D1D";
-          red     = "#590202"; # Your custom dark red
-          green   = "#9ece6a";
-          yellow  = "#e0af68";
-          blue    = "#7aa2f7";
-          magenta = "#ad8ee6";
-          cyan    = "#0db9d7";
-          white   = "#a9b1d6";
+          black   = "#45475A";
+          red     = "#F38BA8";
+          green   = "#A6E3A1";
+          yellow  = "#F9E2AF";
+          blue    = "#89B4FA";
+          magenta = "#F5C2E7";
+          cyan    = "#94E2D5";
+          white   = "#BAC2DE";
         };
 
         bright = {
-          black   = "#444b6a";
-          red     = "#ff7a93";
-          green   = "#b9f27c";
-          yellow  = "#ff9e64";
-          blue    = "#7da6ff";
-          magenta = "#bb9af7";
-          cyan    = "#0db9d7";
-          white   = "#c0caf5";
+          black   = "#585B70";
+          red     = "#F38BA8";
+          green   = "#A6E3A1";
+          yellow  = "#F9E2AF";
+          blue    = "#89B4FA";
+          magenta = "#F5C2E7";
+          cyan    = "#94E2D5";
+          white   = "#A6ADC8";
         };
       };
     };

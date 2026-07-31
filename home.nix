@@ -28,16 +28,19 @@
   home.username = "boredvoidater";
   home.stateVersion = "25.05";
 
-  xdg.configFile."Thunar/uca.xml".text = ''
-    <?xml version="1.0" encoding="UTF-8"?>
-    <actions>
-      <action>
-        <icon>localsend</icon>
-        <name>Send via LocalSend</name>
-        <command>localsend_app %F</command>
-        <patterns>*</patterns>
-        <directories/>
-      </action>
-    </actions>
-  '';
+  xdg.configFile."Thunar/uca.xml" = {
+    force = true;
+    text = ''
+      <?xml version="1.0" encoding="UTF-8"?>
+      <actions>
+        <action>
+          <icon>localsend</icon>
+          <name>Send via LocalSend</name>
+          <command>localsend_app %F</command>
+          <patterns>*</patterns>
+          <directories/>
+        </action>
+      </actions>
+    '';
+  };
 }

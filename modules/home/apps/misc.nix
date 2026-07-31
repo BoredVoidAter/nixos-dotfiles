@@ -40,15 +40,14 @@
     copyq
     wl-clipboard
 
-    grim          # Wayland screenshot backend
-    slurp         # region selection for grim
-    qt5.qtwayland   # Qt Wayland support
+    grim          
+    slurp         
+    qt5.qtwayland   
 
     gqrx
     sdrpp
 
     xdg-utils
-
 
     blender
 
@@ -57,14 +56,35 @@
     ghidra
 
     davinci-resolve
-
   ];
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/boredvoidater/.config/sops/age/keys.txt";
 
-  home.sessionVariables = {
-    YTUI_MUSIC_DIR = "/home/boredvoidater/Music/ytui-music";
+  # Wipes Downloads directory on shutdown/logout
+  systemd.user.services.clean-downloads = {
+    Unit = {
+      Description = "Clean Downloads folder on logout/shutdown";
+      DefaultDependencies = "no";
+    };
+    Service = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.coreutils}/bin/true";
+      ExecStop = "${pkgs.bash}/bin/bash -c 'rm -rf %h/Downloads/*'";
+    };
+    Install.WantedBy = [ "default.target" ];
   };
+
+  # Deletes leftover PWA and Android shortcut files cluttering rofi
+  home.activation.removeUnwantedDesktopFiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    rm -f ~/.local/share/applications/*FirefoxPWA*.desktop
+    rm -f ~/.local/share/applications/*whatsapp*.desktop
+    rm -f ~/.local/share/applications/*fdroid*.desktop
+    rm -f ~/.local/share/applications/*F-Droid*.desktop
+    rm -f ~/.local/share/applications/*musify*.desktop
+    rm -f ~/.local/share/applications/*Musify*.desktop
+    rm -f ~/.local/share/applications/waydroid*.desktop
+  '';
 }

@@ -23,16 +23,16 @@ let
       icu
       openssl
 
-      xorg.libX11
-      xorg.libXcursor
-      xorg.libXrandr
-      xorg.libXi
-      xorg.libXext
-      xorg.libXfixes
-      xorg.libXrender
-      xorg.libxcb
-      xorg.libXinerama
-      xorg.libXxf86vm
+      libx11
+      libxcursor
+      libxrandr
+      libxi
+      libxext
+      libxfixes
+      libxrender
+      libxcb
+      libxinerama
+      libxxf86vm
 
       udev
       alsa-lib

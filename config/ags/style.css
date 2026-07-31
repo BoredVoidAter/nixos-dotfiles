@@ -1,0 +1,25 @@
+* {
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+window#notch {
+    background: transparent;
+}
+
+.notch-content {
+    background-color: #11111B;
+    border: 1px solid #313244;
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    padding: 10px 24px;
+}
+
+.sys-info {
+    color: #CDD6F4;
+}
+
+.clock, .volume {
+    margin: 0 4px;
+}
