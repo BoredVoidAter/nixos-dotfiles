@@ -5,3 +5,4 @@
 config/nvim/LICENSE
 *.lock
 config/firefoxpwa/**/*
+work.sh

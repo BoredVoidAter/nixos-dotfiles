@@ -41,7 +41,7 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs;[
-    vim wget git pciutils lshw tree calibre wireguard-tools protonvpn-gui wl-clicker
+    vim wget git pciutils lshw tree calibre wireguard-tools protonvpn-gui wl-clicker gtk3
   ];
 
   networking.firewall.checkReversePath = false; 

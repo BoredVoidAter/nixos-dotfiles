@@ -20,3 +20,5 @@ repomix-output.xml
 id_rsa
 keys.txt
 *.age
+
+work.sh

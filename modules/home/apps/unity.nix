@@ -4,6 +4,45 @@ let
 
   my-dotnet = with pkgs.dotnetCorePackages; combinePackages [ sdk_8_0 sdk_9_0 ];
 
+  unity-fhs = pkgs.buildFHSEnv {
+    name = "unity-fhs";
+
+    targetPkgs = pkgs: with pkgs; [
+      gtk3
+      glib
+      atk
+      cairo
+      pango
+      harfbuzz
+      gdk-pixbuf
+      fontconfig
+      libGL
+      libGLU
+      zlib
+      libxml2
+      icu
+      openssl
+
+      xorg.libX11
+      xorg.libXcursor
+      xorg.libXrandr
+      xorg.libXi
+      xorg.libXext
+      xorg.libXfixes
+      xorg.libXrender
+      xorg.libxcb
+      xorg.libXinerama
+      xorg.libXxf86vm
+
+      udev
+      alsa-lib
+
+      stdenv.cc.cc.lib
+    ];
+
+    runScript = "bash";
+  };
+
 
   unity-neovim-wrapper = pkgs.writeShellScriptBin "code" ''
     PROJECT_PATH="$1"
@@ -31,6 +70,7 @@ in
 {
   home.packages = with pkgs;[
     my-unityhub
+    unity-fhs
     my-dotnet
     mono
     netcoredbg
