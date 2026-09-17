@@ -1,5 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, spicetify-nix, ... }:
 
+let
+  spicePkgs = spicetify-nix.legacyPackages.${pkgs.system};
+in
 {
 
   programs.imv = {
@@ -26,8 +29,18 @@
     };
   };
 
+  programs.spicetify = {
+    enable = true;
+    enabledExtensions = with spicePkgs.extensions; [
+      adblock
+    ];
+    theme = spicePkgs.themes.catppuccin;
+    colorScheme = "mocha";
+  };
+
   home.packages = with pkgs; [
     xarchiver # GUI archive manager (works perfectly with Thunar)
+    playerctl
   ];
 
   xdg.mimeApps = {

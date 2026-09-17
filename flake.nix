@@ -18,10 +18,15 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
-    ags.url = "github:Aylur/ags/v1";
+    vicinae.url = "github:vicinaehq/vicinae";
+
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, sops-nix, nix-flatpak, ags, ... }:
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, sops-nix, nix-flatpak, vicinae, spicetify-nix, ... }:
     let
       system = "x86_64-linux";
       pkgs-stable = import nixpkgs-stable {
@@ -48,7 +53,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                extraSpecialArgs = { inherit pkgs-stable sops-nix ags; };
+                extraSpecialArgs = { inherit pkgs-stable sops-nix vicinae spicetify-nix; };
                 users.boredvoidater = import ./home.nix;
                 backupFileExtension = "backup";
               };
@@ -73,7 +78,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                extraSpecialArgs = { inherit pkgs-stable sops-nix ags; };
+                extraSpecialArgs = { inherit pkgs-stable sops-nix vicinae spicetify-nix; };
                 users.boredvoidater = import ./aspire-home.nix;
                 backupFileExtension = "backup";
               };

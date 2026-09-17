@@ -1,13 +1,16 @@
-{ config, pkgs, sops-nix, ... }:
+{ config, pkgs, sops-nix, vicinae, spicetify-nix, ... }:
 
 {
   imports = [
+    vicinae.homeManagerModules.default
+    spicetify-nix.homeManagerModules.default
     ./modules/home/dotfiles-path.nix
     sops-nix.homeManagerModules.sops
 
     ./modules/home/desktop/theme.nix
     ./modules/home/desktop/hyprland.nix
-    ./modules/home/desktop/rofi.nix
+    ./modules/home/desktop/notifications.nix
+    ./modules/home/desktop/vicinae.nix
     ./modules/home/desktop/nvim.nix
 
     ./modules/home/terminal/git.nix

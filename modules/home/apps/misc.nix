@@ -56,7 +56,14 @@
     ghidra
 
     davinci-resolve
+    ferdium
   ];
+
+  # Enables KDE Connect Indicator (Pairs great with the KDE Connect iOS App for notifications & clipboard)
+  services.kdeconnect = {
+    enable = true;
+    indicator = true;
+  };
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
   sops.defaultSopsFormat = "yaml";
@@ -77,14 +84,13 @@
     Install.WantedBy = [ "default.target" ];
   };
 
-  # Deletes leftover PWA and Android shortcut files cluttering rofi
+  # Deletes leftover PWA and Android shortcut files cluttering launchers
   home.activation.removeUnwantedDesktopFiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    rm -f ~/.local/share/applications/*FirefoxPWA*.desktop
-    rm -f ~/.local/share/applications/*whatsapp*.desktop
-    rm -f ~/.local/share/applications/*fdroid*.desktop
-    rm -f ~/.local/share/applications/*F-Droid*.desktop
-    rm -f ~/.local/share/applications/*musify*.desktop
-    rm -f ~/.local/share/applications/*Musify*.desktop
-    rm -f ~/.local/share/applications/waydroid*.desktop
+    # Using 'find -iname' handles capitalization differences like WhatsAppWeb and firefoxPWA reliably
+    find ~/.local/share/applications -maxdepth 1 -type f -iname '*whatsapp*' -delete || true
+    find ~/.local/share/applications -maxdepth 1 -type f -iname '*firefoxpwa*' -delete || true
+    find ~/.local/share/applications -maxdepth 1 -type f -iname '*fdroid*' -delete || true
+    find ~/.local/share/applications -maxdepth 1 -type f -iname '*musify*' -delete || true
+    find ~/.local/share/applications -maxdepth 1 -type f -iname '*waydroid*' -delete || true
   '';
 }

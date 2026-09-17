@@ -28,9 +28,13 @@
   };
   networking.nameservers = [ "1.1.1.1" "1.0.0.1" ];
   networking.nftables.enable = true;
+  
   networking.firewall = {
     allowedTCPPorts = [ 53317 ];
     allowedUDPPorts = [ 53317 ];
+    # Ports for KDE Connect (iOS Integration)
+    allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
+    allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
 
   time.timeZone = "Europe/Berlin";
@@ -40,8 +44,17 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs;[
+  # Enable usbmuxd to communicate with iOS devices over USB
+  services.usbmuxd.enable = true;
+
+  # Power management and thermal tuning
+  services.power-profiles-daemon.enable = true;
+  services.thermald.enable = true;
+  powerManagement.powertop.enable = true;
+
+  environment.systemPackages = with pkgs; [
     vim wget git pciutils lshw tree calibre wireguard-tools proton-vpn wl-clicker gtk3
+    libimobiledevice ifuse # Required for mounting and interacting with iOS devices
   ];
 
   networking.firewall.checkReversePath = false; 

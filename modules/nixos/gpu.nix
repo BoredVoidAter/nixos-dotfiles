@@ -7,7 +7,7 @@
     enable32Bit = true;
     extraPackages = with pkgs; [
       ocl-icd
-      intel-compute-runtime # Add this! Fixes DaVinci Resolve aborting on the iGPU
+      intel-compute-runtime # Fixes DaVinci Resolve aborting on the iGPU
     ];
   };
 
@@ -15,14 +15,13 @@
 
   hardware.nvidia = {
     modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
+    powerManagement.enable = true;
+    powerManagement.finegrained = true;
     open = false;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
 
     prime = {
-      # Change from sync to offload
       offload = {
         enable = true;
         enableOffloadCmd = true; # Automatically creates the 'nvidia-offload' script
