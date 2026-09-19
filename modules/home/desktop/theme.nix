@@ -25,6 +25,30 @@
     gtk3.extraConfig = { gtk-application-prefer-dark-theme = 1; };
     gtk4.extraConfig = { gtk-application-prefer-dark-theme = 1; };
     gtk4.theme = null;
+
+    gtk3.extraCss = ''
+      window.csd,
+      window.solid-csd,
+      decoration,
+      decoration:backdrop {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        border: none;
+      }
+    '';
+
+    gtk4.extraCss = ''
+      window.csd,
+      window.solid-csd,
+      decoration,
+      decoration:backdrop {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        border: none;
+      }
+    '';
   };
 
   qt = {

@@ -25,6 +25,7 @@
     ./modules/home/apps/cad.nix
     ./modules/home/apps/media.nix
     ./modules/home/apps/alacritty.nix
+    ./modules/home/apps/codex.nix
   ];
 
 

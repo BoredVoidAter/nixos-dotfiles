@@ -2,13 +2,23 @@
 
 {
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelParams = [ "nvidia_drm.fbdev=1" ];
+  boot.kernelParams = [
+    "nvidia_drm.fbdev=1"
+    "usbcore.autosuspend=-1"
+  ];
   boot.loader.grub = {
     enable = true;
     efiSupport = true;
     device = "nodev";          # Required for EFI
     useOSProber = true;        # This automatically finds Windows and makes it the 2nd option
     configurationLimit = 20;   # Keeps the last 20 generations in the "Advanced" submenu
+    splashImage = null;
+    extraConfig = ''
+      set menu_color_normal=light-gray/black
+      set menu_color_highlight=white/dark-gray
+      set color_normal=light-gray/black
+      set color_highlight=white/dark-gray
+    '';
   };
 
   hardware.uinput.enable = true;
@@ -51,6 +61,11 @@
   services.power-profiles-daemon.enable = true;
   services.thermald.enable = true;
   powerManagement.powertop.enable = true;
+
+  services.udev.extraRules = ''
+    # Prevent USB power-saving autosuspend on USB devices
+    ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on"
+  '';
 
   environment.systemPackages = with pkgs; [
     vim wget git pciutils lshw tree calibre wireguard-tools proton-vpn wl-clicker gtk3

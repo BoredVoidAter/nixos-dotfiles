@@ -13,7 +13,7 @@
     settings = {
       default_session = {
         # This automatically launches Hyprland after you type your password!
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd start-hyprland";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --theme 'border=gray;text=white;prompt=gray;time=gray;action=white;button=gray;container=black;input=white' --cmd start-hyprland";
         user = "greeter";
       };
     };

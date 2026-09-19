@@ -83,14 +83,4 @@
     };
     Install.WantedBy = [ "default.target" ];
   };
-
-  # Deletes leftover PWA and Android shortcut files cluttering launchers
-  home.activation.removeUnwantedDesktopFiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    # Using 'find -iname' handles capitalization differences like WhatsAppWeb and firefoxPWA reliably
-    find ~/.local/share/applications -maxdepth 1 -type f -iname '*whatsapp*' -delete || true
-    find ~/.local/share/applications -maxdepth 1 -type f -iname '*firefoxpwa*' -delete || true
-    find ~/.local/share/applications -maxdepth 1 -type f -iname '*fdroid*' -delete || true
-    find ~/.local/share/applications -maxdepth 1 -type f -iname '*musify*' -delete || true
-    find ~/.local/share/applications -maxdepth 1 -type f -iname '*waydroid*' -delete || true
-  '';
 }

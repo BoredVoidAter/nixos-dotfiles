@@ -10,7 +10,7 @@ in
     settings = {
       options = {
 
-        background = "1a1b26";
+        background = "0d0e11";
       };
     };
   };
@@ -20,12 +20,12 @@ in
     enable = true;
     options = {
 
-      default-bg = "#1a1b26";
-      default-fg = "#a9b1d6";
-      statusbar-bg = "#24283b";
-      statusbar-fg = "#a9b1d6";
-      inputbar-bg = "#24283b";
-      inputbar-fg = "#a9b1d6";
+      default-bg = "#0d0e11";
+      default-fg = "#e6e6ea";
+      statusbar-bg = "#131418";
+      statusbar-fg = "#8c8f9a";
+      inputbar-bg = "#18191e";
+      inputbar-fg = "#e6e6ea";
     };
   };
 

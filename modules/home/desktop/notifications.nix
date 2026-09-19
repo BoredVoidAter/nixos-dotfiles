@@ -4,11 +4,11 @@
   services.mako = {
     enable = true;
     font = "JetBrainsMono Nerd Font 11";
-    backgroundColor = "#11111bee";
-    textColor = "#cdd6f4";
-    borderColor = "#89b4fa";
+    backgroundColor = "#131418ee";
+    textColor = "#e6e6ea";
+    borderColor = "#2c2d35";
     borderRadius = 10;
-    borderSize = 2;
+    borderSize = 1;
     padding = "12";
     defaultTimeout = 5000;
     layer = "overlay";

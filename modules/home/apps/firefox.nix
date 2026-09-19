@@ -7,6 +7,8 @@
     for dir in ~/.mozilla/firefox/*.default*; do
       if [ -d "$dir" ]; then
         $DRY_RUN_CMD ${pkgs.curl}/bin/curl -sL https://raw.githubusercontent.com/yokoffing/Betterfox/main/user.js -o "$dir/user.js"
+        echo 'user_pref("widget.gtk.rounded-bottom-corners.enabled", false);' >> "$dir/user.js"
+        echo 'user_pref("widget.wayland.opaque-region.enabled", true);' >> "$dir/user.js"
       fi
     done
   '';
