@@ -26,6 +26,7 @@
     ./modules/home/apps/media.nix
     ./modules/home/apps/alacritty.nix
     ./modules/home/apps/codex.nix
+    ./modules/home/apps/notion.nix
   ];
 
 

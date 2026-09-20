@@ -57,6 +57,8 @@
 
     davinci-resolve
     ferdium
+
+    jq
   ];
 
   # Enables KDE Connect Indicator (Pairs great with the KDE Connect iOS App for notifications & clipboard)

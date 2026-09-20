@@ -58,6 +58,17 @@ let
     fi
   '';
 
+  steam-test-run = pkgs.writeShellScriptBin "steam-test-run" ''
+    TARGET="$1"
+    if [ -z "$TARGET" ]; then
+      echo "Usage: steam-test-run <path-to-unity-build.x86_64> [args...]"
+      exit 1
+    fi
+    shift
+    TARGET_ABS=$(realpath "$TARGET")
+    TARGET_DIR=$(dirname "$TARGET_ABS")
+    exec flatpak run --filesystem=host --command=bash com.valvesoftware.Steam -c "cd \"$TARGET_DIR\" && exec \"$TARGET_ABS\" \"\$@\"" -- "$@"
+  '';
 
   my-unityhub = pkgs.unityhub.overrideAttrs (old: {
     buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.makeWrapper ];
@@ -79,10 +90,24 @@ in
     p7zip
 
     unity-neovim-wrapper
+    steam-test-run
   ];
 
   home.sessionVariables = {
     DOTNET_ROOT = "${my-dotnet}";
     UNITY_IGNORE_DKG = "1";
+  };
+
+  xdg.desktopEntries."com.valvesoftware.Steam" = {
+    name = "Steam (Second Account)";
+    genericName = "Application for managing and playing games on Steam";
+    comment = "Secondary Steam Client (Flatpak / Alt Account)";
+    exec = "flatpak run com.valvesoftware.Steam @@u %U @@";
+    icon = "com.valvesoftware.Steam";
+    terminal = false;
+    categories = [ "Network" "FileTransfer" "Game" ];
+    settings = {
+      StartupWMClass = "steam";
+    };
   };
 }

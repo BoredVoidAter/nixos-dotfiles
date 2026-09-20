@@ -14,6 +14,7 @@
     packages = [
       "com.ultimaker.cura"
       "org.jdownloader.JDownloader"
+      "com.valvesoftware.Steam"
     ];
 
 
