@@ -59,6 +59,8 @@
     ferdium
 
     jq
+    steamcmd
+    python3
   ];
 
   # Enables KDE Connect Indicator (Pairs great with the KDE Connect iOS App for notifications & clipboard)

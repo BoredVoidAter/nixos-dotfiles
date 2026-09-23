@@ -49,6 +49,7 @@ let
       zlib
       stdenv.cc.cc.lib
       udev
+      bubblewrap
     ];
 
     extraBuildCommands = ''
@@ -157,6 +158,7 @@ in
   home.packages = [
     codex-fhs
     codex-installer
+    pkgs.bubblewrap
   ];
 
   xdg.desktopEntries.codex = {
