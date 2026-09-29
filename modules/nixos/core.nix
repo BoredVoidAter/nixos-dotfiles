@@ -40,7 +40,7 @@
   networking.nftables.enable = true;
   
   networking.firewall = {
-    allowedTCPPorts = [ 53317 ];
+    allowedTCPPorts = [ 53317 8080 9090 ];
     allowedUDPPorts = [ 53317 ];
     # Ports for KDE Connect (iOS Integration)
     allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];

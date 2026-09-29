@@ -27,6 +27,7 @@
     tenacity
 
     gimp
+    rawtherapee
 
     gsettings-desktop-schemas
     pamixer
