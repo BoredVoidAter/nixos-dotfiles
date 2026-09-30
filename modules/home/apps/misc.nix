@@ -62,6 +62,8 @@
     jq
     steamcmd
     python3
+    
+    zbar # Provides zbarimg for reading QR codes
   ];
 
   # Enables KDE Connect Indicator (Pairs great with the KDE Connect iOS App for notifications & clipboard)

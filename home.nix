@@ -27,7 +27,7 @@
     ./modules/home/apps/alacritty.nix
     ./modules/home/apps/codex.nix
     ./modules/home/apps/notion.nix
-    ./modules/home/apps/reminders.nix
+    ./modules/home/apps/todo.nix
   ];
 
 
