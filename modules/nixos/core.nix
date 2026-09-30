@@ -71,6 +71,7 @@
     vim wget git pciutils lshw tree calibre wireguard-tools proton-vpn wl-clicker gtk3
     libimobiledevice ifuse # Required for mounting and interacting with iOS devices
     bubblewrap
+    libsmbios
     (writeShellScriptBin "bubblewrap" ''exec ${pkgs.bubblewrap}/bin/bwrap "$@"'')
   ];
 
@@ -102,5 +103,17 @@
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
     stdenv.cc.cc zlib fuse3 icu nss openssl curl expat
+  ];
+
+  security.sudo.extraRules = [
+    {
+      users = [ "boredvoidater" ];
+      commands = [
+        {
+          command = "${pkgs.libsmbios}/bin/smbios-battery-ctl";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
   ];
 }

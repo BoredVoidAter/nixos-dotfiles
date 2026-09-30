@@ -11,24 +11,32 @@
 
 export PATH="/run/current-system/sw/bin:/etc/profiles/per-user/$USER/bin:$PATH"
 
-if ! command -v todo >/dev/null 2>&1; then
-  notify-send -u critical -i dialog-warning "Reminders" "todoman is not installed"
+if ! command -v icloud-reminders >/dev/null 2>&1; then
+  notify-send -u critical -i dialog-warning "Reminders" "icloud-reminders is not installed"
   exit 1
 fi
 
-MENU_ITEMS=""
-RAW_TASKS=$(todo list --raw 2>/dev/null)
+RAW_OUTPUT=$(icloud-reminders list 2>&1)
+STATUS=$?
 
-if [ -n "$RAW_TASKS" ]; then
-  while IFS= read -r line; do
-    [ -z "$line" ] && continue
-    ID=$(echo "$line" | awk '{print $1}')
-    SUMMARY=$(echo "$line" | cut -d' ' -f2-)
-    MENU_ITEMS+="$(printf "󰄱 [%s] %s\n" "$ID" "$SUMMARY")"
-  done <<< "$RAW_TASKS"
+if [ $STATUS -ne 0 ] || [ "$RAW_OUTPUT" = "AUTH_REQUIRED" ] || [ "$RAW_OUTPUT" = "2FA_REQUIRED" ]; then
+  ACTION=$(printf "󰌆 Log in to iCloud (open terminal)\n" | vicinae dmenu --placeholder "iCloud session expired or not authenticated")
+  if [ -n "$ACTION" ]; then
+    alacritty -e icloud-reminders auth
+  fi
+  exit 0
 fi
 
-MENU_ITEMS+="$(printf "󰐕 + Add New Reminder\n󰁪  Sync Now\n")"
+MENU_ITEMS=""
+
+if [ -n "$RAW_OUTPUT" ]; then
+  while IFS=$'\t' read -r guid list_name title; do
+    [ -z "$guid" ] && continue
+    MENU_ITEMS+="$(printf "󰄱 [%s] %s | %s\n" "$list_name" "$title" "$guid")"
+  done <<< "$RAW_OUTPUT"
+fi
+
+MENU_ITEMS+="$(printf "󰐕 + Add New Reminder\n")"
 
 SELECTED=$(printf "%s" "$MENU_ITEMS" | vicinae dmenu --placeholder "Select reminder to complete or action...")
 
@@ -38,22 +46,16 @@ case "$SELECTED" in
 *"+ Add New Reminder"*)
   TITLE=$(vicinae dmenu --placeholder "Enter reminder title...")
   if [ -n "$TITLE" ]; then
-    todo new "$TITLE"
+    icloud-reminders add "$TITLE"
     notify-send -i checkbox-checked-symbolic "Reminders" "Created: $TITLE"
-    vdirsyncer sync >/dev/null 2>&1 &
   fi
   ;;
-*"Sync Now"*)
-  notify-send -i view-refresh-symbolic "Reminders" "Syncing with iCloud..."
-  vdirsyncer sync >/dev/null 2>&1
-  notify-send -i view-refresh-symbolic "Reminders" "Sync completed"
-  ;;
-*"["*"]"*)
-  TASK_ID=$(echo "$SELECTED" | sed -E 's/.*\[([0-9]+)\].*/\1/')
-  if [ -n "$TASK_ID" ]; then
-    todo done "$TASK_ID"
-    notify-send -i checkbox-checked-symbolic "Reminders" "Marked task #$TASK_ID completed"
-    vdirsyncer sync >/dev/null 2>&1 &
+*" | "*)
+  GUID=$(echo "$SELECTED" | awk -F ' \\| ' '{print $2}')
+  TITLE=$(echo "$SELECTED" | awk -F ' \\| ' '{print $1}' | sed -E 's/^󰄱 \[[^]]*\] //')
+  if [ -n "$GUID" ]; then
+    icloud-reminders done "$GUID"
+    notify-send -i checkbox-checked-symbolic "Reminders" "Completed: $TITLE"
   fi
   ;;
 esac

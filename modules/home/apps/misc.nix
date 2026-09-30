@@ -1,4 +1,4 @@
-{ pkgs, pkgs-stable, lib, config, sops, neohabit-src, ... }:
+{ pkgs, pkgs-stable, lib, config, ... }:
 
 {
   home.packages = with pkgs;[
