@@ -38,7 +38,6 @@
 
     xsel
     xclip
-    copyq
     wl-clipboard
 
     grim          
@@ -64,6 +63,8 @@
     python3
     
     zbar # Provides zbarimg for reading QR codes
+    tesseract # Optical Character Recognition (OCR) for screen scraping
+    hyprpicker # Global color picker
   ];
 
   # Enables KDE Connect Indicator (Pairs great with the KDE Connect iOS App for notifications & clipboard)
