@@ -28,7 +28,6 @@
     ./modules/home/apps/codex.nix
     ./modules/home/apps/notion.nix
     ./modules/home/apps/todo.nix
-    ./modules/home/apps/ai-agent.nix
   ];
 
 

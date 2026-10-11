@@ -15,6 +15,7 @@
 
   programs.firefox = {
     enable = true;
+    configPath = ".mozilla/firefox";
     nativeMessagingHosts = [ pkgs.keepassxc ];
     # Removing `profiles.default` stops Home Manager from forcing a fresh profile.
     # Firefox will now fall back to your original profile with all your history intact,

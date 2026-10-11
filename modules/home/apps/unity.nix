@@ -38,6 +38,9 @@ let
       alsa-lib
 
       stdenv.cc.cc.lib
+
+      git
+      git-lfs
     ];
 
     runScript = "bash";
@@ -74,7 +77,7 @@ let
     buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.makeWrapper ];
     postInstall = (old.postInstall or "") + ''
       wrapProgram $out/bin/unityhub \
-        --prefix PATH : "${lib.makeBinPath[ pkgs.ffmpeg pkgs.android-tools pkgs.p7zip ]}"
+        --prefix PATH : "${lib.makeBinPath [ pkgs.ffmpeg pkgs.android-tools pkgs.p7zip pkgs.git pkgs.git-lfs ]}"
     '';
   });
 in
@@ -88,6 +91,7 @@ in
     ffmpeg
     android-tools
     p7zip
+    git-lfs
 
     unity-neovim-wrapper
     steam-test-run
