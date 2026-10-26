@@ -46,6 +46,7 @@
 
     gqrx
     sdrpp
+    rtl_433
 
     xdg-utils
 
@@ -56,6 +57,7 @@
     ghidra
 
     davinci-resolve
+    obs-studio
     ferdium
 
     jq
@@ -90,5 +92,14 @@
       ExecStop = "${pkgs.bash}/bin/bash -c 'rm -rf %h/Downloads/*'";
     };
     Install.WantedBy = [ "default.target" ];
+  };
+
+  xdg.desktopEntries."com.blackmagicdesign.resolve" = {
+    name = "DaVinci Resolve";
+    genericName = "Video Editor";
+    exec = "nvidia-offload davinci-resolve %u";
+    icon = "davinci-resolve";
+    terminal = false;
+    categories = [ "AudioVideo" "Video" "AudioVideoEditing" ];
   };
 }
