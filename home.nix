@@ -25,7 +25,7 @@
     ./modules/home/apps/cad.nix
     ./modules/home/apps/media.nix
     ./modules/home/apps/alacritty.nix
-    ./modules/home/apps/codex.nix
+    ./modules/home/apps/free-claude-code.nix
     ./modules/home/apps/notion.nix
     ./modules/home/apps/todo.nix
   ];

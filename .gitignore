@@ -21,4 +21,4 @@ id_rsa
 keys.txt
 *.age
 
-work.sh
+apply.sh

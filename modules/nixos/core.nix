@@ -70,12 +70,10 @@
   environment.systemPackages = with pkgs; [
     vim wget git pciutils lshw tree calibre wireguard-tools proton-vpn wl-clicker gtk3
     libimobiledevice ifuse # Required for mounting and interacting with iOS devices
-    bubblewrap
     libsmbios
-    (writeShellScriptBin "bubblewrap" ''exec ${pkgs.bubblewrap}/bin/bwrap "$@"'')
   ];
 
-  networking.firewall.checkReversePath = false; 
+  networking.firewall.checkReversePath = "loose"; 
 
   services.pcscd = {
     enable = true;
