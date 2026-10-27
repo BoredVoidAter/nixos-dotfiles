@@ -83,8 +83,8 @@ in
     configPath = ".mozilla/firefox";
     nativeMessagingHosts = [ pkgs.keepassxc vicinaeNativeMessaging ];
 
-    # Configure profiles with our preferences
-    profiles.default = {
+    # Configure profiles with our preferences - use existing profile
+    profiles."6tcs4h8d.default" = {
       # Install extensions declaratively (per-profile)
       extensions = {
         packages = firefoxExtensions;
