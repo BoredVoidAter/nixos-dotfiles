@@ -17,11 +17,11 @@ in
       description = "Mount point for iCloud Drive";
     };
     # App-specific password (generate at appleid.apple.com)
-    # Store in SOPS or pass via environment variable
+    # Store in SOPS (decrypted to /run/secrets/icloud_app_password) or pass via file
     appPasswordFile = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
-      default = null;
-      description = "File containing app-specific password (one line)";
+      default = "/run/secrets/icloud_app_password";
+      description = "File containing app-specific password (one line). Defaults to SOPS secret path.";
     };
     # Read-only mount (safer)
     readOnly = lib.mkOption {
@@ -112,7 +112,7 @@ in
         User = config.services.icloud-drive.mountUser or "root";
       };
       # Need the app password
-      environment = lib.optionalAttrs (cfg.appPasswordFile != null) {
+      environment = {
         RCLONE_CONFIG_ICLOUD_PASS = "command:cat ${cfg.appPasswordFile}";
       };
     };
