@@ -11,6 +11,7 @@
       ./modules/nixos/flatpak.nix
       ./modules/nixos/storage.nix
       ./modules/nixos/ios.nix
+      ./modules/nixos/icloud.nix
     ];
 
   networking.hostName = "nixos-btw"; # <--- Add this line
