@@ -1,0 +1,203 @@
+{ pkgs, lib, config, ... }:
+
+{
+  # ========================================================================
+  # SECURITY HARDENING - Reasonable Desktop Hardening
+  # ========================================================================
+
+  # -------------------------------------------------------------------------
+  # Firewall - Restrict incoming connections
+  # -------------------------------------------------------------------------
+  networking.firewall = {
+    enable = true;
+    # Only allow explicitly defined ports
+    allowedTCPPorts = [ 22 53317 8080 9090 ]; # SSH + your custom ports
+    allowedUDPPorts = [ 53317 ];
+    # KDE Connect (iOS integration) - keep if needed
+    allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
+    allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
+    # Log rejected packets for debugging
+    logRefusedPackets = true;
+    logRefusedConnections = true;
+  };
+
+  # -------------------------------------------------------------------------
+  # SSH Hardening
+  # -------------------------------------------------------------------------
+  services.openssh = {
+    enable = true;
+    passwordAuthentication = false;           # Keys only
+    challengeResponseAuthentication = false;  # No keyboard-interactive
+    permitRootLogin = "no";                   # No root login
+    allowSFTP = false;                        # Disable SFTP unless needed
+    extraConfig = ''
+      # Crypto hardening
+      Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+      MACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com
+      KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512
+      # Security features
+      AuthenticationMethods publickey
+      MaxAuthTries 3
+      LoginGraceTime 30
+      ClientAliveInterval 300
+      ClientAliveCountMax 2
+      X11Forwarding no
+      AllowAgentForwarding no
+      AllowStreamLocalForwarding no
+      AllowTcpForwarding no
+      PermitEmptyPasswords no
+      PermitUserEnvironment no
+      PrintMotd no
+      # Debanner no  # Not a valid option
+    '';
+  };
+
+  # -------------------------------------------------------------------------
+  # Nix Access Control - Limit who can use nix
+  # -------------------------------------------------------------------------
+  nix = {
+    # Only wheel group can use nix (sudo users)
+    allowedUsers = [ "@wheel" ];
+    # Prevent random users from installing packages
+    extraOptions = ''
+      # Require signatures on binary cache
+      require-sigs = true
+      # Don't automatically trust new substituters
+      trusted-substituters = https://cache.nixos.org https://nixos.cachix.org
+    '';
+  };
+
+  # -------------------------------------------------------------------------
+  # Kernel Hardening via sysctl
+  # -------------------------------------------------------------------------
+  boot.kernel.sysctl = {
+    # Network hardening
+    "net.ipv4.tcp_syncookies" = 1;
+    "net.ipv4.conf.all.rp_filter" = 1;
+    "net.ipv4.conf.default.rp_filter" = 1;
+    "net.ipv4.conf.all.accept_redirects" = 0;
+    "net.ipv4.conf.default.accept_redirects" = 0;
+    "net.ipv4.conf.all.send_redirects" = 0;
+    "net.ipv4.conf.all.accept_source_route" = 0;
+    "net.ipv4.conf.default.accept_source_route" = 0;
+    "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
+    "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
+    "net.ipv6.conf.all.accept_redirects" = 0;
+    "net.ipv6.conf.default.accept_redirects" = 0;
+    # Kernel hardening
+    "kernel.dmesg_restrict" = 1;
+    "kernel.kptr_restrict" = 2;
+    "kernel.yama.ptrace_scope" = 1;
+    "kernel.unprivileged_bpf_disabled" = 1;
+    "kernel.perf_event_paranoid" = 3;
+    # Filesystem hardening
+    "fs.protected_hardlinks" = 1;
+    "fs.protected_symlinks" = 1;
+    "fs.protected_fifos" = 2;
+    "fs.protected_regular" = 2;
+    # ASLR
+    "vm.mmap_rnd_bits" = 32;
+    "vm.mmap_rnd_compat_bits" = 16;
+  };
+
+  # -------------------------------------------------------------------------
+  # Sudo Hardening
+  # -------------------------------------------------------------------------
+  security.sudo = {
+    enable = true;
+    # Only wheel group can use sudo
+    wheelNeedsPassword = true;
+  };
+
+  # -------------------------------------------------------------------------
+  # Remove unnecessary default packages
+  # -------------------------------------------------------------------------
+  environment.defaultPackages = lib.mkForce [ ];
+
+  # -------------------------------------------------------------------------
+  # Audit Logging - Track important events
+  # -------------------------------------------------------------------------
+  security.audit = {
+    enable = true;
+    rules = [
+      # Track execve (program execution)
+      "-a exit,always -F arch=b64 -S execve -F key=exec"
+      # Track file modifications in sensitive areas
+      "-w /etc/passwd -p wa -k passwd_changes"
+      "-w /etc/shadow -p wa -k shadow_changes"
+      "-w /etc/sudoers -p wa -k sudoers_changes"
+      "-w /etc/ssh/sshd_config -p wa -k sshd_config_changes"
+      # Track mount/unmount
+      "-a exit,always -F arch=b64 -S mount -S umount2 -k mount"
+      # Track privilege escalation
+      "-a exit,always -F arch=b64 -S setuid -S setgid -S setreuid -S setregid -k priv_esc"
+      # Track kernel module loading
+      "-w /sbin/insmod -p x -k modules"
+      "-w /sbin/rmmod -p x -k modules"
+      "-w /sbin/modprobe -p x -k modules"
+    ];
+  };
+
+  # -------------------------------------------------------------------------
+  # Disable core dumps
+  # -------------------------------------------------------------------------
+  systemd.coredump.enable = false;
+
+  # -------------------------------------------------------------------------
+  # AppArmor - Mandatory Access Control (optional, enable if desired)
+  # -------------------------------------------------------------------------
+
+  # -------------------------------------------------------------------------
+  # AppArmor - Mandatory Access Control (optional, enable if desired)
+  # -------------------------------------------------------------------------
+  # security.apparmor = {
+  #   enable = true;
+  #   profiles = [ ];
+  # };
+
+  # -------------------------------------------------------------------------
+  # Automatic Security Updates
+  # -------------------------------------------------------------------------
+  system.autoUpgrade = {
+    enable = true;
+    # Run daily at 3 AM
+    flags = [ "--keep-going" ];
+    # Only install security updates automatically
+    # (you'll still need to run nixos-rebuild switch manually for major updates)
+  };
+
+  # -------------------------------------------------------------------------
+  # Disable unused filesystems
+  # -------------------------------------------------------------------------
+  # Blacklist uncommon filesystems
+  boot.blacklistedKernelModules = [
+    "cramfs"
+    "freevxfs"
+    "jffs2"
+    "hfs"
+    "hfsplus"
+    "squashfs"
+    "udf"
+    "affs"
+    "ecryptfs"
+    "efivarfs"
+    "befs"
+    "sysv"
+    "ufs"
+  ];
+
+  # -------------------------------------------------------------------------
+  # USBGuard - Control USB device access (optional)
+  # -------------------------------------------------------------------------
+  # services.usbguard = {
+  #   enable = true;
+  #   # Generate initial policy with: usbguard generate-policy
+  # };
+
+  # -------------------------------------------------------------------------
+  # Hardened malloc (optional - can break some apps)
+  # -------------------------------------------------------------------------
+  # environment.memoryAllocator = {
+  #   provider = pkgs.hardened_malloc;
+  # };
+}

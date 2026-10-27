@@ -10,6 +10,7 @@
       ./modules/nixos/audio.nix
       ./modules/nixos/flatpak.nix
       ./modules/nixos/storage.nix
+      ./modules/nixos/ios.nix
     ];
 
   networking.hostName = "nixos-btw"; # <--- Add this line

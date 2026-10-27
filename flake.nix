@@ -38,13 +38,13 @@
       nixosConfigurations = {
 
 
-
         nixos-btw = nixpkgs.lib.nixosSystem {
           inherit system;
 
 
           modules = [
             ./configuration.nix
+            ./modules/nixos/security.nix
             home-manager.nixosModules.home-manager
             sops-nix.nixosModules.sops
             nix-flatpak.nixosModules.nix-flatpak
@@ -55,31 +55,6 @@
                 useUserPackages = true;
                 extraSpecialArgs = { inherit pkgs-stable sops-nix vicinae spicetify-nix; };
                 users.boredvoidater = import ./home.nix;
-                backupFileExtension = "backup";
-              };
-            }
-          ];
-        };
-
-
-
-
-        nixos-aspire = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [
-            ./aspire-configuration.nix
-
-
-            home-manager.nixosModules.home-manager
-            sops-nix.nixosModules.sops
-            nix-flatpak.nixosModules.nix-flatpak
-
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                extraSpecialArgs = { inherit pkgs-stable sops-nix vicinae spicetify-nix; };
-                users.boredvoidater = import ./aspire-home.nix;
                 backupFileExtension = "backup";
               };
             }
