@@ -16,14 +16,13 @@
 
   networking.hostName = "nixos-btw";
 
-  # iCloud Drive integration via rclone + SOPS
+  # iCloud Drive integration via rclone (main password + 2FA)
   services.icloud-drive = {
     enable = true;
     appleId = "boredvoidater@icloud.com";
     mountPoint = "/mnt/icloud-drive";
     readOnly = true;
-    # appPasswordFile will be set via SOPS secret at runtime
-    # Run: icloud-config to set up rclone remote, then icloud-mount
+    mountUser = "boredvoidater";
   };
 
   system.stateVersion = "25.05";

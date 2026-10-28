@@ -5,7 +5,7 @@ let
 in
 {
   options.services.icloud-drive = {
-    enable = lib.mkEnableOption "iCloud Drive integration via rclone";
+    enable = lib.mkEnableOption "iCloud Drive integration via rclone (uses main password + 2FA)";
     appleId = lib.mkOption {
       type = lib.types.str;
       description = "Apple ID email";
@@ -16,23 +16,17 @@ in
       default = "/mnt/icloud-drive";
       description = "Mount point for iCloud Drive";
     };
-    # App-specific password (generate at appleid.apple.com)
-    # Store in SOPS (decrypted to /run/secrets/icloud_app_password) or pass via file
-    appPasswordFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = "/run/secrets/icloud_app_password";
-      description = "File containing app-specific password (one line). Defaults to SOPS secret path.";
-    };
-    # Read-only mount (safer)
+    # Read-only mount (safer - rclone iCloud is experimental)
     readOnly = lib.mkOption {
       type = lib.types.bool;
       default = true;
       description = "Mount read-only (rclone iCloud is experimental)";
     };
+    # User to run the mount service as (should be your user for rclone config access)
     mountUser = lib.mkOption {
       type = lib.types.str;
-      default = "root";
-      description = "User to run the mount service as";
+      default = "boredvoidater";
+      description = "User to run the mount service as (needs access to ~/.config/rclone/rclone.conf)";
     };
   };
 
@@ -44,7 +38,7 @@ in
       # User-friendly mount scripts
       (writeShellScriptBin "icloud-mount" ''
         #!/bin/sh
-        # Mount iCloud Drive interactively (prompts for password if not in config)
+        # Mount iCloud Drive (uses rclone config with cached trust token)
         MOUNT_POINT="${cfg.mountPoint}"
         mkdir -p "$MOUNT_POINT"
         if mountpoint -q "$MOUNT_POINT"; then
@@ -60,7 +54,7 @@ in
             echo "Mounted successfully!"
             echo "Access in Thunar: $MOUNT_POINT"
           else
-            echo "Mount failed. Check: rclone config icloud:"
+            echo "Mount failed. Run: icloud-config"
           fi
         fi
       '')
@@ -72,17 +66,19 @@ in
       '')
       (writeShellScriptBin "icloud-config" ''
         #!/bin/sh
-        # Interactive rclone config for iCloud
+        # Interactive rclone config for iCloud (main password + 2FA)
+        echo "Configuring iCloud remote 'icloud'..."
+        echo "Use your MAIN Apple ID password (not app-specific) + 2FA code"
         ${pkgs.rclone}/bin/rclone config
       '')
     ];
 
     # Create mount point
     systemd.tmpfiles.rules = [
-      "d ${cfg.mountPoint} 0755 ${config.users.users.${config.services.icloud-drive.mountUser or "root"}.name} ${config.users.users.${config.services.icloud-drive.mountUser or "root"}.group} - -"
+      "d ${cfg.mountPoint} 0755 ${config.users.users.${config.services.icloud-drive.mountUser or "boredvoidater"}.name} ${config.users.users.${config.services.icloud-drive.mountUser or "boredvoidater"}.group} - -"
     ];
 
-    # systemd service to mount iCloud Drive
+    # systemd service to mount iCloud Drive (runs as user to access rclone config)
     systemd.services.icloud-drive = {
       description = "iCloud Drive FUSE mount via rclone";
       documentation = [ "https://rclone.org/icloud/" ];
@@ -108,19 +104,12 @@ in
         ExecStop = "${pkgs.rclone}/bin/rclone unmount ${cfg.mountPoint}";
         Restart = "on-failure";
         RestartSec = 10;
-        # Run as user for better permissions
-        User = config.services.icloud-drive.mountUser or "root";
-      };
-      # Need the app password
-      environment = {
-        RCLONE_CONFIG_ICLOUD_PASS = "command:cat ${cfg.appPasswordFile}";
+        # Run as your user to access ~/.config/rclone/rclone.conf with cached trust token
+        User = config.services.icloud-drive.mountUser or "boredvoidater";
       };
     };
 
     # Auto-start (optional, user can enable manually)
     systemd.services.icloud-drive.wantedBy = [ "multi-user.target" ];
-
-    # Add to Thunar bookmarks (user-specific, via home-manager)
-    # This would be better in home.nix but we can provide the path
   };
 }
