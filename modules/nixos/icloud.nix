@@ -22,11 +22,11 @@ in
       default = true;
       description = "Mount read-only (rclone iCloud is experimental)";
     };
-    # User to run the mount service as (should be your user for rclone config access)
+    # User to run the mount service as (for tmpfiles mount point ownership)
     mountUser = lib.mkOption {
       type = lib.types.str;
       default = "boredvoidater";
-      description = "User to run the mount service as (needs access to ~/.config/rclone/rclone.conf)";
+      description = "User for mount point ownership and user service";
     };
   };
 
@@ -73,14 +73,14 @@ in
       '')
     ];
 
-    # Create mount point
+    # Create mount point (owned by user)
     systemd.tmpfiles.rules = [
-      "d ${cfg.mountPoint} 0755 ${config.users.users.${config.services.icloud-drive.mountUser or "boredvoidater"}.name} ${config.users.users.${config.services.icloud-drive.mountUser or "boredvoidater"}.group} - -"
+      "d ${cfg.mountPoint} 0755 ${config.users.users.${cfg.mountUser}.name} ${config.users.users.${cfg.mountUser}.group} - -"
     ];
 
-    # systemd service to mount iCloud Drive (runs as user to access rclone config)
-    systemd.services.icloud-drive = {
-      description = "iCloud Drive FUSE mount via rclone";
+    # User-level systemd service (starts on login, runs in your session)
+    systemd.user.services.icloud-drive = {
+      description = "iCloud Drive FUSE mount via rclone (user service)";
       documentation = [ "https://rclone.org/icloud/" ];
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
@@ -104,12 +104,10 @@ in
         ExecStop = "${pkgs.rclone}/bin/rclone unmount ${cfg.mountPoint}";
         Restart = "on-failure";
         RestartSec = 10;
-        # Run as your user to access ~/.config/rclone/rclone.conf with cached trust token
-        User = config.services.icloud-drive.mountUser or "boredvoidater";
+        # Runs as your user automatically - accesses ~/.config/rclone/rclone.conf
       };
+      # Enable on login
+      wantedBy = [ "default.target" ];
     };
-
-    # Auto-start (optional, user can enable manually)
-    systemd.services.icloud-drive.wantedBy = [ "multi-user.target" ];
   };
 }
