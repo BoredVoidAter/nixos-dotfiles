@@ -10,7 +10,7 @@
     enable = true;
     efiSupport = true;
     device = "nodev";          # Required for EFI
-    useOSProber = true;        # This automatically finds Windows and makes it the 2nd option
+    useOSProber = false;       # Windows dualboot removed - no longer needed
     configurationLimit = 20;   # Keeps the last 20 generations in the "Advanced" submenu
     splashImage = null;
     extraConfig = ''
@@ -36,6 +36,10 @@
   networking.networkmanager = {
     enable = true;
   };
+
+  # Disable NetworkManager-wait-online to speed up boot (~5.5s saved)
+  # Network will come up in background, apps can handle transient connectivity
+  systemd.services.NetworkManager-wait-online.enable = false;
   networking.nameservers = [ "1.1.1.1" "1.0.0.1" ];
   networking.nftables.enable = true;
   
@@ -71,6 +75,12 @@
     vim wget git pciutils lshw tree calibre wireguard-tools proton-vpn wl-clicker gtk3
     libimobiledevice ifuse # Required for mounting and interacting with iOS devices
     libsmbios
+    mcp-nixos
+    # Wrapper for passwordless nixos-rebuild (uses current system's nixos-rebuild)
+    (writeShellScriptBin "nixos-rebuild-claude" ''
+      #!/usr/bin/env sh
+      exec /run/current-system/sw/bin/nixos-rebuild switch --flake /home/boredvoidater/nixos-dotfiles#nixos-btw "$@"
+    '')
   ];
 
   networking.firewall.checkReversePath = "loose"; 
@@ -109,6 +119,16 @@
       commands = [
         {
           command = "${pkgs.libsmbios}/bin/smbios-battery-ctl";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          # Allow passwordless nixos-rebuild via wrapper script (stable path)
+          command = "/run/current-system/sw/bin/nixos-rebuild-claude";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          # Allow passwordless nix-env for profile switching
+          command = "${pkgs.nix}/bin/nix-env";
           options = [ "NOPASSWD" ];
         }
       ];

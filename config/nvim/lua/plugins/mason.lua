@@ -1,7 +1,7 @@
 return {
   -- VSCode like Extension Manager
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     cmd = "Mason",
     keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason (Extension Manager)" } },
     opts = {
@@ -26,7 +26,7 @@ return {
 
   -- Automatic LSP Hookup
   {
-    "williamboman/mason-lspconfig.nvim",
+    "mason-org/mason-lspconfig.nvim",
     opts = {
       automatic_installation = true, -- Automatically install LSPs when you open a file!
     },

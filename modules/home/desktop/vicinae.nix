@@ -11,8 +11,8 @@ in
     pkgs.wtype
   ];
 
-  xdg.configFile."vicinae/scripts" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/vicinae/scripts";
+  xdg.configFile.vicinae = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/vicinae";
     recursive = true;
   };
 }

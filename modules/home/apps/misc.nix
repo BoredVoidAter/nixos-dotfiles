@@ -40,9 +40,9 @@
     xclip
     wl-clipboard
 
-    grim          
-    slurp         
-    qt5.qtwayland   
+    grim
+    slurp
+    qt5.qtwayland
 
     gqrx
     sdrpp
@@ -63,7 +63,7 @@
     jq
     steamcmd
     python3
-    
+
     zbar # Provides zbarimg for reading QR codes
     tesseract # Optical Character Recognition (OCR) for screen scraping
     hyprpicker # Global color picker
@@ -97,7 +97,7 @@
   xdg.desktopEntries."com.blackmagicdesign.resolve" = {
     name = "DaVinci Resolve";
     genericName = "Video Editor";
-    exec = "nvidia-offload davinci-resolve %u";
+    exec = "bash ${config.xdg.configHome}/vicinae/scripts/davinci-resolve-wrapper.sh %u";
     icon = "davinci-resolve";
     terminal = false;
     categories = [ "AudioVideo" "Video" "AudioVideoEditing" ];

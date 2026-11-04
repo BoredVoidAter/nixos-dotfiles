@@ -26,10 +26,12 @@
   # -------------------------------------------------------------------------
   services.openssh = {
     enable = true;
-    passwordAuthentication = false;           # Keys only
-    challengeResponseAuthentication = false;  # No keyboard-interactive
-    permitRootLogin = "no";                   # No root login
-    allowSFTP = false;                        # Disable SFTP unless needed
+    settings = {
+      PasswordAuthentication = false;           # Keys only
+      KbdInteractiveAuthentication = false;     # No keyboard-interactive
+      PermitRootLogin = "no";                   # No root login
+      # SFTP is controlled via Subsystem directive in extraConfig if needed
+    };
     extraConfig = ''
       # Crypto hardening
       Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
@@ -55,16 +57,17 @@
   # -------------------------------------------------------------------------
   # Nix Access Control - Limit who can use nix
   # -------------------------------------------------------------------------
-  nix = {
+  nix.settings = {
     # Only wheel group can use nix (sudo users)
-    allowedUsers = [ "@wheel" ];
-    # Prevent random users from installing packages
-    extraOptions = ''
-      # Require signatures on binary cache
-      require-sigs = true
-      # Don't automatically trust new substituters
-      trusted-substituters = https://cache.nixos.org https://nixos.cachix.org
-    '';
+    allowed-users = [ "@wheel" ];
+    # Require signatures on binary cache
+    require-sigs = true;
+    # Don't automatically trust new substituters
+    trusted-substituters = [ "https://cache.nixos.org" "https://nixos.cachix.org" ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nixos.cachix.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    ];
   };
 
   # -------------------------------------------------------------------------
@@ -131,10 +134,10 @@
       "-a exit,always -F arch=b64 -S mount -S umount2 -k mount"
       # Track privilege escalation
       "-a exit,always -F arch=b64 -S setuid -S setgid -S setreuid -S setregid -k priv_esc"
-      # Track kernel module loading
-      "-w /sbin/insmod -p x -k modules"
-      "-w /sbin/rmmod -p x -k modules"
-      "-w /sbin/modprobe -p x -k modules"
+      # Track kernel module loading (NixOS paths)
+      "-w /run/current-system/sw/bin/insmod -p x -k modules"
+      "-w /run/current-system/sw/bin/rmmod -p x -k modules"
+      "-w /run/current-system/sw/bin/modprobe -p x -k modules"
     ];
   };
 

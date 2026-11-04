@@ -1,0 +1,60 @@
+/* Minimal mac-style tiny top bar */
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "SF Pro Display", "Inter", "JetBrains Mono", monospace;
+  font-size: 11px;
+  min-height: 0;
+}
+
+window#waybar {
+  background: rgba(18, 18, 19, 0.85);
+  color: #e8e8e8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#workspaces {
+  padding: 0 8px;
+}
+
+#workspaces button {
+  padding: 0 4px;
+  margin: 0 1px;
+  color: #888;
+  background: transparent;
+  transition: color 0.15s;
+}
+
+#workspaces button.active {
+  color: #fff;
+  font-weight: 600;
+}
+
+#workspaces button:hover {
+  color: #ccc;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+#battery {
+  padding: 0 10px 0 8px;
+  color: #e8e8e8;
+}
+
+#battery.warning {
+  color: #ff9f0a;
+}
+
+#battery.critical {
+  color: #ff453a;
+  /* animation: blink 1s ease-in-out infinite; */
+}
+
+/* @keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+} */
+
+#clock {
+  padding: 0 10px 0 4px;
+  color: #e8e8e8;
+}

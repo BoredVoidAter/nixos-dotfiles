@@ -25,12 +25,14 @@ let
     if [ ! -x "$UV_BIN" ]; then
         echo "Installing standalone uv..."
         ${pkgs.curl}/bin/curl -LsSf https://astral.sh/uv/install.sh | env INSTALLER_NO_MODIFY_PATH=1 UV_INSTALL_DIR="$UV_INSTALL_DIR" sh
-    else
-        "$UV_BIN" self update --quiet 2>/dev/null || true
     fi
     
-    echo "Installing / Updating free-claude-code wrapper..."
-    "$UV_BIN" tool install --force free-claude-code --quiet
+    # Only update if no proxy is currently running to avoid breaking active instances
+    if ! ${pkgs.procps}/bin/pgrep -f "fcc-server" > /dev/null; then
+        "$UV_BIN" self update --quiet 2>/dev/null || true
+        echo "Installing / Updating free-claude-code wrapper..."
+        "$UV_BIN" tool install --force free-claude-code --quiet
+    fi
     
     # Ensure the official Claude CLI is installed so fcc-claude can wrap it
     if ! command -v claude >/dev/null 2>&1; then
@@ -38,17 +40,21 @@ let
         ${pkgs.nodejs}/bin/npm install -g @anthropic-ai/claude-code --quiet
     fi
     
-    echo "Starting fcc-server proxy..."
-    "$UV_TOOL_BIN_DIR/fcc-server" > "$CLAUDE_FREE_DIR/proxy.log" 2>&1 &
-    PROXY_PID=$!
-    
-    # Give the server a moment to bind
-    sleep 2
-    
-    if ! kill -0 $PROXY_PID 2>/dev/null; then
-      echo "Error: fcc-server crashed! Check proxy.log in $CLAUDE_FREE_DIR for details."
-      cat "$CLAUDE_FREE_DIR/proxy.log"
-      exit 1
+    # Start proxy if it isn't already running
+    if ! ${pkgs.procps}/bin/pgrep -f "fcc-server" > /dev/null; then
+        echo "Starting fcc-server proxy..."
+        "$UV_TOOL_BIN_DIR/fcc-server" > "$CLAUDE_FREE_DIR/proxy.log" 2>&1 &
+        
+        # Give the server a moment to bind
+        sleep 2
+        
+        if ! ${pkgs.procps}/bin/pgrep -f "fcc-server" > /dev/null; then
+          echo "Error: fcc-server crashed! Check proxy.log in $CLAUDE_FREE_DIR for details."
+          cat "$CLAUDE_FREE_DIR/proxy.log"
+          exit 1
+        fi
+    else
+        echo "fcc-server is already running. Connecting to existing instance..."
     fi
     
     # On first run, open the Admin UI so the user can configure their API keys
@@ -73,8 +79,10 @@ let
     echo "Launching Claude Code via fcc-claude..."
     "$UV_TOOL_BIN_DIR/fcc-claude" "$@"
     
-    # Cleanup proxy on exit
-    kill $PROXY_PID 2>/dev/null || true
+    # Cleanup proxy on exit only if this is the last active instance
+    if ! ${pkgs.procps}/bin/pgrep -f "fcc-claude" > /dev/null; then
+        ${pkgs.procps}/bin/pkill -f "fcc-server" 2>/dev/null || true
+    fi
   '';
 in
 {
@@ -83,6 +91,7 @@ in
     pkgs.nodejs
     pkgs.xdg-utils
     pkgs.gnugrep
+    pkgs.procps
   ];
 
   # This tells sops-nix to decrypt the `fcc_env` key from your secrets.yaml 

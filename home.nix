@@ -28,6 +28,8 @@
     ./modules/home/apps/free-claude-code.nix
     ./modules/home/apps/notion.nix
     ./modules/home/apps/todo.nix
+    ./modules/home/apps/pkgripper/pkgripper.nix
+    ./modules/home/apps/flatpak-auto-update.nix
   ];
 
 

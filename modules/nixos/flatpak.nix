@@ -14,9 +14,12 @@
     packages = [
       "com.ultimaker.cura"
       "org.jdownloader.JDownloader"
+      "org.freedownloadmanager.Manager"
     ];
 
 
-    update.onActivation = true;
+    # Disable onActivation to prevent blocking boot (was taking ~65s)
+    # Flatpaks will be installed/updated in background via flatpak-system-helper
+    update.onActivation = false;
   };
 }

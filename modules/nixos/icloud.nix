@@ -86,7 +86,7 @@ in
       wants = [ "network-online.target" ];
       serviceConfig = {
         Type = "notify";
-        ExecStartPre = "/bin/mkdir -p ${cfg.mountPoint}";
+        ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${cfg.mountPoint}";
         ExecStart = ''
           ${pkgs.rclone}/bin/rclone mount icloud: ${cfg.mountPoint} \
             --vfs-cache-mode full \
