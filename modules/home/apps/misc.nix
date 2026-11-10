@@ -1,4 +1,4 @@
-{ pkgs, pkgs-stable, lib, config, ... }:
+{ pkgs, lib, config, ... }:
 
 {
   home.packages = with pkgs;[
@@ -14,15 +14,12 @@
     keepassxc
     gh
 
-    digital
-
     peek
     gifski
 
-    gtk-engine-murrine
     gnome-themes-extra
 
-    pkgs-stable.aseprite
+    aseprite
 
     tenacity
 
@@ -56,7 +53,7 @@
 
     ghidra
 
-    davinci-resolve
+    kdePackages.kdenlive
     obs-studio
     ferdium
 
@@ -94,11 +91,12 @@
     Install.WantedBy = [ "default.target" ];
   };
 
-  xdg.desktopEntries."com.blackmagicdesign.resolve" = {
-    name = "DaVinci Resolve";
+  xdg.desktopEntries."org.kde.kdenlive" = {
+    name = "Kdenlive";
     genericName = "Video Editor";
-    exec = "bash ${config.xdg.configHome}/vicinae/scripts/davinci-resolve-wrapper.sh %u";
-    icon = "davinci-resolve";
+    comment = "Free and open-source video editor";
+    exec = "kdenlive %u";
+    icon = "kdenlive";
     terminal = false;
     categories = [ "AudioVideo" "Video" "AudioVideoEditing" ];
   };

@@ -5,8 +5,6 @@
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
-
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -26,10 +24,10 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, sops-nix, nix-flatpak, vicinae, spicetify-nix, ... }:
+  outputs = { self, nixpkgs, home-manager, sops-nix, nix-flatpak, vicinae, spicetify-nix, ... }:
     let
       system = "x86_64-linux";
-      pkgs-stable = import nixpkgs-stable {
+      pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
@@ -53,7 +51,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                extraSpecialArgs = { inherit pkgs-stable sops-nix vicinae spicetify-nix; };
+                extraSpecialArgs = { inherit pkgs sops-nix vicinae spicetify-nix; };
                 users.boredvoidater = import ./home.nix;
                 backupFileExtension = "backup";
               };

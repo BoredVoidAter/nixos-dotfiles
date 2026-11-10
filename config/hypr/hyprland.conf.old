@@ -1,0 +1,190 @@
+# --- EXPLICIT NVIDIA DRIVER FIXES ---
+env = XDG_SESSION_TYPE,wayland
+env = WLR_NO_HARDWARE_CURSORS,1
+
+cursor {
+    no_hardware_cursors = true
+}
+# ------------------------------------
+
+monitor=,preferred,auto,1
+
+# Startup Programs
+exec-once = nm-applet & cbatticon
+exec-once = swaybg -i ~/Pictures/wallpaper.jpg -m fill
+exec-once = polkit-gnome-agent
+exec-once = vicinae server &
+exec-once = waybar &
+exec-once = mako
+exec-once = ferdium --hidden
+exec-once = spotify &
+
+# Environment
+env = XCURSOR_SIZE,24
+env = QT_QPA_PLATFORMTHEME,gtk3
+
+# Keyboard
+input {
+    kb_layout = de
+    repeat_rate = 28
+    repeat_delay = 200
+    follow_mouse = 1
+    touchpad {
+        natural_scroll = false
+    }
+}
+
+# Modern Clean Look
+general {
+    gaps_in = 4
+    gaps_out = 8
+    border_size = 1
+    col.active_border = rgba(3a3c48ff)
+    col.inactive_border = rgba(1e1f25ff)
+    layout = dwindle
+}
+
+decoration {
+    rounding = 12
+    blur {
+        enabled = true
+        size = 6
+        passes = 3
+    }
+    shadow {
+        enabled = true
+        range = 20
+        render_power = 4
+        color = rgba(07080aee)
+    } 
+}
+
+animations {
+    enabled = yes
+    bezier = myBezier, 0.05, 0.9, 0.1, 1.05
+    animation = windows, 1, 5, myBezier
+    animation = windowsOut, 1, 7, default, popin 80%
+    animation = border, 1, 10, default
+    animation = borderangle, 1, 8, default
+    animation = fade, 1, 7, default
+    animation = workspaces, 1, 6, default
+}
+
+dwindle {
+    preserve_split = yes
+}
+
+# Ferdium Scratchpad Rules
+windowrule = workspace special:ferdium silent, match:class [Ff]erdium
+windowrule = float true, match:class [Ff]erdium
+windowrule = size 85% 85%, match:class [Ff]erdium
+windowrule = center true, match:class [Ff]erdium
+
+# Spotify Scratchpad Rules
+windowrule = workspace special:music silent, match:class [Ss]potify
+windowrule = float true, match:class [Ss]potify
+windowrule = size 80% 80%, match:class [Ss]potify
+windowrule = center true, match:class [Ss]potify
+
+# Spotify Miniplayer Rule (compact floating live activity style)
+windowrule = float true, match:title ^(Mini Player)$
+windowrule = pin true, match:title ^(Mini Player)$
+windowrule = size 360 140, match:title ^(Mini Player)$
+
+# UltraStar Window Rules
+windowrule = float true, match:title ^(UltraStar.*)$
+windowrule = center true, match:title ^(UltraStar.*)$
+
+# Keybindings 
+$mainMod = SUPER
+
+bind = $mainMod, Return, exec, alacritty
+bind = $mainMod, W, killactive, 
+bind = $mainMod CTRL, Q, exit, 
+bind = $mainMod SHIFT, F, exec, thunar
+bind = $mainMod SHIFT, B, exec, firefox
+bind = $mainMod, T, togglefloating, 
+bind = $mainMod, Space, exec, vicinae toggle
+bind = $mainMod, F, fullscreen,
+
+# Ferdium Overlay Scratchpad (Super + M or Super + ^ on German layout)
+bind = $mainMod, M, togglespecialworkspace, ferdium
+bind = $mainMod, code:49, togglespecialworkspace, ferdium
+bind = $mainMod, grave, togglespecialworkspace, ferdium
+
+# Music Overlay Scratchpad (Super + P)
+bind = $mainMod, P, togglespecialworkspace, music
+
+# Display Projection Menu (Super + Shift + P, Fn Display)
+bind = $mainMod SHIFT, P, exec, bash ~/.config/vicinae/scripts/display-mode.sh
+bind = , XF86Display, exec, bash ~/.config/vicinae/scripts/display-mode.sh
+
+# Productivity / Poweruser Tools
+bind = $mainMod, V, exec, vicinae deeplink vicinae://launch/clipboard/history
+bind = $mainMod, C, exec, hyprpicker -a
+bind = , Print, exec, grim - | wl-copy
+bind = $mainMod, S, exec, grim -g "$(slurp)" - | wl-copy
+bind = $mainMod SHIFT, S, exec, bash ~/.config/vicinae/scripts/qr-scanner.sh
+bind = $mainMod SHIFT, T, exec, bash ~/.config/vicinae/scripts/ocr.sh
+bind = $mainMod SHIFT, W, exec, bash ~/.config/vicinae/scripts/web-search.sh
+bind = $mainMod, slash, exec, bash ~/.config/vicinae/scripts/keybindings.sh
+bind = $mainMod, F1, exec, bash ~/.config/vicinae/scripts/keybindings.sh
+
+# Audio / Brightness
+binde = , XF86AudioRaiseVolume, exec, pamixer -i 5
+binde = , XF86AudioLowerVolume, exec, pamixer -d 5
+bind = , XF86AudioMute, exec, pamixer -t
+bind = , XF86AudioPlay, exec, playerctl play-pause
+bind = , XF86AudioNext, exec, playerctl next
+bind = , XF86AudioPrev, exec, playerctl previous
+binde = , XF86MonBrightnessUp, exec, brightnessctl set +5%
+binde = , XF86MonBrightnessDown, exec, brightnessctl set 5%-
+
+# Autoclicker 
+bind = $mainMod SHIFT, A, exec, wl-clicker toggle
+
+# Move focus
+bind = $mainMod, H, movefocus, l
+bind = $mainMod, L, movefocus, r
+bind = $mainMod, K, movefocus, u
+bind = $mainMod, J, movefocus, d
+
+# Move Windows
+bind = $mainMod SHIFT, H, movewindow, l
+bind = $mainMod SHIFT, L, movewindow, r
+bind = $mainMod SHIFT, K, movewindow, u
+bind = $mainMod SHIFT, J, movewindow, d
+
+# Smooth Live Window Resizing (Super + Ctrl + H/J/K/L)
+binde = $mainMod CTRL, H, resizeactive, -30 0
+binde = $mainMod CTRL, L, resizeactive, 30 0
+binde = $mainMod CTRL, K, resizeactive, 0 -30
+binde = $mainMod CTRL, J, resizeactive, 0 30
+
+# Mouse Window Control (Super + Left-Click = Drag, Super + Right-Click = Resize)
+bindm = $mainMod, mouse:272, movewindow
+bindm = $mainMod, mouse:273, resizewindow
+
+# Switch workspaces with Super + [1-0] (hardware keycodes 10-19)
+bind = $mainMod, code:10, workspace, 1
+bind = $mainMod, code:11, workspace, 2
+bind = $mainMod, code:12, workspace, 3
+bind = $mainMod, code:13, workspace, 4
+bind = $mainMod, code:14, workspace, 5
+bind = $mainMod, code:15, workspace, 6
+bind = $mainMod, code:16, workspace, 7
+bind = $mainMod, code:17, workspace, 8
+bind = $mainMod, code:18, workspace, 9
+bind = $mainMod, code:19, workspace, 10
+
+# Move active window to workspace and switch with Super + Shift + [1-0]
+bind = $mainMod SHIFT, code:10, movetoworkspace, 1
+bind = $mainMod SHIFT, code:11, movetoworkspace, 2
+bind = $mainMod SHIFT, code:12, movetoworkspace, 3
+bind = $mainMod SHIFT, code:13, movetoworkspace, 4
+bind = $mainMod SHIFT, code:14, movetoworkspace, 5
+bind = $mainMod SHIFT, code:15, movetoworkspace, 6
+bind = $mainMod SHIFT, code:16, movetoworkspace, 7
+bind = $mainMod SHIFT, code:17, movetoworkspace, 8
+bind = $mainMod SHIFT, code:18, movetoworkspace, 9
+bind = $mainMod SHIFT, code:19, movetoworkspace, 10

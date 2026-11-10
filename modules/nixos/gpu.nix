@@ -40,6 +40,13 @@
 
   programs.gamemode.enable = true;
 
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;    # Essential for Wayland/Hyprland display capture
+    openFirewall = true;   # Opens ports 47984-48010 for Moonlight
+  };
+
   environment.systemPackages = with pkgs; [
     steam-run
     cudatoolkit

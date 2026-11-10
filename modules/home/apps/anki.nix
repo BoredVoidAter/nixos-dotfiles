@@ -2,7 +2,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    anki
+    anki-bin
     # CJK fonts for Chinese hanzi
     noto-fonts-cjk-sans
     source-han-serif  # Noto Serif CJK (Refold decks use serif)

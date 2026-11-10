@@ -92,7 +92,7 @@
 
   users.users.boredvoidater = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "audio" "bluetooth" "dialout" "cdrom" "input" "render" ];
+    extraGroups = [ "wheel" "networkmanager" "video" "audio" "bluetooth" "dialout" "cdrom" "input" "render" "uinput"];
     home = "/home/boredvoidater";
   };
 

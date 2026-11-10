@@ -12,6 +12,9 @@
     ./modules/home/desktop/notifications.nix
     ./modules/home/desktop/vicinae.nix
     ./modules/home/desktop/nvim.nix
+    ./modules/home/desktop/gtk.nix
+    ./modules/home/desktop/mako.nix
+    ./modules/home/desktop/environment.nix
 
     ./modules/home/terminal/git.nix
     ./modules/home/terminal/bash.nix
@@ -30,6 +33,7 @@
     ./modules/home/apps/todo.nix
     ./modules/home/apps/pkgripper/pkgripper.nix
     ./modules/home/apps/flatpak-auto-update.nix
+    ./modules/home/apps/karaoke.nix
   ];
 
 

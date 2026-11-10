@@ -12,11 +12,9 @@ in
 
   xdg.configFile.hypr = {
     source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/hypr";
-    recursive = true;
   };
 
   xdg.configFile.waybar = {
     source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/waybar";
-    recursive = true;
   };
 }

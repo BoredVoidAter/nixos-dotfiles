@@ -37,7 +37,45 @@ in
         "extensions.darkreader.brightness" = 100;
         "extensions.darkreader.contrast" = 100;
         "extensions.darkreader.sepia" = 0;
-        "extensions.leechblockng.blockSets" = "[]";
+        "extensions.leechblockng.blockSets" = builtins.toJSON [
+          {
+            name = "Social Media Limit";
+            enabled = true;
+            timeLimit = {
+              enabled = true;
+              limitMinutes = 20;
+              resetPeriod = "daily";
+              blockAfterLimit = true;
+              showCountdown = true;
+              warningMinutes = 5;
+            };
+            sites = [
+              "*://*.twitter.com/*"
+              "*://*.x.com/*"
+              "*://*.facebook.com/*"
+              "*://*.instagram.com/*"
+              "*://*.reddit.com/*"
+              "*://*.youtube.com/*"
+              "*://*.tiktok.com/*"
+              "*://*.linkedin.com/*"
+              "*://*.threads.net/*"
+              "*://*.bluesky.social/*"
+              "*://*.mastodon.social/*"
+              "*://*.discord.com/*"
+            ];
+            wildcard = true;
+            when = {
+              enabled = true;
+              days = [ 0 1 2 3 4 5 6 ]; # All days
+              timeRange = "00:00-23:59";
+            };
+            blockMessage = "Daily 20-minute social media limit reached. Come back tomorrow! 🌱";
+            lock = {
+              enabled = false;
+              password = "";
+            };
+          }
+        ];
         "extensions.tampermonkey.scriptSync" = true;
       };
       extraConfig = ''

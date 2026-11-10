@@ -1,11 +1,11 @@
-// Minimal mac-style top bar - only battery, date, time, workspace
+// Minimal mac-style top bar - workspace, audio, battery, time
 {
   "layer": "top",
   "position": "top",
   "height": 22,
   "modules-left": ["hyprland/workspaces"],
   "modules-center": [],
-  "modules-right": ["battery", "clock"],
+  "modules-right": ["pulseaudio", "battery", "clock"],
 
   "hyprland/workspaces": {
     "disable-scroll": true,
@@ -19,8 +19,25 @@
     }
   },
 
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟 Muted",
+    "format-icons": {
+      "headphone": "󰋋",
+      "handsfree": "󰋋",
+      "headset": "󰋋",
+      "phone": "󰋋",
+      "portable": "󰋋",
+      "default": ["󰕿", "󰖀", "󰕾"]
+    },
+    "on-click": "pavucontrol",
+    "tooltip": false
+  },
+
   "battery": {
     "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󰁹 {capacity}%",
     "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰁹"],
     "threshold": 15,
     "tooltip": false

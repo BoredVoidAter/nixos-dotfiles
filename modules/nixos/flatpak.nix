@@ -15,6 +15,7 @@
       "com.ultimaker.cura"
       "org.jdownloader.JDownloader"
       "org.freedownloadmanager.Manager"
+      "moe.karaokes.mugen"
     ];
 
 

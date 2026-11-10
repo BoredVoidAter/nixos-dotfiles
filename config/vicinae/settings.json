@@ -15,6 +15,28 @@
          "preferences": {
             "network-cli-tool": "nmcli"
          }
+      },
+      "applications": {
+         "entrypoints": {
+            "moe.karaokes.mugen": {
+               "alias": "karaoke"
+            },
+            "ultrastar-play": {
+               "alias": "karaoke"
+            },
+            "ultrastardx": {
+               "alias": "karaoke"
+            },
+            "usdb-syncer": {
+               "alias": "karaoke"
+            },
+            "uskmaker": {
+               "alias": "karaoke"
+            },
+            "ultrastar-karaoke-maker": {
+               "alias": "karaoke"
+            }
+         }
       }
    }
 }

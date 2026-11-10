@@ -49,6 +49,19 @@ window#waybar {
   /* animation: blink 1s ease-in-out infinite; */
 }
 
+#battery.charging {
+  color: #30d158;
+}
+
+#pulseaudio {
+  padding: 0 10px 0 8px;
+  color: #e8e8e8;
+}
+
+#pulseaudio.muted {
+  color: #ff453a;
+}
+
 /* @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
