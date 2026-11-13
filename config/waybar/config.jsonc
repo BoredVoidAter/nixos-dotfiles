@@ -1,11 +1,11 @@
-// Minimal mac-style top bar - workspace, audio, battery, time
+// Minimal mac-style top bar - workspace, power, audio, battery, time
 {
   "layer": "top",
   "position": "top",
   "height": 22,
   "modules-left": ["hyprland/workspaces"],
   "modules-center": [],
-  "modules-right": ["pulseaudio", "battery", "clock"],
+  "modules-right": ["custom/power", "pulseaudio", "battery", "clock"],
 
   "hyprland/workspaces": {
     "disable-scroll": true,
@@ -17,6 +17,16 @@
       "9": "9", "10": "10",
       "active": "●", "default": "○", "urgent": "◎"
     }
+  },
+
+  "custom/power": {
+    "exec": "bash ~/.config/vicinae/scripts/power-mode.sh --status",
+    "return-type": "json",
+    "interval": 5,
+    "signal": 8,
+    "on-click": "bash ~/.config/vicinae/scripts/power-mode.sh --toggle",
+    "on-click-right": "bash ~/.config/vicinae/scripts/power-mode.sh",
+    "tooltip": true
   },
 
   "pulseaudio": {

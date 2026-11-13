@@ -8,9 +8,8 @@
 }
 
 window#waybar {
-  background: rgba(18, 18, 19, 0.85);
+  background: rgba(15, 16, 21, 1);
   color: #e8e8e8;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 #workspaces {
@@ -33,6 +32,23 @@ window#waybar {
 #workspaces button:hover {
   color: #ccc;
   background: rgba(255, 255, 255, 0.05);
+}
+
+#custom-power {
+  padding: 0 8px 0 8px;
+  color: #888;
+}
+
+#custom-power.power-saver {
+  color: #30d158;
+}
+
+#custom-power.performance {
+  color: #ff9f0a;
+}
+
+#custom-power.balanced {
+  color: #888;
 }
 
 #battery {

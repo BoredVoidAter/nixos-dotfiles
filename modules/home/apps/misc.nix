@@ -1,5 +1,22 @@
 { pkgs, lib, config, ... }:
 
+let
+  localsend-wrapped = pkgs.symlinkJoin {
+    name = "localsend";
+    paths = [ pkgs.localsend ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      for bin in $out/bin/*; do
+        if [ -e "$bin" ]; then
+          target=$(readlink -f "$bin")
+          rm -f "$bin"
+          makeWrapper "$target" "$bin" \
+            --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ pkgs.zlib pkgs.stdenv.cc.cc.lib ]}"
+        fi
+      done
+    '';
+  };
+in
 {
   home.packages = with pkgs;[
     tumbler
@@ -9,7 +26,7 @@
     lxappearance
     prismlauncher
     jdk17
-    localsend
+    localsend-wrapped
     mpv
     keepassxc
     gh
@@ -61,6 +78,8 @@
     steamcmd
     python3
 
+    paisa # Financial tracker
+
     zbar # Provides zbarimg for reading QR codes
     tesseract # Optical Character Recognition (OCR) for screen scraping
     hyprpicker # Global color picker
@@ -100,4 +119,14 @@
     terminal = false;
     categories = [ "AudioVideo" "Video" "AudioVideoEditing" ];
   };
+
+  # Automatically inject the Vimium script into every Ferdium recipe
+  home.activation.injectFerdiumVimium = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    for dir in ~/.config/Ferdium/recipes/*; do
+      if [ -d "$dir" ]; then
+        cp -f ${./ferdium-user.js} "$dir/user.js"
+        chmod 644 "$dir/user.js"
+      fi
+    done
+  '';
 }

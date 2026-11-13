@@ -1,6 +1,13 @@
 { pkgs, config, ... }:
 
 let
+  pythonWithDeps = pkgs.python3.withPackages (ps: [ ps.beautifulsoup4 ]);
+
+  mcp-de-deals = pkgs.writeShellScriptBin "mcp-de-deals" ''
+    export PATH="${pkgs.curl}/bin:$PATH"
+    exec ${pythonWithDeps}/bin/python3 ${./deals-mcp/server.py} "$@"
+  '';
+
   claude-free = pkgs.writeShellScriptBin "claude-free" ''
     CLAUDE_FREE_DIR="$HOME/.local/share/free-claude-code"
     mkdir -p "$CLAUDE_FREE_DIR"
@@ -39,6 +46,29 @@ let
         echo "Installing official Claude Code CLI..."
         ${pkgs.nodejs}/bin/npm install -g @anthropic-ai/claude-code --quiet
     fi
+
+    # Ensure local German deals MCP server is registered for Claude Code
+    ${pkgs.python3}/bin/python3 -c '
+import json, os
+path = os.path.expanduser("~/.claude.json")
+data = {}
+if os.path.exists(path):
+    try:
+        with open(path, "r") as f:
+            data = json.load(f)
+    except Exception:
+        data = {}
+if not isinstance(data, dict):
+    data = {}
+servers = data.setdefault("mcpServers", {})
+servers["de-deals"] = {
+    "type": "stdio",
+    "command": "mcp-de-deals",
+    "args": []
+}
+with open(path, "w") as f:
+    json.dump(data, f, indent=2)
+'
     
     # Start proxy if it isn't already running
     if ! ${pkgs.procps}/bin/pgrep -f "fcc-server" > /dev/null; then
@@ -88,6 +118,7 @@ in
 {
   home.packages = [
     claude-free
+    mcp-de-deals
     pkgs.nodejs
     pkgs.xdg-utils
     pkgs.gnugrep

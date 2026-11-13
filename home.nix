@@ -21,7 +21,7 @@
     ./modules/home/terminal/fzf.nix
 
     ./modules/home/apps/neovim.nix
-    ./modules/home/apps/firefox.nix
+    ./modules/home/apps/librewolf.nix
     ./modules/home/apps/anki.nix
     ./modules/home/apps/unity.nix
     ./modules/home/apps/misc.nix

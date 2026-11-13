@@ -37,17 +37,21 @@ hl.config({
 		follow_mouse = 1,
 		touchpad = {
 			natural_scroll = false,
+			tap_to_click = true,
 		},
 	},
 	general = {
-		gaps_in = 4,
-		gaps_out = 8,
-		border_size = 1,
+		gaps_in = 5,
+		gaps_out = 5,
+		border_size = 0,
 		col = {
-			active_border = "rgba(3a3c48ff)",
+			active_border = "rgba(4c50bcff)",
 			inactive_border = "rgba(1e1f25ff)",
 		},
 		layout = "dwindle",
+		resize_on_border = true,
+		extend_border_grab_area = 24,
+		hover_icon_on_border = true,
 	},
 	decoration = {
 		rounding = 12,
@@ -70,6 +74,11 @@ hl.config({
 		enabled = true,
 	},
 })
+
+-- ----------------------------------------------------------------------------
+-- Touch Gestures (Touchscreen & Touchpad)
+-- ----------------------------------------------------------------------------
+hl.gesture({ fingers = 3, direction = "pinch", action = "resize" })
 
 -- ----------------------------------------------------------------------------
 -- Animations & Curves
@@ -148,7 +157,7 @@ hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("alacritty"))
 hl.bind(mainMod .. " + W", hl.dsp.window.close())
 hl.bind(mainMod .. " + CTRL + Q", hl.dsp.exit())
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.exec_cmd("thunar"))
-hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("firefox"))
+hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("librewolf"))
 hl.bind(mainMod .. " + T", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd("vicinae toggle"))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
@@ -160,6 +169,8 @@ hl.bind(mainMod .. " + grave", hl.dsp.workspace.toggle_special("ferdium"))
 hl.bind(mainMod .. " + P", hl.dsp.workspace.toggle_special("music"))
 
 -- Tools & Scripts
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/power-mode.sh --toggle"))
+hl.bind(mainMod .. " + SHIFT + E", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/power-mode.sh"))
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/display-mode.sh"))
 hl.bind("XF86Display", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/display-mode.sh"))
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("vicinae deeplink vicinae://launch/clipboard/history"))
@@ -169,8 +180,6 @@ hl.bind(mainMod .. " + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/qr-scanner.sh"))
 hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/ocr.sh"))
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/web-search.sh"))
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/keybindings.sh"))
-hl.bind(mainMod .. " + F1", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/keybindings.sh"))
 hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd("wl-clicker toggle"))
 
 -- Audio & Brightness
