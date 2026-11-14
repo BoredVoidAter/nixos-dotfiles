@@ -37,7 +37,7 @@ print_status_json() {
       printf '{"text":"󱐋","class":"performance","tooltip":"Power Mode: Performance (Click to toggle)"}\n'
       ;;
     *)
-      printf '{"text":"󰗑","class":"balanced","tooltip":"Power Mode: Balanced (Click to toggle)"}\n'
+      printf '{"text":"󰁿","class":"balanced","tooltip":"Power Mode: Balanced (Click to toggle)"}\n'
       ;;
   esac
 }

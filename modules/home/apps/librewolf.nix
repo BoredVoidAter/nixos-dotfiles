@@ -68,6 +68,37 @@ EOF
       color: #ffffff !important;
     }
 
+    /* Strip window controls, spacers, and redundant navigation/action buttons */
+    .titlebar-buttonbox-container,
+    .titlebar-spacer,
+    #back-button,
+    #forward-button,
+    #stop-reload-button,
+    #reload-button,
+    #stop-button,
+    #home-button,
+    #downloads-button,
+    #library-button,
+    #fxa-toolbar-menu-button,
+    #sidebar-button,
+    #firefox-view-button,
+    #unified-extensions-button,
+    #PanelUI-button,
+    #new-tab-button,
+    #tabs-newtab-button,
+    #alltabs-button,
+    #private-browsing-indicator-with-label,
+    .tab-close-button,
+    #star-button-box,
+    #reader-mode-button,
+    #picture-in-picture-button,
+    #translations-button,
+    #pageActionButton,
+    #tracking-protection-icon-container,
+    toolbarspring {
+      display: none !important;
+    }
+
     #main-window,
     #browser,
     #tabbrowser-tabpanels,
@@ -84,6 +115,7 @@ EOF
     #nav-bar {
       background-color: #131418 !important;
       box-shadow: none !important;
+      padding: 2px 6px !important;
     }
 
     /* Force all URL and search input layers to #0d0e11, stripping GTK #333333 */
@@ -138,18 +170,12 @@ EOF
       font-size: 13px !important;
     }
 
-    /* LibreWolf identity / privacy shield / search mode pills */
-    #identity-box,
-    #tracking-protection-icon-container,
-    .urlbar-page-action,
-    #private-browsing-indicator-with-label {
+    #identity-box {
       background-color: transparent !important;
       color: #b5b7c0 !important;
     }
 
-    #identity-box:hover,
-    #tracking-protection-icon-container:hover,
-    .urlbar-page-action:hover {
+    #identity-box:hover {
       background-color: #18191e !important;
       border-radius: 6px !important;
     }
@@ -228,7 +254,7 @@ EOF
       background-color: #4c50bc !important;
     }
 
-    /* Tab bar styling with purple accent */
+    /* Compact tab bar with purple accent */
     tab {
       font-family: "JetBrainsMono Nerd Font", monospace !important;
       font-size: 12px !important;
@@ -236,7 +262,7 @@ EOF
 
     .tab-background {
       border-radius: 8px !important;
-      margin-block: 4px !important;
+      margin-block: 3px !important;
       box-shadow: none !important;
     }
 
@@ -260,10 +286,6 @@ EOF
       font-weight: 500 !important;
     }
 
-    .tabbrowser-tab:not([selected="true"]) .tab-close-button {
-      display: none !important;
-    }
-
     /* Sidebar & vertical tabs */
     #sidebar-box,
     #sidebar-header,
@@ -274,7 +296,7 @@ EOF
       border-color: #1e1f25 !important;
     }
 
-    /* Popups, context menus, and extension panels */
+    /* Popups & context menus */
     menupopup,
     panel,
     .panel-subview-body,
@@ -407,6 +429,11 @@ in
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "browser.tabs.drawInTitlebar" = true;
         "browser.tabs.inTitlebar" = 1;
+        "browser.uidensity" = 1;
+        "browser.compactmode.show" = true;
+        "browser.toolbars.bookmarks.visibility" = "never";
+        "browser.tabs.tabmanager.enabled" = false;
+        "sidebar.revamp" = false;
         "browser.theme.toolbar-theme" = 0;
         "browser.theme.content-theme" = 0;
         "ui.systemUsesDarkTheme" = 1;
@@ -474,6 +501,10 @@ in
         user_pref("browser.theme.toolbar-theme", 0);
         user_pref("browser.theme.content-theme", 0);
         user_pref("ui.systemUsesDarkTheme", 1);
+        user_pref("browser.uidensity", 1);
+        user_pref("browser.toolbars.bookmarks.visibility", "never");
+        user_pref("browser.tabs.tabmanager.enabled", false);
+        user_pref("sidebar.revamp", false);
         user_pref("extensions.enabledScopes", 15);
         user_pref("extensions.autoDisableScopes", 0);
         user_pref("extensions.installDistroAddons", true);

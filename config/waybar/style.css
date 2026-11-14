@@ -75,7 +75,7 @@ window#waybar {
 }
 
 #pulseaudio.muted {
-  color: #ff453a;
+  color: #e8e8e8;
 }
 
 /* @keyframes blink {
