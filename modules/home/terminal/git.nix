@@ -5,12 +5,12 @@
     settings = {
       user.name = "BoredVoidAter";
       user.email = "boredvoideater@proton.me";
-      credential.helper = "/run/current-system/sw/bin/gh auth git-credential";
+      credential.helper = "${pkgs.gh}/bin/gh auth git-credential";
       filter.lfs = {
-        clean = "/run/current-system/sw/bin/git-lfs clean -- %f";
-        process = "/run/current-system/sw/bin/git-lfs filter-process";
+        clean = "${pkgs.git-lfs}/bin/git-lfs clean -- %f";
+        process = "${pkgs.git-lfs}/bin/git-lfs filter-process";
         required = true;
-        smudge = "/run/current-system/sw/bin/git-lfs smudge -- %f";
+        smudge = "${pkgs.git-lfs}/bin/git-lfs smudge -- %f";
       };
     };
   };
