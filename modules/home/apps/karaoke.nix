@@ -41,7 +41,7 @@ let
       libxcb-cursor
     ]);
 
-    runScript = "uvx --with 'PySide6<6.8.0' --with keyrings.alt --python 3.12 usdb_syncer";
+    runScript = "uvx --with 'PySide6<6.8.0' --python 3.12 usdb_syncer";
   };
 
   usdb-syncer-bin = pkgs.writeShellScriptBin "usdb-syncer" ''

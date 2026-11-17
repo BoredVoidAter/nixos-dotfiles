@@ -2,17 +2,20 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title Spotify: Previous Track
+# @raycast.title Music: Previous Track
 # @raycast.mode silent
 
 # Optional parameters:
 # @raycast.packageName Media
-# @raycast.icon ./spotify.svg
+# @raycast.icon 󰒮
 
 # Documentation:
-# @raycast.description Return to previous Spotify track
+# @raycast.description Return to previous YouTube Music track
 # @raycast.author BoredVoidAter
 
 export PATH="/run/current-system/sw/bin:/etc/profiles/per-user/$USER/bin:$PATH"
 
-playerctl -p spotify previous 2>/dev/null
+PLAYER=$(playerctl -l 2>/dev/null | grep -iE 'ytm|youtube' | head -n 1)
+if [ -n "$PLAYER" ]; then
+  playerctl -p "$PLAYER" previous 2>/dev/null
+fi

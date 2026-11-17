@@ -265,7 +265,7 @@ in
   programs.firefox = {
     enable = true;
     configPath = ".mozilla/firefox";
-    nativeMessagingHosts = [ pkgs.keepassxc vicinaeNativeMessaging ];
+    nativeMessagingHosts = [ vicinaeNativeMessaging ];
 
     profiles."6tcs4h8d.default" = {
       settings = {

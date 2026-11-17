@@ -16,9 +16,20 @@
             "network-cli-tool": "nmcli"
          }
       },
+      "ai": {
+         "preferences": {
+            "providers": {},
+            "defaultModel": "claude-code:default",
+            "instructions": "",
+            "enableTools": true
+         }
+      },
       "applications": {
          "entrypoints": {
             "moe.karaokes.mugen": {
+               "alias": "karaoke"
+            },
+            "ultrastar-karaoke-maker": {
                "alias": "karaoke"
             },
             "ultrastar-play": {
@@ -31,9 +42,6 @@
                "alias": "karaoke"
             },
             "uskmaker": {
-               "alias": "karaoke"
-            },
-            "ultrastar-karaoke-maker": {
                "alias": "karaoke"
             }
          }

@@ -28,7 +28,8 @@ in
     jdk17
     localsend-wrapped
     mpv
-    keepassxc
+    bitwarden-desktop
+    ente-auth
     gh
 
     peek
@@ -72,7 +73,6 @@ in
 
     kdePackages.kdenlive
     obs-studio
-    ferdium
 
     jq
     steamcmd
@@ -84,12 +84,6 @@ in
     tesseract # Optical Character Recognition (OCR) for screen scraping
     hyprpicker # Global color picker
   ];
-
-  # Enables KDE Connect Indicator (Pairs great with the KDE Connect iOS App for notifications & clipboard)
-  services.kdeconnect = {
-    enable = true;
-    indicator = true;
-  };
 
   sops.defaultSopsFile = ../../../secrets/secrets.yaml;
   sops.defaultSopsFormat = "yaml";
@@ -119,14 +113,4 @@ in
     terminal = false;
     categories = [ "AudioVideo" "Video" "AudioVideoEditing" ];
   };
-
-  # Automatically inject the Vimium script into every Ferdium recipe
-  home.activation.injectFerdiumVimium = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    for dir in ~/.config/Ferdium/recipes/*; do
-      if [ -d "$dir" ]; then
-        cp -f ${./ferdium-user.js} "$dir/user.js"
-        chmod 644 "$dir/user.js"
-      fi
-    done
-  '';
 }

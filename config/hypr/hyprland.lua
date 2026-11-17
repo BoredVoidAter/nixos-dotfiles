@@ -106,40 +106,30 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("vicinae server")
 	hl.exec_cmd("waybar")
 	hl.exec_cmd("mako")
-	hl.exec_cmd("ferdium --hidden")
-	hl.exec_cmd("spotify")
+	hl.exec_cmd("comms-scratchpad")
 end)
 
 -- ----------------------------------------------------------------------------
 -- Window Rules & Scratchpads
 -- ----------------------------------------------------------------------------
--- Ferdium Scratchpad
+-- Unified Comms TUI Scratchpad (WhatsApp, Telegram, Discord, Gmail)
 hl.window_rule({
-	name = "ferdium-scratchpad",
-	match = { class = "[Ff]erdium" },
-	workspace = "special:ferdium silent",
+	name = "comms-scratchpad",
+	match = { class = "^(comms-scratchpad)$" },
+	workspace = "special:comms silent",
 	float = true,
 	size = "85% 85%",
 	center = true,
 })
 
--- Spotify Scratchpad
+-- Music TUI Scratchpad (ytm-player)
 hl.window_rule({
-	name = "spotify-scratchpad",
-	match = { class = "[Ss]potify" },
+	name = "music-scratchpad",
+	match = { class = "^(music-scratchpad)$" },
 	workspace = "special:music silent",
 	float = true,
 	size = "80% 80%",
 	center = true,
-})
-
--- Spotify Miniplayer
-hl.window_rule({
-	name = "spotify-miniplayer",
-	match = { title = "^(Mini Player)$" },
-	float = true,
-	pin = true,
-	size = "360 140",
 })
 
 -- UltraStar
@@ -163,10 +153,10 @@ hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd("vicinae toggle"))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 
 -- Scratchpads
-hl.bind(mainMod .. " + M", hl.dsp.workspace.toggle_special("ferdium"))
-hl.bind(mainMod .. " + code:49", hl.dsp.workspace.toggle_special("ferdium"))
-hl.bind(mainMod .. " + grave", hl.dsp.workspace.toggle_special("ferdium"))
-hl.bind(mainMod .. " + P", hl.dsp.workspace.toggle_special("music"))
+hl.bind(mainMod .. " + M", hl.dsp.workspace.toggle_special("comms"))
+hl.bind(mainMod .. " + code:49", hl.dsp.workspace.toggle_special("comms"))
+hl.bind(mainMod .. " + grave", hl.dsp.workspace.toggle_special("comms"))
+hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("music-toggle"))
 
 -- Tools & Scripts
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/power-mode.sh --toggle"))

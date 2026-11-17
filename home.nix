@@ -1,9 +1,8 @@
-{ config, pkgs, sops-nix, vicinae, spicetify-nix, ... }:
+{ config, pkgs, sops-nix, vicinae, ... }:
 
 {
   imports = [
     vicinae.homeManagerModules.default
-    spicetify-nix.homeManagerModules.default
     ./modules/home/dotfiles-path.nix
     sops-nix.homeManagerModules.sops
 
@@ -34,6 +33,9 @@
     ./modules/home/apps/pkgripper/pkgripper.nix
     ./modules/home/apps/flatpak-auto-update.nix
     ./modules/home/apps/karaoke.nix
+    ./modules/home/apps/kbm2pad.nix
+    ./modules/home/apps/webapps.nix
+    ./modules/home/apps/comms.nix
   ];
 
 

@@ -18,13 +18,10 @@
 
     vicinae.url = "github:vicinaehq/vicinae";
 
-    spicetify-nix = {
-      url = "github:Gerg-L/spicetify-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    ytm-player.url = "github:peternaame-boop/ytm-player";
   };
 
-  outputs = { self, nixpkgs, home-manager, sops-nix, nix-flatpak, vicinae, spicetify-nix, ... }:
+  outputs = { self, nixpkgs, home-manager, sops-nix, nix-flatpak, vicinae, ytm-player, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -51,7 +48,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                extraSpecialArgs = { inherit pkgs sops-nix vicinae spicetify-nix; };
+                extraSpecialArgs = { inherit pkgs sops-nix vicinae ytm-player; };
                 users.boredvoidater = import ./home.nix;
                 backupFileExtension = "backup";
               };

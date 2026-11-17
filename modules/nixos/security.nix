@@ -13,9 +13,6 @@
     # Only allow explicitly defined ports
     allowedTCPPorts = [ 22 53317 8080 9090 ]; # SSH + your custom ports
     allowedUDPPorts = [ 53317 ];
-    # KDE Connect (iOS integration) - keep if needed
-    allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
-    allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
     # Log rejected packets for debugging
     logRefusedPackets = true;
     logRefusedConnections = true;

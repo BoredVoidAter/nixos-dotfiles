@@ -1,22 +1,7 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, config, lib, vicinae, ... }:
 
 let
-  # Native messaging host definition for Vicinae
-  vicinaeNativeMessaging = pkgs.runCommand "vicinae-native-messaging-host" { } ''
-    mkdir -p $out/lib/mozilla/native-messaging-hosts
-    cat > $out/lib/mozilla/native-messaging-hosts/com.vicinae.vicinae.json <<EOF
-{
-  "name": "com.vicinae.vicinae",
-  "description": "Vicinae Native Messaging Host",
-  "path": "${pkgs.vicinae}/libexec/vicinae/vicinae-browser-link",
-  "type": "stdio",
-  "allowed_extensions": [
-    "firefox@vicinae.com",
-    "vicinae@vicinae.com"
-  ]
-}
-EOF
-  '';
+  vicinaePkg = vicinae.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
   userChromeContent = ''
     :root {
@@ -82,7 +67,6 @@ EOF
     #fxa-toolbar-menu-button,
     #sidebar-button,
     #firefox-view-button,
-    #unified-extensions-button,
     #PanelUI-button,
     #new-tab-button,
     #tabs-newtab-button,
@@ -380,7 +364,7 @@ in
 {
   programs.librewolf = {
     enable = true;
-    nativeMessagingHosts = [ pkgs.keepassxc vicinaeNativeMessaging ];
+    nativeMessagingHosts = [ vicinaePkg ];
 
     policies = {
       DisableAppUpdate = true;
@@ -417,6 +401,11 @@ in
         "firefox@vicinae.com" = {
           installation_mode = "force_installed";
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/vicinae/latest.xpi";
+        };
+        "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+          installation_mode = "force_installed";
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
+          private_browsing = true;
         };
       };
     };

@@ -46,9 +46,6 @@
   networking.firewall = {
     allowedTCPPorts = [ 53317 8080 9090 ];
     allowedUDPPorts = [ 53317 ];
-    # Ports for KDE Connect (iOS Integration)
-    allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
-    allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
 
   time.timeZone = "Europe/Berlin";
