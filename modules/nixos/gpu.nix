@@ -42,7 +42,7 @@
 
   services.sunshine = {
     enable = true;
-    autoStart = true;
+    autoStart = false;
     capSysAdmin = true;    # Essential for Wayland/Hyprland display capture
     openFirewall = true;   # Opens ports 47984-48010 for Moonlight
   };
