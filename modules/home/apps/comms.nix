@@ -67,26 +67,39 @@ let
             lines = f.read().splitlines()
 
     out = []
-    seen_active = False
+    seen_enabled = False
+    seen_active_current = False
+    seen_active_noncurrent = False
     seen_inactive = False
     seen_cmd = False
 
     for line in lines:
         if line.startswith("desktop_notify_active="):
-            out.append("desktop_notify_active=1")
-            seen_active = True
+            continue
+        elif line.startswith("desktop_notify_enabled="):
+            out.append("desktop_notify_enabled=1")
+            seen_enabled = True
+        elif line.startswith("desktop_notify_active_current="):
+            out.append("desktop_notify_active_current=1")
+            seen_active_current = True
+        elif line.startswith("desktop_notify_active_noncurrent="):
+            out.append("desktop_notify_active_noncurrent=1")
+            seen_active_noncurrent = True
         elif line.startswith("desktop_notify_inactive="):
             out.append("desktop_notify_inactive=1")
             seen_inactive = True
         elif line.startswith("desktop_notify_command="):
-            existing = line.split("=", 1)[1].strip()
-            out.append(f"desktop_notify_command={existing if existing else cmd_val}")
+            out.append(f"desktop_notify_command={cmd_val}")
             seen_cmd = True
         else:
             out.append(line)
 
-    if not seen_active:
-        out.append("desktop_notify_active=1")
+    if not seen_enabled:
+        out.append("desktop_notify_enabled=1")
+    if not seen_active_current:
+        out.append("desktop_notify_active_current=1")
+    if not seen_active_noncurrent:
+        out.append("desktop_notify_active_noncurrent=1")
     if not seen_inactive:
         out.append("desktop_notify_inactive=1")
     if not seen_cmd:
@@ -186,6 +199,13 @@ let
   '';
 
   commsImv = pkgs.writeShellScriptBin "imv" ''
+    export PATH="/run/current-system/sw/bin:/etc/profiles/per-user/$USER/bin:$PATH"
+
+    BEFORE_ADDRS=""
+    if command -v hyprctl >/dev/null 2>&1; then
+      BEFORE_ADDRS=$(hyprctl clients -j 2>/dev/null | ${pkgs.jq}/bin/jq -r '.[] | select(.class == "imv" or .class == "imv-wayland" or .initialClass == "imv" or .initialClass == "imv-wayland") | .address' || true)
+    fi
+
     ${pkgs.imv}/bin/imv "$@" &
     IMV_PID=$!
 
@@ -193,14 +213,26 @@ let
       if command -v hyprctl >/dev/null 2>&1; then
         ADDR=""
         for _ in $(seq 1 60); do
-          ADDR=$(hyprctl clients -j 2>/dev/null | ${pkgs.jq}/bin/jq -r --argjson pid "$IMV_PID" '.[] | select(.pid == $pid) | .address' | head -n 1)
+          CLIENTS_JSON=$(hyprctl clients -j 2>/dev/null || echo "[]")
+          ADDR=$(printf '%s' "$CLIENTS_JSON" | ${pkgs.jq}/bin/jq -r --argjson pid "$IMV_PID" '.[] | select(.pid == $pid) | .address' | head -n 1)
+          if [ -z "$ADDR" ] || [ "$ADDR" = "null" ]; then
+            ADDR=$(printf '%s' "$CLIENTS_JSON" | ${pkgs.jq}/bin/jq -r --arg before "$BEFORE_ADDRS" '
+              ($before | split("\n") | map(select(length > 0))) as $seen
+              | .[]
+              | select(.class == "imv" or .class == "imv-wayland" or .initialClass == "imv" or .initialClass == "imv-wayland")
+              | select(.address as $a | ($seen | index($a)) | not)
+              | .address
+            ' | head -n 1)
+          fi
           if [ -n "$ADDR" ] && [ "$ADDR" != "null" ]; then
             break
           fi
           sleep 0.05
         done
         if [ -n "$ADDR" ] && [ "$ADDR" != "null" ]; then
-          hyprctl --batch "dispatch setfloating address:$ADDR ; dispatch movetoworkspace special:comms,address:$ADDR ; dispatch resizewindowpixel exact 80% 80%,address:$ADDR ; dispatch focuswindow address:$ADDR ; dispatch centerwindow ; dispatch alterzorder top,address:$ADDR" >/dev/null 2>&1
+          hyprctl --batch "dispatch setfloating address:$ADDR ; dispatch movetoworkspacesilent special:comms,address:$ADDR" >/dev/null 2>&1
+          sleep 0.05
+          hyprctl --batch "dispatch focuswindow address:$ADDR ; dispatch resizewindowpixel exact 80% 80%,address:$ADDR ; dispatch centerwindow ; dispatch alterzorder top,address:$ADDR" >/dev/null 2>&1
         fi
       fi
     ) &

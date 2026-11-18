@@ -144,9 +144,21 @@
   };
 
   # -------------------------------------------------------------------------
-  # Disable core dumps
+  # Core Dump Handling - Hardened: collect but restrict access
   # -------------------------------------------------------------------------
-  systemd.coredump.enable = false;
+  systemd.coredump.enable = true;
+  systemd.coredump.settings.Coredump = {
+    Storage = "external";           # Store in /var/lib/systemd/coredump
+    Compress = "zstd";              # Compress dumps
+    ProcessSizeMax = "2G";          # Max dump size
+    ExternalSizeMax = "10G";        # Max total storage
+    MaxUse = "5G";                  # Disk quota
+    KeepSize = "1G";                # Keep at least this much free
+  };
+  # Restrict access to root only (default is root:systemd-coredump 0640)
+  systemd.tmpfiles.rules = [
+    "d /var/lib/systemd/coredump 0700 root root -"
+  ];
 
   # -------------------------------------------------------------------------
   # AppArmor - Mandatory Access Control (optional, enable if desired)
