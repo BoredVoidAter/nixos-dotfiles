@@ -14,7 +14,7 @@
 # @raycast.author BoredVoidAter
 
 set -e
-export PATH="/run/current-system/sw/bin:/etc/profiles/per-user/$USER/bin:$PATH"
+export PATH="/run/wrappers/bin:/run/current-system/sw/bin:/etc/profiles/per-user/$USER/bin:$PATH"
 
 DOTFILES_DIR="$HOME/nixos-dotfiles"
 cd "$DOTFILES_DIR" || exit 1

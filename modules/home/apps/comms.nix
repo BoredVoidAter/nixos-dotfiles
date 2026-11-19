@@ -3,7 +3,7 @@
 let
   nchat-record = pkgs.writeShellScriptBin "nchat-record" ''
     set -euo pipefail
-    export PATH="${lib.makeBinPath [ pkgs.ffmpeg pkgs.opusTools pkgs.coreutils ]}:$PATH"
+    export PATH="${lib.makeBinPath [ pkgs.ffmpeg pkgs.opus-tools pkgs.coreutils ]}:$PATH"
 
     OUT_FILE="''${1:-}"
     if [ -z "$OUT_FILE" ]; then
