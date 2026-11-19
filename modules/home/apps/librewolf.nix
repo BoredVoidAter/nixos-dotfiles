@@ -390,10 +390,6 @@ in
           installation_mode = "force_installed";
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/tampermonkey/latest.xpi";
         };
-        "addon@darkreader.org" = {
-          installation_mode = "force_installed";
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/darkreader/latest.xpi";
-        };
         "leechblockng@proginosko.com" = {
           installation_mode = "force_installed";
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/leechblock-ng/latest.xpi";
@@ -425,6 +421,7 @@ in
         "sidebar.revamp" = false;
         "browser.theme.toolbar-theme" = 0;
         "browser.theme.content-theme" = 0;
+        "layout.css.prefers-color-scheme.content-override" = 0;
         "ui.systemUsesDarkTheme" = 1;
         "widget.non-native-theme.gtk.accent-color" = "#4c50bc";
         "widget.gtk.rounded-bottom-corners.enabled" = false;
@@ -433,10 +430,6 @@ in
         "extensions.autoDisableScopes" = 0;
         "extensions.installDistroAddons" = true;
         "extensions.vimium-c.excludedUrls" = "";
-        "extensions.darkreader.theme" = "dark";
-        "extensions.darkreader.brightness" = 100;
-        "extensions.darkreader.contrast" = 100;
-        "extensions.darkreader.sepia" = 0;
         "extensions.leechblockng.blockSets" = builtins.toJSON [
           {
             name = "Social Media Limit";
@@ -489,6 +482,7 @@ in
         user_pref("widget.wayland.opaque-region.enabled", true);
         user_pref("browser.theme.toolbar-theme", 0);
         user_pref("browser.theme.content-theme", 0);
+        user_pref("layout.css.prefers-color-scheme.content-override", 0);
         user_pref("ui.systemUsesDarkTheme", 1);
         user_pref("browser.uidensity", 1);
         user_pref("browser.toolbars.bookmarks.visibility", "never");
