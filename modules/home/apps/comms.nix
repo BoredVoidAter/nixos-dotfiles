@@ -155,20 +155,7 @@ let
     EOF
   '';
 
-  nchat-patched = pkgs.nchat.overrideAttrs (old: {
-    cmakeFlags = (old.cmakeFlags or [ ]) ++ [
-      "-DHAS_TELEGRAM=OFF"
-      "-DHAS_DUMMY=OFF"
-      "-DHAS_TESTS=OFF"
-    ];
-    doCheck = false;
-    postPatch = (old.postPatch or "") + ''
-      cp ${./nchat/inline_media.h} src/inline_media.h
-      cp ${./nchat/inline_media.cpp} src/inline_media.cpp
-      cp ${./nchat/audio_info.go} lib/wmchat/go/audio_info.go
-      ${pkgs.python3}/bin/python3 ${./nchat/patch.py}
-    '';
-  });
+  nchat-patched = pkgs.nchat-patched;
 
   # Wrap runtime tools outside nchat-patched so tweaking nchat-record or updating
   # ffmpeg/mpv/chafa never triggers a full C++/Go recompile of nchat.
@@ -183,9 +170,7 @@ let
     '';
   };
 
-  concord-tui-fixed = pkgs.concord-tui.overrideAttrs (old: {
-    buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.zstd ];
-  });
+  concord-tui-fixed = pkgs.concord-tui-fixed;
 
   genAercAccountsPy = pkgs.writeText "gen-aerc-accounts.py" ''
     import os

@@ -37,9 +37,15 @@ jobs:
       - name: Update Flake Lock
         run: nix flake update
 
-      - name: Build System to Cache Heavy Packages
+      - name: Build & Cache Custom Heavy Packages
         run: |
-          nix build .#nixosConfigurations.nixos-btw.config.system.build.toplevel
+          nix build .#packages.x86_64-linux.nchat-patched \
+                    .#packages.x86_64-linux.concord-tui-fixed \
+                    .#packages.x86_64-linux.aseprite
+
+      - name: Fast System Evaluation Check
+        run: |
+          nix eval .#nixosConfigurations.nixos-btw.config.system.build.toplevel.drvPath
 
       - name: Push Updated flake.lock
         run: |
