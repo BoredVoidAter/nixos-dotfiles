@@ -1,6 +1,188 @@
 { config, lib, pkgs, ... }:
 
 let
+  nchat-record = pkgs.writeShellScriptBin "nchat-record" ''
+    set -euo pipefail
+    export PATH="${lib.makeBinPath [ pkgs.ffmpeg pkgs.opusTools pkgs.coreutils ]}:$PATH"
+
+    OUT_FILE="''${1:-}"
+    if [ -z "$OUT_FILE" ]; then
+      exit 1
+    fi
+
+    exec ${pkgs.python3}/bin/python3 - "$OUT_FILE" << 'EOF'
+    import os
+    import select
+    import signal
+    import subprocess
+    import sys
+    import termios
+    import time
+    import tty
+
+    out_file = sys.argv[1]
+    raw_wav = out_file + ".wav"
+    os.makedirs(os.path.dirname(out_file), exist_ok=True)
+
+    # Open /dev/tty directly so ncurses/background subshell stdin does not trigger ioctl error
+    try:
+        tty_fd = os.open("/dev/tty", os.O_RDWR)
+        tty_in = os.fdopen(tty_fd, "rb", buffering=0)
+        tty_out = os.fdopen(tty_fd, "wb", buffering=0)
+    except Exception:
+        tty_in = sys.stdin.buffer
+        tty_out = sys.stdout.buffer
+
+    # Capture uncompressed PCM first so live PulseAudio timestamps never leak into Ogg Opus
+    rec = subprocess.Popen(
+        [
+            "ffmpeg", "-y", "-v", "error",
+            "-f", "pulse", "-i", "default",
+            "-ac", "1", "-ar", "16000",
+            "-f", "wav", raw_wav,
+        ],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+    send_audio = False
+    start_ts = time.monotonic()
+    old_term = None
+
+    try:
+        try:
+            old_term = termios.tcgetattr(tty_in.fileno())
+            tty.setcbreak(tty_in.fileno())
+        except Exception:
+            old_term = None
+
+        tty_out.write(b"\n")
+        while True:
+            if rec.poll() is not None:
+                break
+            elapsed = int(time.monotonic() - start_ts)
+            mins, secs = divmod(elapsed, 60)
+            status_line = (
+                f"\r  \033[1;31m●\033[0m Recording voice message  {mins:02d}:{secs:02d}   "
+                "[Enter/Space] Send   [q/Esc] Cancel   "
+            )
+            tty_out.write(status_line.encode("utf-8", "ignore"))
+
+            rlist, _, _ = select.select([tty_in.fileno()], [], [], 0.1)
+            if rlist:
+                ch = tty_in.read(1)
+                if ch in (b"\r", b"\n", b" "):
+                    send_audio = True
+                    break
+                if ch in (b"q", b"Q", b"\x1b", b"\x03"):
+                    send_audio = False
+                    break
+    except KeyboardInterrupt:
+        send_audio = False
+    finally:
+        if old_term is not None:
+            try:
+                termios.tcsetattr(tty_in.fileno(), termios.TCSADRAIN, old_term)
+            except Exception:
+                pass
+        tty_out.write(b"\n\033[0m")
+
+    # Ask ffmpeg to quit gracefully via 'q' so the WAV header and samples flush cleanly
+    if rec.poll() is None:
+        try:
+            if rec.stdin is not None:
+                rec.stdin.write(b"q\n")
+                rec.stdin.flush()
+                rec.stdin.close()
+            rec.wait(timeout=3)
+        except Exception:
+            if rec.poll() is None:
+                rec.send_signal(signal.SIGINT)
+                try:
+                    rec.wait(timeout=2)
+                except subprocess.TimeoutExpired:
+                    rec.kill()
+                    rec.wait()
+
+    encoded_ok = False
+    try:
+        if send_audio and os.path.isfile(raw_wav) and os.path.getsize(raw_wav) > 44:
+            flt = subprocess.Popen(
+                [
+                    "ffmpeg", "-y", "-v", "error",
+                    "-i", raw_wav,
+                    "-af", "highpass=f=80",
+                    "-ac", "1", "-ar", "16000",
+                    "-f", "wav", "-",
+                ],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+            )
+            enc = subprocess.Popen(
+                [
+                    "opusenc", "--quiet",
+                    "--vbr", "--bitrate", "16",
+                    "--comp", "10", "--framesize", "20",
+                    "--speech", "--discard-comments",
+                    "-", out_file,
+                ],
+                stdin=flt.stdout,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            if flt.stdout is not None:
+                flt.stdout.close()
+            enc_rc = enc.wait()
+            flt_rc = flt.wait()
+            encoded_ok = (enc_rc == 0) and (flt_rc == 0) and os.path.isfile(out_file) and os.path.getsize(out_file) > 512
+    finally:
+        if os.path.exists(raw_wav):
+            try:
+                os.unlink(raw_wav)
+            except OSError:
+                pass
+
+    if encoded_ok:
+        sys.exit(0)
+
+    if os.path.exists(out_file):
+        try:
+            os.unlink(out_file)
+        except OSError:
+            pass
+    sys.exit(1)
+    EOF
+  '';
+
+  nchat-patched = pkgs.nchat.overrideAttrs (old: {
+    cmakeFlags = (old.cmakeFlags or [ ]) ++ [
+      "-DHAS_TELEGRAM=OFF"
+      "-DHAS_DUMMY=OFF"
+      "-DHAS_TESTS=OFF"
+    ];
+    doCheck = false;
+    postPatch = (old.postPatch or "") + ''
+      cp ${./nchat/inline_media.h} src/inline_media.h
+      cp ${./nchat/inline_media.cpp} src/inline_media.cpp
+      cp ${./nchat/audio_info.go} lib/wmchat/go/audio_info.go
+      ${pkgs.python3}/bin/python3 ${./nchat/patch.py}
+    '';
+  });
+
+  # Wrap runtime tools outside nchat-patched so tweaking nchat-record or updating
+  # ffmpeg/mpv/chafa never triggers a full C++/Go recompile of nchat.
+  nchat-wrapped = pkgs.symlinkJoin {
+    name = "nchat-wrapped-${nchat-patched.version or "custom"}";
+    paths = [ nchat-patched ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      rm -f $out/bin/nchat
+      makeWrapper ${nchat-patched}/bin/nchat $out/bin/nchat \
+        --prefix PATH : "${lib.makeBinPath [ pkgs.chafa pkgs.ffmpeg pkgs.mpv nchat-record ]}"
+    '';
+  };
+
   concord-tui-fixed = pkgs.concord-tui.overrideAttrs (old: {
     buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.zstd ];
   });
@@ -127,44 +309,14 @@ let
         echo "Press [Enter] to run setup (pick WhatsApp and scan the QR code)..."
         read -r _
         ensure_notify_conf
-        ${pkgs.nchat}/bin/nchat -d "$CONF_DIR" -s
+        ${nchat-wrapped}/bin/nchat -d "$CONF_DIR" -s
         ensure_notify_conf
       else
         ensure_notify_conf
-        ${pkgs.nchat}/bin/nchat -d "$CONF_DIR"
+        ${nchat-wrapped}/bin/nchat -d "$CONF_DIR"
         echo ""
         echo "[WhatsApp exited] Press [Enter] to reconnect..."
         read -r _
-      fi
-    done
-  '';
-
-  comms-telegram = pkgs.writeShellScriptBin "comms-telegram" ''
-    set -u
-    CONF_DIR="$HOME/.config/nchat-tg"
-    UI_CONF="$CONF_DIR/ui.conf"
-    mkdir -p "$CONF_DIR"
-
-    ensure_notify_conf() {
-      ${pkgs.python3}/bin/python3 ${ensureNchatNotifyPy} "$UI_CONF" "Telegram" "${pkgs.libnotify}/bin/notify-send"
-    }
-
-    while true; do
-      clear
-      echo "=== Telegram (nchat) ==="
-      echo "Status: IDLE (0% CPU / 0% network)"
-      if [ ! -d "$CONF_DIR/profiles" ] || [ -z "$(ls -A "$CONF_DIR/profiles" 2>/dev/null)" ]; then
-        echo "No Telegram profile linked yet."
-        echo "Press [Enter] to run setup (pick Telegram and authenticate)..."
-        read -r _
-        ensure_notify_conf
-        ${pkgs.nchat}/bin/nchat -d "$CONF_DIR" -s
-        ensure_notify_conf
-      else
-        echo "Press [Enter] to connect (quit nchat to return to idle)..."
-        read -r _
-        ensure_notify_conf
-        ${pkgs.nchat}/bin/nchat -d "$CONF_DIR"
       fi
     done
   '';
@@ -258,9 +410,6 @@ EOF
     launch ${comms-whatsapp}/bin/comms-whatsapp
     focus
 
-    new_tab Telegram
-    launch ${comms-telegram}/bin/comms-telegram
-
     new_tab Discord
     launch ${comms-discord}/bin/comms-discord
 
@@ -283,11 +432,13 @@ EOF
 in
 {
   home.packages = [
-    pkgs.nchat
+    nchat-wrapped
+    nchat-record
+    pkgs.chafa
+    pkgs.ffmpeg
     concord-tui-fixed
     pkgs.aerc
     comms-whatsapp
-    comms-telegram
     comms-discord
     comms-gmail
     comms-session
@@ -352,7 +503,6 @@ in
       "alt+1" = "goto_tab 1";
       "alt+2" = "goto_tab 2";
       "alt+3" = "goto_tab 3";
-      "alt+4" = "goto_tab 4";
     };
   };
 }
