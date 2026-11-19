@@ -52,13 +52,19 @@
   };
 
   # -------------------------------------------------------------------------
-  # Nix Access Control - Limit who can use nix
+  # Nix Access Control & Download Performance
   # -------------------------------------------------------------------------
   nix.settings = {
     # Only wheel group can use nix (sudo users)
     allowed-users = [ "@wheel" ];
     # Require signatures on binary cache
     require-sigs = true;
+
+    # Download throughput optimizations
+    http-connections = 50;
+    max-substitution-jobs = 32;
+    download-buffer-size = 67108864;
+
     # Don't automatically trust new substituters
     trusted-substituters = [
       "https://cache.nixos.org"
@@ -163,10 +169,6 @@
   systemd.tmpfiles.rules = [
     "d /var/lib/systemd/coredump 0700 root root -"
   ];
-
-  # -------------------------------------------------------------------------
-  # AppArmor - Mandatory Access Control (optional, enable if desired)
-  # -------------------------------------------------------------------------
 
   # -------------------------------------------------------------------------
   # AppArmor - Mandatory Access Control (optional, enable if desired)

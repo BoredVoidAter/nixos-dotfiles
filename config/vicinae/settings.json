@@ -45,6 +45,13 @@
                "alias": "karaoke"
             }
          }
+      },
+      "scripts": {
+         "preferences": {
+            "customDirs": [
+               "/home/boredvoidater/nixos-dotfiles/config/vicinae/scripts"
+            ]
+         }
       }
    }
 }
