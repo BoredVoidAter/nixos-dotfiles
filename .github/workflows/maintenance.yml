@@ -1,0 +1,54 @@
+name: System Update & Build Cache
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * 0' # Automated weekly run on Sundays
+
+jobs:
+  build-and-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free Disk Space
+        uses: easimon/maximize-build-space@v10
+        with:
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-docker-images: 'true'
+          root-reserve-mb: 2048
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            trusted-substituters = https://cache.nixos.org https://vicinae.cachix.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= vicinae.cachix.org-1:b67slZMcPnvEtL5mB5g7pSmD898Wmsr0pIgb78a/Xlg=
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: boredvoidater-dotfiles # <-- Your cache name
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Update Flake Lock
+        run: nix flake update
+
+      - name: Build System to Cache Heavy Packages
+        run: |
+          nix build .#nixosConfigurations.nixos-btw.config.system.build.toplevel
+
+      - name: Push Updated flake.lock
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet flake.lock; then
+            git add flake.lock
+            git commit -m "chore(flake): lockfile update [skip ci]"
+            git push
+          else
+            echo "flake.lock was already up to date."
+          fi

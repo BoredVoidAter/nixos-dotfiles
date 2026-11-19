@@ -64,11 +64,15 @@
       "https://cache.nixos.org"
       "https://nixos.cachix.org"
       "https://cuda-maintainers.cachix.org"
+      "https://vicinae.cachix.org"
+      "https://boredvoidater-dotfiles.cachix.org"
     ];
     trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nixos.cachix.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5U="
+      "vicinae.cachix.org-1:b67slZMcPnvEtL5mB5g7pSmD898Wmsr0pIgb78a/Xlg="
+      "boredvoidater-dotfiles.cachix.org-1:Lw1knkMWYS0Zdc/xpPT+98s0nNio12ziYASKjps5790="
     ];
   };
 
