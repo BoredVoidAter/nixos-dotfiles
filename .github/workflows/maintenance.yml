@@ -9,14 +9,14 @@ jobs:
   build-and-cache:
     runs-on: ubuntu-latest
     steps:
-      - name: Free Disk Space
-        uses: easimon/maximize-build-space@v10
-        with:
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-docker-images: 'true'
-          root-reserve-mb: 2048
+      - name: Free Disk Space (Clean Root Partition)
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force 2>/dev/null || true
+          df -h /
 
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
       - name: Setup Cachix
         uses: cachix/cachix-action@v15
         with:
-          name: boredvoidater-dotfiles # <-- Your cache name
+          name: boredvoidater-dotfiles # Ensure this matches your Cachix cache name
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
       - name: Update Flake Lock
