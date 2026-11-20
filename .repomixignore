@@ -6,3 +6,9 @@ config/nvim/LICENSE
 *.lock
 config/firefoxpwa/**/*
 work.sh
+
+
+# patches and mcps
+modules/home/apps/nchat/patch.py
+modules/home/apps/deals-mcp/server.py
+modules/home/apps/nchat/inline_media.cpp

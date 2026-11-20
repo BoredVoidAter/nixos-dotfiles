@@ -43,6 +43,9 @@
             },
             "uskmaker": {
                "alias": "karaoke"
+            },
+            "waypaper": {
+               "alias": "wallpaper"
             }
          }
       },

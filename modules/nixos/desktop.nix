@@ -8,17 +8,117 @@
     xkb.layout = "de";
   };
 
-  services.greetd = {
+  programs.regreet = {
     enable = true;
+    cageArgs = [ "-s" "-m" "last" ];
+    theme = {
+      name = "Matcha-dark-aliz";
+      package = pkgs.matcha-gtk-theme;
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+    cursorTheme = {
+      name = "Bibata-Modern-Ice";
+      package = pkgs.bibata-cursors;
+    };
+    font = {
+      name = "JetBrainsMono Nerd Font";
+      package = pkgs.nerd-fonts.jetbrains-mono;
+      size = 12;
+    };
     settings = {
-      default_session = {
-        # This automatically launches Hyprland after you type your password!
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --theme 'border=gray;text=white;prompt=gray;time=gray;action=white;button=gray;container=black;input=white' --cmd start-hyprland";
-        user = "greeter";
+      background = {
+        path = "/var/lib/wallpaper/current";
+        fit = "Cover";
+      };
+      GTK = {
+        application_prefer_dark_theme = true;
+      };
+      appearance = {
+        greeting_msg = "Welcome back";
       };
     };
-  }; 
-  
+    extraCss = ''
+      window {
+        background-color: #0d0e11;
+        color: #e6e6ea;
+        font-family: "JetBrainsMono Nerd Font";
+      }
+
+      frame {
+        background-color: rgba(19, 20, 24, 0.88);
+        border: 1px solid #27282f;
+        border-radius: 12px;
+        padding: 16px;
+      }
+
+      label {
+        color: #e6e6ea;
+      }
+
+      entry {
+        background-color: #0d0e11;
+        color: #e6e6ea;
+        border: 1px solid #27282f;
+        border-radius: 8px;
+        padding: 8px 12px;
+        caret-color: #4c50bc;
+      }
+
+      entry:focus {
+        border-color: #4c50bc;
+        box-shadow: 0 0 0 1px #4c50bc;
+      }
+
+      selection {
+        background-color: #4c50bc;
+        color: #ffffff;
+      }
+
+      button {
+        background-color: #18191e;
+        color: #e6e6ea;
+        border: 1px solid #27282f;
+        border-radius: 8px;
+        padding: 6px 14px;
+      }
+
+      button:hover {
+        background-color: #27282f;
+        border-color: #3a3c48;
+      }
+
+      button.suggested-action {
+        background-color: #4c50bc;
+        color: #ffffff;
+        border-color: #4c50bc;
+      }
+
+      button.suggested-action:hover {
+        background-color: #5b5fce;
+      }
+
+      button.destructive-action {
+        color: #e05555;
+      }
+
+      popover contents,
+      popover > contents {
+        background-color: #131418;
+        color: #e6e6ea;
+        border: 1px solid #27282f;
+        border-radius: 10px;
+      }
+    '';
+  };
+
+  # World-readable directory so greeter can read the active wallpaper synced by waypaper
+  systemd.tmpfiles.rules = [
+    "d /var/lib/wallpaper 0755 ${config.users.users.boredvoidater.name} ${config.users.users.boredvoidater.group} - -"
+  ];
+
   programs.hyprland.enable = true;
 
   services.gnome.gnome-keyring.enable = true;

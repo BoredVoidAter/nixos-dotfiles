@@ -101,7 +101,7 @@ hl.animation({ leaf = "workspaces", enabled = true, speed = 6, bezier = "default
 hl.on("hyprland.start", function()
 	hl.exec_cmd("nm-applet")
 	hl.exec_cmd("cbatticon")
-	hl.exec_cmd("swaybg -i " .. os.getenv("HOME") .. "/Pictures/wallpaper.jpg -m fill")
+	hl.exec_cmd("waypaper --restore")
 	hl.exec_cmd("polkit-gnome-agent")
 	hl.exec_cmd("vicinae server")
 	hl.exec_cmd("waybar")
@@ -129,6 +129,15 @@ hl.window_rule({
 	workspace = "special:music silent",
 	float = true,
 	size = "80% 80%",
+	center = true,
+})
+
+-- Waypaper Wallpaper Picker
+hl.window_rule({
+	name = "waypaper",
+	match = { class = "^([Ww]aypaper)$" },
+	float = true,
+	size = "65% 65%",
 	center = true,
 })
 

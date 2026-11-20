@@ -52,32 +52,95 @@ let
   ultrastar-deluxe-wrapper = pkgs.writeShellScriptBin "ultrastardx" ''
     set -euo pipefail
 
+    export PATH="${pkgs.pipewire}/bin:${pkgs.gawk}/bin:${pkgs.gnugrep}/bin:${pkgs.gnused}/bin:${pkgs.findutils}/bin:${pkgs.coreutils}/bin:$PATH"
+
     CONFIG_DIR="$HOME/.ultrastardx"
     CONFIG_FILE="$CONFIG_DIR/config.ini"
     PLAYLISTS_DIR="$CONFIG_DIR/playlists"
     SONGS_DIR="/run/media/boredvoidater/Karaoke/songs_ultrastar"
     mkdir -p "$CONFIG_DIR" "$PLAYLISTS_DIR"
 
-    # Automatically split SingStar 2-channel USB adapter into two virtual mono mics if present
-    SINGSTAR_SRC=$(pactl list sources short 2>/dev/null | grep -iE 'singstar|usbmic' | grep -v 'remapped' | grep -v 'SingStar_' | awk '{print $2}' | head -n 1 || echo "")
-    if [ -n "$SINGSTAR_SRC" ]; then
-      if ! pactl list sources short 2>/dev/null | grep -q "SingStar_Blue"; then
-        pactl load-module module-remap-source \
-          source_name="SingStar_Blue" \
-          source_properties="device.description='SingStar Blue (Mic 1)'" \
-          master="$SINGSTAR_SRC" \
-          master_channel_map=front-left \
-          channel_map=mono 2>/dev/null || true
+    PIDS=()
+    cleanup() {
+      for pid in "''${PIDS[@]}"; do
+        kill "$pid" 2>/dev/null || true
+      done
+    }
+    trap cleanup EXIT INT TERM
+
+    start_virtual_mic() {
+      local cap_name="$1"
+      local src_name="$2"
+      local desc="$3"
+      pw-loopback -c 1 -m '[ MONO ]' -l 10 \
+        -i "node.name=$cap_name node.autoconnect=false" \
+        -o "node.name=$src_name media.class=Audio/Source node.description=\"$desc\"" \
+        >/dev/null 2>&1 &
+      PIDS+=($!)
+    }
+
+    start_virtual_mic "singstar_blue_cap" "SingStar_Blue"  "SingStar Blue (Mic 1)"
+    start_virtual_mic "singstar_red_cap"  "SingStar_Red"   "SingStar Red (Mic 2)"
+    start_virtual_mic "logitech_1_cap"    "Logitech_Mic_1" "Logitech Mic 1"
+    start_virtual_mic "logitech_2_cap"    "Logitech_Mic_2" "Logitech Mic 2"
+
+    # Wait briefly for PipeWire to register the virtual input ports
+    for _ in $(seq 1 30); do
+      PORTS_IN=$(pw-link -i 2>/dev/null || true)
+      if echo "$PORTS_IN" | grep -q "^singstar_blue_cap:input_MONO$" \
+        && echo "$PORTS_IN" | grep -q "^singstar_red_cap:input_MONO$" \
+        && echo "$PORTS_IN" | grep -q "^logitech_1_cap:input_MONO$" \
+        && echo "$PORTS_IN" | grep -q "^logitech_2_cap:input_MONO$"; then
+        break
       fi
-      if ! pactl list sources short 2>/dev/null | grep -q "SingStar_Red"; then
-        pactl load-module module-remap-source \
-          source_name="SingStar_Red" \
-          source_properties="device.description='SingStar Red (Mic 2)'" \
-          master="$SINGSTAR_SRC" \
-          master_channel_map=front-right \
-          channel_map=mono 2>/dev/null || true
+      sleep 0.1
+    done
+
+    link_mics() {
+      local links ports_out singstar_fl singstar_fr logi_ports src used1 used2
+      links=$(pw-link -l 2>/dev/null || true)
+      ports_out=$(pw-link -o 2>/dev/null || true)
+
+      # Split SingStar Left/Right into Blue/Red
+      singstar_fl=$(echo "$ports_out" | grep -iE 'singstar|usbmic' | grep ':capture_FL$' | head -n 1 || true)
+      singstar_fr=$(echo "$ports_out" | grep -iE 'singstar|usbmic' | grep ':capture_FR$' | head -n 1 || true)
+
+      if [ -n "$singstar_fl" ] && ! echo "$links" | awk '/^singstar_blue_cap:input_MONO$/{f=1;next} f && /^[^[:space:]]/{f=0} f && /\|<-/{hit=1} END{exit !hit}'; then
+        pw-link "$singstar_fl" "singstar_blue_cap:input_MONO" 2>/dev/null || true
       fi
-    fi
+      if [ -n "$singstar_fr" ] && ! echo "$links" | awk '/^singstar_red_cap:input_MONO$/{f=1;next} f && /^[^[:space:]]/{f=0} f && /\|<-/{hit=1} END{exit !hit}'; then
+        pw-link "$singstar_fr" "singstar_red_cap:input_MONO" 2>/dev/null || true
+      fi
+
+      # Auto-link & auto-relink Logitech USB mics
+      logi_ports=$(echo "$ports_out" | grep '^alsa_input\.usb-Logitech.*:capture_' || true)
+      if [ -n "$logi_ports" ]; then
+        used1=$(echo "$links" | awk '/^logitech_1_cap:input_MONO$/{f=1;next} f && /^[^[:space:]]/{f=0} f && /\|<-/{hit=1} END{exit !hit}' && echo 1 || echo 0)
+        used2=$(echo "$links" | awk '/^logitech_2_cap:input_MONO$/{f=1;next} f && /^[^[:space:]]/{f=0} f && /\|<-/{hit=1} END{exit !hit}' && echo 1 || echo 0)
+
+        while IFS= read -r src; do
+          [ -z "$src" ] && continue
+          if echo "$links" | awk -v p="$src" '$0==p{f=1;next} f && /^[^[:space:]]/{f=0} f && /\|->.*(logitech_1_cap|logitech_2_cap):input_MONO/{hit=1} END{exit !hit}'; then
+            continue
+          fi
+          if [ "$used1" -eq 0 ]; then
+            pw-link "$src" "logitech_1_cap:input_MONO" 2>/dev/null && used1=1 || true
+          elif [ "$used2" -eq 0 ]; then
+            pw-link "$src" "logitech_2_cap:input_MONO" 2>/dev/null && used2=1 || true
+          fi
+        done <<< "$logi_ports"
+      fi
+    }
+
+    link_mics
+    (
+      set +e
+      while true; do
+        sleep 0.5
+        link_mics
+      done
+    ) &
+    PIDS+=($!)
 
     # Sync playlists (.upl) into UltraStar Deluxe's expected playlist folder
     if [ -d "$SONGS_DIR" ]; then
@@ -109,7 +172,7 @@ EOF
       sed -i 's/^Theme=Deluxe/Theme=Modern/' "$CONFIG_FILE" 2>/dev/null || true
     fi
 
-    exec ${pkgs.ultrastardx}/bin/ultrastardx "$@"
+    ${pkgs.ultrastardx}/bin/ultrastardx "$@"
   '';
 
   ultrastar-alias = pkgs.writeShellScriptBin "ultrastar" ''
@@ -444,6 +507,44 @@ in
     yt-dlp
     ffmpeg
   ];
+
+  home.file.".asoundrc".text = ''
+    pcm.singstar_blue {
+      type pipewire
+      capture_node "SingStar_Blue"
+      hint {
+        show on
+        description "SingStar Blue (Mic 1)"
+      }
+    }
+
+    pcm.singstar_red {
+      type pipewire
+      capture_node "SingStar_Red"
+      hint {
+        show on
+        description "SingStar Red (Mic 2)"
+      }
+    }
+
+    pcm.logitech_mic_1 {
+      type pipewire
+      capture_node "Logitech_Mic_1"
+      hint {
+        show on
+        description "Logitech Mic 1 (Persistent)"
+      }
+    }
+
+    pcm.logitech_mic_2 {
+      type pipewire
+      capture_node "Logitech_Mic_2"
+      hint {
+        show on
+        description "Logitech Mic 2 (Persistent)"
+      }
+    }
+  '';
 
   xdg.desktopEntries = {
     usdb-syncer = {
