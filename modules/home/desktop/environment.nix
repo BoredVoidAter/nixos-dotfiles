@@ -6,6 +6,7 @@
     QML2_IMPORT_PATH = "${pkgs.qt5.qtdeclarative}/lib/qt-5.15/qml:${pkgs.qt6.qtdeclarative}/lib/qt-6/qml";
     QT_PLUGIN_PATH = "${pkgs.qt5.qtbase}/lib/qt-5.15/plugins:${pkgs.qt6.qtbase}/lib/qt-6/plugins";
     QT_QPA_PLATFORMTHEME = "gtk3";
+    AQ_DRM_DEVICES = "/dev/dri/by-path/pci-0000:00:02.0-card:/dev/dri/by-path/pci-0000:01:00.0-card";
   };
 
   # Immediately unmount and clear any stale ~/.gvfs FUSE mount on rebuild/switch
