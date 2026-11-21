@@ -32,6 +32,8 @@ in
     ente-auth
     gh
 
+    chiaki-ng
+
     peek
     gifski
 

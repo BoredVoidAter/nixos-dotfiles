@@ -154,6 +154,13 @@ hl.window_rule({
 	center = true,
 })
 
+hl.window_rule({
+	name = "chiaki-rules",
+	match = { class = "^(chiaki-ng)$" },
+	float = true,
+	center = true,
+})
+
 -- ----------------------------------------------------------------------------
 -- Keybindings: Core Applications & Window Management
 -- ----------------------------------------------------------------------------
