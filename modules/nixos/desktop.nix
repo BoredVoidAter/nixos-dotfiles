@@ -1,5 +1,20 @@
 { pkgs, config, ... }:
 
+let
+  powerSupplyPerms = pkgs.writeShellScript "power-supply-perms" ''
+    for f in \
+      /sys/class/power_supply/BAT*/charge_control_start_threshold \
+      /sys/class/power_supply/BAT*/charge_control_end_threshold \
+      /sys/class/power_supply/BAT*/charge_behaviour \
+      /sys/bus/platform/drivers/ideapad_acpi/*/conservation_mode
+    do
+      if [ -e "$f" ]; then
+        ${pkgs.coreutils}/bin/chgrp wheel "$f"
+        ${pkgs.coreutils}/bin/chmod 664 "$f"
+      fi
+    done
+  '';
+in
 {
   services.xserver = {
     enable = true;
@@ -8,7 +23,7 @@
     xkb.layout = "de";
   };
 
-  programs.regreet = {
+  services.displayManager.regreet = {
     enable = true;
     cageArgs = [ "-s" "-m" "last" ];
     theme = {
@@ -152,7 +167,7 @@
 
   # Allow wheel users to toggle battery charge thresholds/bypass for Wall-Plugged mode
   services.udev.extraRules = ''
-    SUBSYSTEM=="power_supply", ACTION=="add|change", RUN+="${pkgs.bash}/bin/bash -c 'for f in /sys/class/power_supply/BAT*/charge_control_start_threshold /sys/class/power_supply/BAT*/charge_control_end_threshold /sys/class/power_supply/BAT*/charge_behaviour /sys/bus/platform/drivers/ideapad_acpi/*/conservation_mode; do [ -e \"$f\" ] && ${pkgs.coreutils}/bin/chgrp wheel \"$f\" && ${pkgs.coreutils}/bin/chmod 664 \"$f\"; done'"
+    SUBSYSTEM=="power_supply", ACTION=="add|change", RUN+="${powerSupplyPerms}"
   '';
 
   programs.thunar = {
