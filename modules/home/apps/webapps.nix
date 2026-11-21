@@ -61,6 +61,24 @@ let
     ${pkgs.resvg}/bin/resvg -w 512 -h 512 ${notionSvg} $out
   '';
 
+  aistudioSvg = pkgs.writeText "aistudio.svg" ''
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+      <defs>
+        <linearGradient id="aistudio-bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1a73e8"/>
+          <stop offset="100%" stop-color="#4c50bc"/>
+        </linearGradient>
+      </defs>
+      <rect x="20" y="20" width="472" height="472" rx="96" fill="url(#aistudio-bg)"/>
+      <path d="M 256 96 C 268 188 324 244 416 256 C 324 268 268 324 256 416 C 244 324 188 268 96 256 C 188 244 244 188 256 96 Z" fill="#ffffff"/>
+      <path d="M 372 108 C 376 132 392 148 416 152 C 392 156 376 172 372 196 C 368 172 352 156 328 152 C 352 148 368 132 372 108 Z" fill="#dbeafe"/>
+    </svg>
+  '';
+
+  aistudioPng = pkgs.runCommand "aistudio.png" { } ''
+    ${pkgs.resvg}/bin/resvg -w 512 -h 512 ${aistudioSvg} $out
+  '';
+
   # Reference google-chrome-stable directly instead of adding pkgs.google-chrome to
   # home.packages so Chrome itself stays hidden from $PATH and application launchers.
   mkChromeWebApp = { execName, url, extraFlags ? [ ] }:
@@ -118,6 +136,15 @@ let
     execName = "notion";
     url = "https://www.notion.so";
   };
+
+  aistudio = mkChromeWebApp {
+    execName = "aistudio";
+    url = "https://aistudio.google.com";
+    extraFlags = [
+      "--enable-webgl"
+      "--ignore-gpu-blocklist"
+    ];
+  };
 in
 {
   home.packages = [
@@ -125,6 +152,7 @@ in
     teams
     onshape
     notion
+    aistudio
   ];
 
   xdg.desktopEntries.xbox-live = {
@@ -180,6 +208,19 @@ in
     };
   };
 
+  xdg.desktopEntries.aistudio = {
+    name = "Google AI Studio";
+    genericName = "AI Prototyping Studio";
+    comment = "Google AI Studio web app";
+    exec = "aistudio";
+    icon = "${aistudioPng}";
+    terminal = false;
+    categories = [ "Development" "Utility" ];
+    settings = {
+      StartupWMClass = "aistudio";
+    };
+  };
+
   xdg.dataFile."icons/hicolor/scalable/apps/xbox-live.svg".source = xboxSvg;
   xdg.dataFile."icons/hicolor/512x512/apps/xbox-live.png".source = xboxPng;
   xdg.dataFile."icons/hicolor/scalable/apps/teams.svg".source = teamsSvg;
@@ -188,4 +229,6 @@ in
   xdg.dataFile."icons/hicolor/512x512/apps/onshape.png".source = onshapePng;
   xdg.dataFile."icons/hicolor/scalable/apps/notion.svg".source = notionSvg;
   xdg.dataFile."icons/hicolor/512x512/apps/notion.png".source = notionPng;
+  xdg.dataFile."icons/hicolor/scalable/apps/aistudio.svg".source = aistudioSvg;
+  xdg.dataFile."icons/hicolor/512x512/apps/aistudio.png".source = aistudioPng;
 }

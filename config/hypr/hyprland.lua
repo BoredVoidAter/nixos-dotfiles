@@ -11,6 +11,8 @@ local mainMod = "SUPER"
 hl.env("XDG_SESSION_TYPE", "wayland")
 hl.env("WLR_NO_HARDWARE_CURSORS", "1")
 hl.env("XCURSOR_SIZE", "24")
+hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
+hl.env("GTK_THEME", "Matcha-dark-aliz")
 hl.env("QT_QPA_PLATFORMTHEME", "gtk3")
 
 -- ----------------------------------------------------------------------------
@@ -99,6 +101,9 @@ hl.animation({ leaf = "workspaces", enabled = true, speed = 6, bezier = "default
 -- Autostart Daemons & Apps (exec-once)
 -- ----------------------------------------------------------------------------
 hl.on("hyprland.start", function()
+	hl.exec_cmd(
+		"dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP GTK_THEME XCURSOR_THEME XCURSOR_SIZE QT_QPA_PLATFORMTHEME"
+	)
 	hl.exec_cmd("nm-applet")
 	hl.exec_cmd("cbatticon")
 	hl.exec_cmd("waypaper --restore")
@@ -180,6 +185,7 @@ hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("bash ~/.config/vicinae/scrip
 hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/ocr.sh"))
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/web-search.sh"))
 hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd("wl-clicker toggle"))
+hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("wl-kbptr"))
 
 -- Audio & Brightness
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pamixer -i 5"), { repeating = true })

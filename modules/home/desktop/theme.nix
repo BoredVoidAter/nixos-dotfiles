@@ -36,9 +36,82 @@
         padding: 0;
         border: none;
       }
+
+      dialog,
+      messagedialog,
+      dialog .dialog-vbox,
+      messagedialog .dialog-vbox {
+        background-color: #131418;
+        color: #e6e6ea;
+      }
+
+      dialog headerbar,
+      messagedialog headerbar {
+        background-color: #131418;
+        border-bottom: 1px solid #27282f;
+        color: #e6e6ea;
+      }
+
+      dialog entry,
+      messagedialog entry {
+        background-color: #0d0e11;
+        color: #e6e6ea;
+        border: 1px solid #27282f;
+        border-radius: 8px;
+        caret-color: #4c50bc;
+      }
+
+      dialog entry:focus,
+      messagedialog entry:focus {
+        border-color: #4c50bc;
+        box-shadow: 0 0 0 1px #4c50bc;
+      }
+
+      dialog button,
+      messagedialog button {
+        background-color: #18191e;
+        color: #e6e6ea;
+        border: 1px solid #27282f;
+        border-radius: 8px;
+      }
+
+      dialog button:hover,
+      messagedialog button:hover {
+        background-color: #27282f;
+        border-color: #3a3c48;
+      }
+
+      dialog button.suggested-action,
+      messagedialog button.suggested-action {
+        background-color: #4c50bc;
+        color: #ffffff;
+        border-color: #4c50bc;
+      }
+
+      dialog button.suggested-action:hover,
+      messagedialog button.suggested-action:hover {
+        background-color: #5b5fce;
+      }
     '';
 
     gtk4.extraCss = ''
+      @define-color accent_color #4c50bc;
+      @define-color accent_bg_color #4c50bc;
+      @define-color accent_fg_color #ffffff;
+      @define-color window_bg_color #0d0e11;
+      @define-color window_fg_color #e6e6ea;
+      @define-color view_bg_color #0d0e11;
+      @define-color view_fg_color #e6e6ea;
+      @define-color headerbar_bg_color #131418;
+      @define-color headerbar_fg_color #e6e6ea;
+      @define-color headerbar_border_color #27282f;
+      @define-color card_bg_color #131418;
+      @define-color card_fg_color #e6e6ea;
+      @define-color dialog_bg_color #131418;
+      @define-color dialog_fg_color #e6e6ea;
+      @define-color popover_bg_color #131418;
+      @define-color popover_fg_color #e6e6ea;
+
       window.csd,
       window.solid-csd,
       decoration,
@@ -47,6 +120,49 @@
         margin: 0;
         padding: 0;
         border: none;
+      }
+
+      window,
+      dialog,
+      alertdialog {
+        background-color: #131418;
+        color: #e6e6ea;
+      }
+
+      entry,
+      passwordentry {
+        background-color: #0d0e11;
+        color: #e6e6ea;
+        border: 1px solid #27282f;
+        border-radius: 8px;
+      }
+
+      entry:focus-within,
+      passwordentry:focus-within {
+        border-color: #4c50bc;
+        box-shadow: 0 0 0 1px #4c50bc;
+      }
+
+      button {
+        background-color: #18191e;
+        color: #e6e6ea;
+        border: 1px solid #27282f;
+        border-radius: 8px;
+      }
+
+      button:hover {
+        background-color: #27282f;
+        border-color: #3a3c48;
+      }
+
+      button.suggested-action {
+        background-color: #4c50bc;
+        color: #ffffff;
+        border-color: #4c50bc;
+      }
+
+      button.suggested-action:hover {
+        background-color: #5b5fce;
       }
     '';
   };

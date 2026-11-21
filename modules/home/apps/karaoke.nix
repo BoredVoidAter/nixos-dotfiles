@@ -172,7 +172,12 @@ EOF
       sed -i 's/^Theme=Deluxe/Theme=Modern/' "$CONFIG_FILE" 2>/dev/null || true
     fi
 
-    ${pkgs.ultrastardx}/bin/ultrastardx "$@"
+    # Offload OpenGL + video decoding to the NVIDIA dGPU while preserving the EXIT trap
+    if [ -x /run/current-system/sw/bin/nvidia-offload ]; then
+      /run/current-system/sw/bin/nvidia-offload ${pkgs.ultrastardx}/bin/ultrastardx "$@"
+    else
+      ${pkgs.ultrastardx}/bin/ultrastardx "$@"
+    fi
   '';
 
   ultrastar-alias = pkgs.writeShellScriptBin "ultrastar" ''

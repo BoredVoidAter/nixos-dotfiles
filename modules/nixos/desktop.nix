@@ -119,6 +119,21 @@
     "d /var/lib/wallpaper 0755 ${config.users.users.boredvoidater.name} ${config.users.users.boredvoidater.group} - -"
   ];
 
+  # Force-install uBlock Origin Lite and Vimium C across all Chrome/Chromium webapp profiles
+  environment.etc."opt/chrome/policies/managed/extensions.json".text = builtins.toJSON {
+    ExtensionInstallForcelist = [
+      "ddkjiahejlhfcafbddmgiahcphecmpfh;https://clients2.google.com/service/update2/crx"
+      "hfjbmagddngcpeloejdejnfgbamkjaeg;https://clients2.google.com/service/update2/crx"
+    ];
+  };
+
+  environment.etc."chromium/policies/managed/extensions.json".text = builtins.toJSON {
+    ExtensionInstallForcelist = [
+      "ddkjiahejlhfcafbddmgiahcphecmpfh;https://clients2.google.com/service/update2/crx"
+      "hfjbmagddngcpeloejdejnfgbamkjaeg;https://clients2.google.com/service/update2/crx"
+    ];
+  };
+
   programs.hyprland.enable = true;
 
   services.gnome.gnome-keyring.enable = true;
