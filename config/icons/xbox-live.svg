@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <clipPath id="xbox-sphere">
+      <circle cx="256" cy="256" r="236"/>
+    </clipPath>
+  </defs>
+  <circle cx="256" cy="256" r="236" fill="#107C10"/>
+  <g clip-path="url(#xbox-sphere)">
+    <path d="M 120 75 Q 256 205 405 420" stroke="#ffffff" stroke-width="54" stroke-linecap="round" fill="none"/>
+    <path d="M 392 75 Q 256 205 107 420" stroke="#ffffff" stroke-width="54" stroke-linecap="round" fill="none"/>
+  </g>
+</svg>

@@ -7,6 +7,7 @@
     sops-nix.homeManagerModules.sops
 
     ./modules/home/desktop/theme.nix
+    ./modules/home/desktop/icons.nix
     ./modules/home/desktop/hyprland.nix
     ./modules/home/desktop/notifications.nix
     ./modules/home/desktop/vicinae.nix

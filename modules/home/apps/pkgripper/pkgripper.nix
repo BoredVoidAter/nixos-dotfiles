@@ -99,6 +99,8 @@ in
       #!/bin/sh
       export WINEPREFIX="$HOME/.wine-pkgripper"
       export WINEDEBUG=-all
+      # Prevent Wine from generating Uninstall / menu .desktop entries
+      export WINEDLLOVERRIDES="winemenubuilder.exe=d"
       export PATH="${pkgs.wine}/bin:${pkgs.winetricks}/bin:$PATH"
 
       # Create wine prefix if it doesn't exist

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="aistudio-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a73e8"/>
+      <stop offset="100%" stop-color="#4c50bc"/>
+    </linearGradient>
+  </defs>
+  <rect x="20" y="20" width="472" height="472" rx="96" fill="url(#aistudio-bg)"/>
+  <path d="M 256 96 C 268 188 324 244 416 256 C 324 268 268 324 256 416 C 244 324 188 268 96 256 C 188 244 244 188 256 96 Z" fill="#ffffff"/>
+  <path d="M 372 108 C 376 132 392 148 416 152 C 392 156 376 172 372 196 C 368 172 352 156 328 152 C 352 148 368 132 372 108 Z" fill="#dbeafe"/>
+</svg>

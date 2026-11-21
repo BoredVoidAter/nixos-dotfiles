@@ -497,6 +497,18 @@ EOF
   uskmaker-build = pkgs.writeShellScriptBin "uskmaker-build" ''
     exec ${uskmaker-bin}/bin/uskmaker --build "$@"
   '';
+
+  ultrastardxIcon = pkgs.runCommand "ultrastardx-icon.png" { } ''
+    found=$(find ${pkgs.ultrastardx}/share/icons ${pkgs.ultrastardx}/share/pixmaps -type f \( -iname "*.png" -o -iname "*.svg" \) 2>/dev/null | head -n 1 || true)
+    if [ -n "$found" ]; then
+      case "$found" in
+        *.svg) ${pkgs.resvg}/bin/resvg -w 512 -h 512 "$found" "$out" ;;
+        *) cp "$found" "$out" ;;
+      esac
+    else
+      ${pkgs.resvg}/bin/resvg -w 512 -h 512 ${../../../config/icons/ultrastardx.svg} "$out"
+    fi
+  '';
 in
 {
   home.packages = with pkgs; [
@@ -557,7 +569,7 @@ in
       genericName = "Karaoke Song Downloader";
       comment = "Download and sync UltraStar karaoke songs from USDB";
       exec = "usdb-syncer";
-      icon = "multimedia-audio-player";
+      icon = "usdb-syncer";
       terminal = false;
       categories = [ "AudioVideo" "Audio" ];
     };
@@ -567,7 +579,7 @@ in
       genericName = "Karaoke Game";
       comment = "Free and open source singing game (Native Linux Build with FFmpeg & PipeWire)";
       exec = "ultrastardx";
-      icon = "ultrastardx";
+      icon = "${ultrastardxIcon}";
       terminal = false;
       categories = [ "Game" "AudioVideo" "Audio" ];
       settings = {
@@ -580,7 +592,7 @@ in
       genericName = "AI Karaoke Package Generator";
       comment = "Generate UltraStar karaoke songs with forced alignment (Demucs + WhisperX on NVIDIA GPU)";
       exec = "uskmaker";
-      icon = "multimedia-audio-player";
+      icon = "uskmaker";
       terminal = false;
       categories = [ "AudioVideo" "Audio" ];
     };
