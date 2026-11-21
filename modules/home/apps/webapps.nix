@@ -161,10 +161,6 @@ let
       comment = "Google AI Studio web app";
       url = "https://aistudio.google.com";
       categories = [ "Development" "Utility" ];
-      extraFlags = [
-        "--enable-webgl"
-        "--ignore-gpu-blocklist"
-      ];
     };
 
     control4free = {

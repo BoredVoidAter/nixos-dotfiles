@@ -10,6 +10,7 @@ local mainMod = "SUPER"
 -- ----------------------------------------------------------------------------
 hl.env("XDG_SESSION_TYPE", "wayland")
 hl.env("WLR_NO_HARDWARE_CURSORS", "1")
+hl.env("AQ_DRM_DEVICES", "/dev/dri/card0:/dev/dri/card1")
 hl.env("XCURSOR_SIZE", "24")
 hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
 hl.env("GTK_THEME", "Matcha-dark-aliz")
