@@ -102,7 +102,7 @@ hl.animation({ leaf = "workspaces", enabled = true, speed = 6, bezier = "default
 -- ----------------------------------------------------------------------------
 hl.on("hyprland.start", function()
 	hl.exec_cmd(
-		"dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP GTK_THEME XCURSOR_THEME XCURSOR_SIZE QT_QPA_PLATFORMTHEME"
+		"dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_RUNTIME_DIR GTK_THEME XCURSOR_THEME XCURSOR_SIZE QT_QPA_PLATFORMTHEME"
 	)
 	hl.exec_cmd("nm-applet")
 	hl.exec_cmd("cbatticon")

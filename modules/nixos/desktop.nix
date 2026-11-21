@@ -14,6 +14,41 @@ let
       fi
     done
   '';
+
+  cleanupGvfsMounts = pkgs.writeShellScript "cleanup-gvfs-mounts" ''
+    FUSERMOUNT=""
+    for candidate in /run/wrappers/bin/fusermount3 /run/wrappers/bin/fusermount ${pkgs.fuse3}/bin/fusermount3; do
+      if [ -x "$candidate" ]; then
+        FUSERMOUNT="$candidate"
+        break
+      fi
+    done
+
+    is_mounted() {
+      ${pkgs.gawk}/bin/awk -v mp="$1" '$2 == mp { found=1; exit } END { exit !found }' /proc/mounts
+    }
+
+    unmount_mp() {
+      local mp="$1"
+      if is_mounted "$mp" && [ -n "$FUSERMOUNT" ]; then
+        "$FUSERMOUNT" -uz "$mp" 2>/dev/null || true
+      fi
+    }
+
+    # Always remove legacy ~/.gvfs fallback mounts so Thunar never hits ENOTCONN in $HOME
+    unmount_mp "$HOME/.gvfs"
+    if ! is_mounted "$HOME/.gvfs"; then
+      ${pkgs.coreutils}/bin/rmdir "$HOME/.gvfs" 2>/dev/null || true
+    fi
+
+    # Unmount disconnected $XDG_RUNTIME_DIR/gvfs so gvfsd-fuse does not fall back to ~/.gvfs
+    RUNTIME_GVFS="''${XDG_RUNTIME_DIR:-/run/user/$(${pkgs.coreutils}/bin/id -u)}/gvfs"
+    if is_mounted "$RUNTIME_GVFS"; then
+      if ! ${pkgs.coreutils}/bin/stat "$RUNTIME_GVFS" >/dev/null 2>&1; then
+        unmount_mp "$RUNTIME_GVFS"
+      fi
+    fi
+  '';
 in
 {
   services.xserver = {
@@ -179,6 +214,24 @@ in
   services.gvfs.enable = true;
   services.udisks2.enable = true;
   programs.dconf.enable = true;
+
+  systemd.user.services.gvfs-cleanup = {
+    description = "Clean up stale GVfs FUSE mountpoints";
+    wantedBy = [ "default.target" ];
+    before = [ "gvfs-daemon.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = cleanupGvfsMounts;
+    };
+  };
+
+  systemd.user.services.gvfs-daemon = {
+    overrideStrategy = "asDropin";
+    serviceConfig = {
+      ExecStartPre = "-${cleanupGvfsMounts}";
+      ExecStopPost = "-${cleanupGvfsMounts}";
+    };
+  };
 
   services.printing = {
     enable = true;
