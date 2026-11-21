@@ -190,6 +190,7 @@ in
   security.pam.services.greetd.enableGnomeKeyring = true;
 
   services.libinput.enable = true;
+  services.joycond.enable = true;
 
   environment.variables = {
     XKB_DEFAULT_LAYOUT = "de";
