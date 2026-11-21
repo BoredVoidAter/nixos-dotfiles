@@ -185,7 +185,6 @@ hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("bash ~/.config/vicinae/scrip
 hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/ocr.sh"))
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("bash ~/.config/vicinae/scripts/web-search.sh"))
 hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd("wl-clicker toggle"))
-hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("wl-kbptr"))
 
 -- Audio & Brightness
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pamixer -i 5"), { repeating = true })

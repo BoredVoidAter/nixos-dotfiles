@@ -68,7 +68,6 @@ in
     blender
 
     wl-clicker
-    wl-kbptr
 
     ghidra
 

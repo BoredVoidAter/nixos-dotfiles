@@ -2,7 +2,7 @@
 * {
   border: none;
   border-radius: 0;
-  font-family: "SF Pro Display", "Inter", "JetBrains Mono", monospace;
+  font-family: "SF Pro Display", "Inter", "JetBrainsMono Nerd Font", monospace;
   font-size: 11px;
   min-height: 0;
 }
@@ -36,7 +36,8 @@ window#waybar {
 
 #custom-power {
   padding: 0 8px 0 8px;
-  color: #888;
+  font-size: 12px;
+  color: #e8e8e8;
 }
 
 #custom-power.power-saver {
@@ -47,8 +48,12 @@ window#waybar {
   color: #ff9f0a;
 }
 
+#custom-power.wall-plugged {
+  color: #2ec4b6;
+}
+
 #custom-power.balanced {
-  color: #888;
+  color: #e8e8e8;
 }
 
 #battery {

@@ -150,6 +150,11 @@
      KEYBOARD_KEY_delay=200
   '';
 
+  # Allow wheel users to toggle battery charge thresholds/bypass for Wall-Plugged mode
+  services.udev.extraRules = ''
+    SUBSYSTEM=="power_supply", ACTION=="add|change", RUN+="${pkgs.bash}/bin/bash -c 'for f in /sys/class/power_supply/BAT*/charge_control_start_threshold /sys/class/power_supply/BAT*/charge_control_end_threshold /sys/class/power_supply/BAT*/charge_behaviour /sys/bus/platform/drivers/ideapad_acpi/*/conservation_mode; do [ -e \"$f\" ] && ${pkgs.coreutils}/bin/chgrp wheel \"$f\" && ${pkgs.coreutils}/bin/chmod 664 \"$f\"; done'"
+  '';
+
   programs.thunar = {
     enable = true;
     plugins = with pkgs; [ thunar-archive-plugin thunar-volman ];
